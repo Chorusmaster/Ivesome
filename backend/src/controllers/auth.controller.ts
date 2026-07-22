@@ -17,3 +17,10 @@ export const register = (
     message: "Register"
   });
 };
+
+export const profile = (
+  req: Request,
+  res: Response
+) => {
+  res.status(204).send();
+};
