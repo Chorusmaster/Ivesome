@@ -1,13 +1,19 @@
 import { Router } from "express";
-import { login, register, profile } from "../controllers/auth.controller.js"
+import { login, register, profile } from "../features/auth/auth.controller.js";
+import { validate } from "../middlewares/validate.js";
+import { registerSchema } from "../features/auth/auth.schema.js";
 
 const router = Router();
-router.get('/', (req, res) => {
-  res.send('Hello World from Express!');
+router.get("/", (req, res) => {
+  res.send("Hello World from Express!");
 });
 
-router.post('/login', login);
-router.post('/register', register);
-router.get('/me', profile);
+router.post(
+  "/register", 
+  validate(registerSchema),
+  register
+);
+router.post("/login", login);
+router.get("/me", profile);
 
 export default router;
