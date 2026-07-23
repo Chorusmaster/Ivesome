@@ -17,13 +17,13 @@ const userSchema = new Schema(
     role: {
       type: String,
       enum: Object.values(UserRole),
-      required: false,
+      required: true,
       default: UserRole.USER,
     },
 
     isBlocked: {
       type: Boolean,
-      required: false,
+      required: true,
       default: false,
     },
   },
