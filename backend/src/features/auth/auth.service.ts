@@ -1,13 +1,14 @@
 import { User } from "../../models/User.model.js";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../utils/jwt.js";
+import { ApiError } from "../../types/error.types.js";
 
 export async function registerUser(
   email: string,
   password: string,
 ) {
   if (await User.findOne({email: email})) {
-    throw new Error("User with this email already exist");
+    throw new ApiError(409, "Validation failed", {email: 'User with this email already exist'});
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
@@ -36,7 +37,7 @@ export async function loginUser(
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new Error("Invalid credentials");
+    throw new ApiError(422, "Invalid credentials", {password: 'Password or email is invalid'});
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -45,7 +46,7 @@ export async function loginUser(
   );
 
   if (!isPasswordValid) {
-    throw new Error("Invalid credentials");
+    throw new ApiError(422, "Invalid credentials", {password: 'Password or email is invalid'});
   }
 
   const token = generateToken(

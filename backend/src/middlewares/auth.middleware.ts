@@ -8,29 +8,39 @@ export function authenticate(
   res: Response,
   next: NextFunction
 ) {
-  const authHeader = req.headers.authorization;
+  // Old code for Bearer token
 
-  if (!authHeader) {
-    return res.status(401).json({
-      message: "Unauthorized",
-    });
-  }
+  // const authHeader = req.headers.authorization;
 
-  const [type, token] = authHeader.split(" ");
+  // if (!authHeader) {
+  //   return res.status(401).json({
+  //     message: "Unauthorized",
+  //   });
+  // }
 
-  if (type !== "Bearer" || !token) {
-    return res.status(401).json({
-      message: "Invalid authorization header",
-    });
-  }
+  // const [type, token] = authHeader.split(" ");
+
+  // if (type !== "Bearer" || !token) {
+  //   return res.status(401).json({
+  //     message: "Invalid authorization header",
+  //   });
+  // }
 
   try {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+    
     const payload = jwt.verify(
       token,
       env.jwtSecret
     );
 
-    const payloadCheckResult = jwtSchema.safeParse(req.body);
+    const payloadCheckResult = jwtSchema.safeParse(payload);
     
     if (!payloadCheckResult.success) {
       return res.status(400).json("");

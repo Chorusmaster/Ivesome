@@ -9,7 +9,7 @@ export function generateToken(userId: string, role: string) {
     },
     env.jwtSecret,
     {
-      expiresIn: "7d",
+      expiresIn: env.jwtExpiresIn ?? "25m",
     }
   );
 }
