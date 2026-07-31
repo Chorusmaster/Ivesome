@@ -9,7 +9,7 @@ export function errorHandler(err: Error, req: Request, res: Response, next: Next
   if (err instanceof ApiError) {
     return res.status(err.statusCode).json({
       message: err.message,
-      errors: err.errors ?? []
+      errors: err.errors
     });
   }
 

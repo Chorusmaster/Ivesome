@@ -1,5 +1,5 @@
 import { api } from "@/api/axios";
-import type { RegisterPayload, LoginPayload } from "./types";
+import type { RegisterPayload, LoginPayload } from "./auth.types";
 
 export const getProfile = async () => {
   const { data } = await api.get("/auth/me");
