@@ -37,7 +37,7 @@ export async function loginUser(
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new ApiError(422, "Invalid credentials", {password: 'Password or email is invalid'});
+    throw new ApiError(422, "Password or email is invalid");
   }
 
   const isPasswordValid = await bcrypt.compare(
@@ -46,7 +46,7 @@ export async function loginUser(
   );
 
   if (!isPasswordValid) {
-    throw new ApiError(422, "Invalid credentials", {password: 'Password or email is invalid'});
+    throw new ApiError(422, "Password or email is invalid");
   }
 
   const token = generateToken(
