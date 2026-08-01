@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import { logout } from "@/features/auth/auth.api";
 import { useNavigate } from "react-router-dom";
 
+import Logo from "@/assets/logo.svg?react";
+import SearchIcon from "@/assets/search.svg?react";
+
 function Navbar() {
 
   const navigate = useNavigate();
@@ -12,9 +15,25 @@ function Navbar() {
   }
 
   return (
-    <nav className="px-8 py-2 w-screen flex justify-between items-center bg-surface shadow-sm">
-      <Link to="/"><img src="/full_logo.svg" className="h-8 mb-2"></img></Link>
-      <button onClick={handleLogout} className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2">Log out</button>
+    <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm">
+      <div className="flex gap-2 py-2 items-center">
+        <Link to="/"><Logo className="size-8"></Logo></Link>
+        <div className="text-2xl font-bold">Ivesome</div>
+        <div className="flex px-8 gap-8 items-center">
+          <Link to="/" className="text-primary font-button">Home</Link>
+          <Link to="/" className="text-muted font-button">Search</Link>
+          <Link to="/" className="text-muted font-button">Dashboard</Link>
+        </div>
+      </div>
+      <div className="flex gap-4">
+        <div className="bg-background rounded-input border border-border w-72 flex items-center">
+          <SearchIcon className="w-4 h-4 ml-4 mr-3 text-muted"></SearchIcon>
+          <input placeholder="Search ideas..." className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"></input>
+        </div>
+        <button className="py-2 px-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-button">+ New idea</button>
+        <div className="rounded-full bg-accent text-white text-sm font-bold px-2 flex justify-center items-center">MK</div>
+        <button onClick={handleLogout} className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2 hidden">Log out</button>
+      </div>
     </nav>
   )
 }
