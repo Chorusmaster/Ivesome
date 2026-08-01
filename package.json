@@ -17,6 +17,7 @@
   "license": "ISC",
   "homepage": "https://github.com/Chorusmaster/Ivesome#readme",
   "devDependencies": {
-    "concurrently": "^10.0.3"
+    "concurrently": "^10.0.3",
+    "vite-plugin-svgr": "^5.2.0"
   }
 }
