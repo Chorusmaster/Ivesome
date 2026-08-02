@@ -7,6 +7,8 @@ import FormLayout from "@/layouts/FormLayout";
 import LoginPage from "@/pages/LoginPage.tsx";
 import RegisterPage from "@/pages/RegisterPage.tsx";
 import HomePage from "@/pages/HomePage.tsx";
+import SearchPage from "@/pages/SearchPage";
+import DashboardPage from "@/pages/DashboardPage";
 
 import { authLoader } from "./auth.loader";
 
@@ -22,6 +24,14 @@ export const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
+          },
+          {
+            path: "search",
+            element: <SearchPage />,
+          },
+          {
+            path: "dashboard",
+            element: <DashboardPage />,
           },
         ],
       },

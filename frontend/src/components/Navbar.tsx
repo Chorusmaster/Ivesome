@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "@/features/auth/auth.api";
-import { useNavigate } from "react-router-dom";
 
 import Logo from "@/assets/logo.svg?react";
 import SearchIcon from "@/assets/search.svg?react";
@@ -8,6 +7,7 @@ import SearchIcon from "@/assets/search.svg?react";
 function Navbar() {
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
@@ -20,9 +20,9 @@ function Navbar() {
         <Link to="/"><Logo className="size-8"></Logo></Link>
         <div className="text-2xl font-bold">Ivesome</div>
         <div className="flex px-8 gap-8 items-center">
-          <Link to="/" className="text-primary font-button">Home</Link>
-          <Link to="/" className="text-muted font-button">Search</Link>
-          <Link to="/" className="text-muted font-button">Dashboard</Link>
+          <Link to="/" className={`${location.pathname == "/" ? "text-primary" : "text-muted"} font-button`}>Home</Link>
+          <Link to="/search" className={`${location.pathname == "/search" ? "text-primary" : "text-muted"} font-button`}>Search</Link>
+          <Link to="/dashboard" className={`${location.pathname == "/dashboard" ? "text-primary" : "text-muted"} font-button`}>Dashboard</Link>
         </div>
       </div>
       <div className="flex gap-4">
