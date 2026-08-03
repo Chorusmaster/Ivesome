@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "@/features/auth/auth.api";
 
 import Logo from "@/assets/logo.svg?react";
-import SearchIcon from "@/assets/search.svg?react";
+import SearchIcon from "@/assets/icons/search.svg?react";
 
 function Navbar() {
 
@@ -15,7 +15,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm">
+    <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm select-none">
       <div className="flex gap-2 py-2 items-center">
         <Link to="/"><Logo className="size-8"></Logo></Link>
         <div className="text-2xl font-bold">Ivesome</div>

@@ -1,3 +1,8 @@
+import StarIcon from "@/assets/icons/star.svg?react";
+import StarIconFill from "@/assets/icons/star-fill.svg?react";
+import CommentIcon from "@/assets/icons/comment.svg?react";
+import ClockIcon from "@/assets/icons/clock.svg?react";
+
 function SearchPage() {
   return (
     <div>
@@ -6,10 +11,10 @@ function SearchPage() {
 
       <div className="flex justify-between items-end mt-4">
         <div className="flex gap-2">
-          <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer">All</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border">Ideas</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border">Startups</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border">People</button>
+          <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer select-none">All</button>
+          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border select-none">Ideas</button>
+          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border select-none">Startups</button>
+          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border select-none">People</button>
         </div>
         <div>Sorted: <span className="font-bold">By rating</span></div>
       </div>
@@ -18,7 +23,7 @@ function SearchPage() {
         <div className="col-span-3">
           <div className="bg-surface border border-border rounded-card shadow-card p-6 flex gap-4">
             <div>
-              <div className="w-16 h-16 border-3 border-primary bg-primary-light rounded-xl flex items-center justify-center text-heading font-heading text-primary">NU</div>
+              <div className="w-16 h-16 border-3 border-primary bg-primary-light rounded-xl flex items-center justify-center text-heading font-heading text-primary select-none">NU</div>
             </div>
 
             <div>
@@ -35,12 +40,51 @@ function SearchPage() {
                 <div className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">#saas</div>
                 <div className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">#b2b</div>
               </div>
+
+              <div className="flex justify-between mt-4">
+                <div className="flex gap-4 items-center">
+                  <div className="flex">
+                    <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center select-none">MK</div>
+                    <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">MD</div>
+                    <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">YB</div>
+                    <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">+2</div>
+                  </div>
+                  <div className="text-muted text-sm">Team formation</div>
+                </div>
+
+                <div className="flex gap-4">
+                  <div className="flex gap-1 items-center text-text-secondary">
+                    <button><StarIcon /></button>
+                    142
+                  </div>
+                  <div className="flex gap-1 items-center text-text-secondary">
+                    <button><CommentIcon /></button>
+                    38
+                  </div>
+                  <div className="flex gap-1 items-center text-text-secondary">
+                    <ClockIcon />
+                    3 hours ago
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
         <div>
           <div className="bg-surface border border-border rounded-card shadow-card p-4">
-            No filters yet
+            <h2 className="font-medium text-subheading mb-3">Filters</h2>
+            <div className="flex items-center gap-2 font-medium">
+              <input id="all_filters" type="checkbox" className="size-4 accent-primary"></input>
+              <label htmlFor="all_filters">All (15)</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input id="in_development_filter" name="in_development" type="checkbox" className="size-4 accent-primary"></input>
+              <label htmlFor="in_development_filter">In development (10)</label>
+            </div>
+            <div className="flex items-center gap-2">
+              <input id="team_formation_filter" name="team_formation" type="checkbox" className="size-4 accent-primary"></input>
+              <label htmlFor="team_formation_filter">Team formation (5)</label>
+            </div>
           </div>
         </div>
       </div>
