@@ -13,3 +13,8 @@ export async function connectDatabase() {
     process.exit(1);
   }
 }
+
+export async function disconnectDatabase() {
+  await mongoose.disconnect();
+  console.log("MongoDB disconnected");
+}
