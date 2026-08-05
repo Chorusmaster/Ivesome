@@ -1,12 +1,20 @@
+import { formatDistanceToNowStrict } from "date-fns";
+import { enUS } from "date-fns/locale";
 import Card from "@/shared/ui/Card";
 import { Triangle, MessageCircle, Clock } from 'lucide-react';
 import DiscoveryCardLogo from "./DiscoveryCardLogo";
 
 type DiscoveryCardProps = {
+  title: string;
+  description: string;
+  tags: Array<string>;
+  upvotes: number;
+  comments: number;
+  publishedAt: Date;
   type?: "idea" | "project";
 }
 
-function DiscoveryCard({ type = "idea" }: DiscoveryCardProps) {
+function DiscoveryCard({ title, description, tags=[], upvotes, comments, publishedAt, type = "idea" }: DiscoveryCardProps) {
   return (
     <Card hoverable>
       <div className="flex gap-4">
@@ -15,8 +23,8 @@ function DiscoveryCard({ type = "idea" }: DiscoveryCardProps) {
         <div className="min-w-0">
           <div className="flex pb-4 justify-between items-start">
             <div className="w-[90%]">
-              <h2 className={`font-heading text-heading cursor-pointer mb-3 ${type == "idea" ? "hover:text-text-accent" : "hover:text-primary"} transition`}>Nudge — a habit tracker for remote development teams</h2>
-              <div className="text-text-secondary">A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings.</div>
+              <h2 className={`font-heading text-heading cursor-pointer mb-3 ${type == "idea" ? "hover:text-text-accent" : "hover:text-primary"} transition`}>{title}</h2>
+              <div className="text-text-secondary">{description}</div>
             </div>
             <div className={`rounded-full ${type === "idea" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}>
               {type === "idea" ? "Idea" : "Project"}
@@ -24,9 +32,11 @@ function DiscoveryCard({ type = "idea" }: DiscoveryCardProps) {
           </div>
 
           <div className="flex gap-2">
-            <div className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">#productivity</div>
-            <div className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">#saas</div>
-            <div className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">#b2b</div>
+            {tags.map((tag) => (
+              <div key={tag} className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">
+                #{tag}
+              </div>
+            ))}
           </div>
 
           <hr className="border-border mt-6 mb-6"></hr>
@@ -45,15 +55,15 @@ function DiscoveryCard({ type = "idea" }: DiscoveryCardProps) {
             <div className="flex gap-4">
               <div className="flex gap-1 items-center text-text-secondary">
                 <button><Triangle size={16} /></button>
-                142
+                {upvotes}
               </div>
               <div className="flex gap-1 items-center text-text-secondary">
                 <button><MessageCircle size={16} /></button>
-                38
+                {comments}
               </div>
               <div className="flex gap-1 items-center text-text-secondary">
                 <Clock size={16} />
-                3 hours ago
+                {formatDistanceToNowStrict(publishedAt, { locale: enUS, addSuffix: true })}
               </div>
             </div>
           </div>
