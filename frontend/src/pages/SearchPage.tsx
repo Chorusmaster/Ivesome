@@ -3,7 +3,7 @@ import FiltersCard from "@/features/search/ui/FiltersCard";
 
 function SearchPage() {
   return (
-    <div>
+    <div className="main-container-narrow">
       <h1 className="font-heading pb-2 text-text-primary text-title">Search ideas</h1>
       <div className="text-text-secondary">Formed based on your preferences and interactions with the platform</div>
 
@@ -17,9 +17,10 @@ function SearchPage() {
         <div>Sorted: <span className="font-bold">By rating</span></div>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 mt-8 mb-16">
+      <div className="grid grid-cols-4 gap-4 mt-8">
         <div className="col-span-3 flex flex-col gap-6">
-          <DiscoveryCard 
+          <DiscoveryCard
+            slug="nudge" 
             title="Nudge — a habit tracker for remote development teams"
             description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
             tags={["productivity", "saas", "b2b"]}
@@ -30,6 +31,7 @@ function SearchPage() {
           >
           </DiscoveryCard>
           <DiscoveryCard 
+            slug="nudge" 
             title="Nudge — a habit tracker for remote development teams"
             description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
             tags={["productivity", "saas", "b2b"]}
@@ -40,6 +42,7 @@ function SearchPage() {
           >
           </DiscoveryCard>
           <DiscoveryCard 
+            slug="nudge" 
             title="Nudge — a habit tracker for remote development teams"
             description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
             tags={["productivity", "saas", "b2b"]}
@@ -50,9 +53,9 @@ function SearchPage() {
           >
           </DiscoveryCard>
         </div>
-        <div>
+        <aside>
           <FiltersCard></FiltersCard>
-        </div>
+        </aside>
       </div>
     </div>
     );

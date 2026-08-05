@@ -2,9 +2,12 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { enUS } from "date-fns/locale";
 import Card from "@/shared/ui/Card";
 import { Triangle, MessageCircle, Clock } from 'lucide-react';
-import DiscoveryCardLogo from "./DiscoveryCardLogo";
+import ItemLogo from "../../../shared/ui/ItemLogo";
+import { Link } from "react-router-dom";
+import Tags from "@/shared/ui/Tags";
 
 type DiscoveryCardProps = {
+  slug: string;
   title: string;
   description: string;
   tags: Array<string>;
@@ -14,16 +17,20 @@ type DiscoveryCardProps = {
   type?: "idea" | "project";
 }
 
-function DiscoveryCard({ title, description, tags=[], upvotes, comments, publishedAt, type = "idea" }: DiscoveryCardProps) {
+function DiscoveryCard({ slug, title, description, tags=[], upvotes, comments, publishedAt, type = "idea" }: DiscoveryCardProps) {
   return (
     <Card hoverable>
       <div className="flex gap-4">
-        <DiscoveryCardLogo type={type}></DiscoveryCardLogo>
+        <ItemLogo type={type}></ItemLogo>
 
         <div className="min-w-0">
           <div className="flex pb-4 justify-between items-start">
             <div className="w-[90%]">
-              <h2 className={`font-heading text-heading cursor-pointer mb-3 ${type == "idea" ? "hover:text-text-accent" : "hover:text-primary"} transition`}>{title}</h2>
+              <Link to={`/project/${slug}`}>
+                <h2 className={`font-heading text-heading cursor-pointer mb-3 ${type == "idea" ? "hover:text-text-accent" : "hover:text-primary"} transition`}>
+                  {title}
+                </h2>
+              </Link>
               <div className="text-text-secondary">{description}</div>
             </div>
             <div className={`rounded-full ${type === "idea" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}>
@@ -31,13 +38,7 @@ function DiscoveryCard({ title, description, tags=[], upvotes, comments, publish
             </div>
           </div>
 
-          <div className="flex gap-2">
-            {tags.map((tag) => (
-              <div key={tag} className="rounded-md text-sm px-2 py-1 font-mono text-muted bg-background border border-border">
-                #{tag}
-              </div>
-            ))}
-          </div>
+          <Tags list={tags}></Tags>
 
           <hr className="border-border mt-6 mb-6"></hr>
 

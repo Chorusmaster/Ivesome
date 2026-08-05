@@ -16,7 +16,7 @@ function Navbar() {
   }
 
   return (
-    <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm select-none">
+    <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm select-none border-b border-border">
       <div className="flex gap-2 py-2 items-center">
         <Link to="/"><Logo className="size-8"></Logo></Link>
         <div className="text-2xl font-bold">Ivesome</div>
@@ -31,7 +31,7 @@ function Navbar() {
           <Search size={18} className="ml-4 mr-3 text-muted"></Search>
           <input placeholder="Search ideas..." className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"></input>
         </div>
-        <button className="py-2 px-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-button">+ New idea</button>
+        <button className="button text-white bg-primary hover:bg-primary-hover">+ New idea</button>
         <Avatar name="Anonymous User" theme="accent" />
         <button onClick={handleLogout} className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2 hidden">Log out</button>
       </div>

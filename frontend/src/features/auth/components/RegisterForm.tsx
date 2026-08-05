@@ -64,22 +64,22 @@ function RegisterForm() {
         <div className="flex flex-col gap-2">
           <label htmlFor="email">Email</label>
           <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-error">{emailError}</div>
+          <div className="text-danger">{emailError}</div>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="password">Password</label>
           <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-error">{passwordError}</div>
+          <div className="text-danger">{passwordError}</div>
         </div>
         <div className="flex flex-col gap-2">
           <label htmlFor="password">Confirm password</label>
           <input type="password" id="password" name="password" onChange={(e) => setPasswordConfirm(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-error">{passwordConfirmError}</div>
+          <div className="text-danger">{passwordConfirmError}</div>
         </div>
       </div>
 
       <div className="mt-6">
-        <div className="text-error">{generalError}</div>
+        <div className="text-danger">{generalError}</div>
         <input type="submit" value="Create account" className="bg-primary hover:bg-primary-hover text-white w-full py-2 mt-2 rounded-button"></input>
         <div className="mt-4">Already have an account? <Link to="/login" className='cursor-pointer text-primary hover:text-primary-hover font-button'>Log in</Link></div>
       </div>
