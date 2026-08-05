@@ -9,6 +9,7 @@ import RegisterPage from "@/pages/RegisterPage.tsx";
 import HomePage from "@/pages/HomePage.tsx";
 import SearchPage from "@/pages/SearchPage";
 import DashboardPage from "@/pages/DashboardPage";
+import ProjectPage from "@/pages/ProjectPage";
 
 import { authLoader } from "./auth.loader";
 
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
           {
             path: "dashboard",
             element: <DashboardPage />,
+          },
+          {
+            path: "project/:slug",
+            element: <ProjectPage />,
           },
         ],
       },

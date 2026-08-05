@@ -5,7 +5,7 @@ function App() {
 
   return (
     <>
-      <main className="flex-1 bg-background px-32 pt-16">
+      <main className="flex-1 bg-background">
         <Outlet />
       </main>
       <Footer />

@@ -58,17 +58,17 @@ function LoginForm() {
         <div className="flex flex-col">
           <label htmlFor="email mb-2">Email</label>
           <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-error">{emailError}</div>
+          <div className="text-danger">{emailError}</div>
         </div>
         <div className="flex flex-col">
           <label htmlFor="password mb-2">Password</label>
           <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-error">{passwordError}</div>
+          <div className="text-danger">{passwordError}</div>
         </div>
       </div>
 
       <div className="mt-6">
-        <div className="text-error">{generalError}</div>
+        <div className="text-danger">{generalError}</div>
         <input type="submit" value="Log in" className="bg-primary hover:bg-primary-hover text-white w-full py-2 mt-2 rounded-button"></input>
         <div className="mt-4">Dont have an account? <Link to="/register" className='cursor-pointer text-primary hover:text-primary-hover font-button'>Create one</Link> now</div>
       </div>

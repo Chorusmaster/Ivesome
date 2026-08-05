@@ -7,10 +7,13 @@
   --color-primary-light: #ecfeff; /* cyan-50 */
 
   --color-accent: #f59e0b; /* amber-500 */
+  --color-accent-hover: #d97706; /* amber-600 */
   --color-accent-light: #fef3c6; /* amber-100 */
 
   --color-success: #10b981; /* emerald-500 */
-  --color-error: #ef4444; /* red-500 */
+  --color-success-hover: #059669; /* emerald-600 */
+  --color-danger: #ef4444; /* red-500 */
+  --color-danger-hover: #dc2626; /* red-600 */
 
   --color-background: #f1f5f9; /* slate-100 */
   --color-surface: #ffffff;
@@ -70,4 +73,24 @@
 
 body {
   margin: 0;
+}
+
+.main-container {
+  @apply px-8 py-8;
+}
+
+.main-container-narrow {
+  @apply px-32 py-16;
+}
+
+.button {
+  @apply py-2 px-4 font-button rounded-button;
+}
+
+.heading {
+  @apply text-heading font-heading mb-4;
+}
+
+.subheading {
+  @apply text-subheading font-semibold mb-4;
 }
