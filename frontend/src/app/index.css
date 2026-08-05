@@ -15,10 +15,11 @@
   --color-background: #f1f5f9; /* slate-100 */
   --color-surface: #ffffff;
 
-  --color-border: #e2e8f0; /* slate-200 */ 
+  --color-border: #cad5e2; /* slate-300 */ 
 
   --color-text-primary: #0f172a; /* slate-900 */
   --color-text-secondary: #45556c; /* slate-600 */
+  --color-text-accent: #d97706; /* amber-600 */
 
   --color-muted: #62748e; /* slate-500 */
 

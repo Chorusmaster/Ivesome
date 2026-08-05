@@ -2,7 +2,8 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { logout } from "@/features/auth/auth.api";
 
 import Logo from "@/assets/logo.svg?react";
-import SearchIcon from "@/assets/icons/search.svg?react";
+import { Search } from "lucide-react";
+import Avatar from "@/shared/ui/Avatar";
 
 function Navbar() {
 
@@ -27,11 +28,11 @@ function Navbar() {
       </div>
       <div className="flex gap-4">
         <div className="bg-background rounded-input border border-border w-72 flex items-center">
-          <SearchIcon className="w-4 h-4 ml-4 mr-3 text-muted"></SearchIcon>
+          <Search size={18} className="ml-4 mr-3 text-muted"></Search>
           <input placeholder="Search ideas..." className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"></input>
         </div>
         <button className="py-2 px-4 bg-primary hover:bg-primary-hover text-white font-bold rounded-button">+ New idea</button>
-        <div className="rounded-full bg-accent text-white text-sm font-bold px-2 flex justify-center items-center">MK</div>
+        <Avatar name="Anonymous User" theme="accent" />
         <button onClick={handleLogout} className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2 hidden">Log out</button>
       </div>
     </nav>
