@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import RootLayout from "@/layouts/RootLayout";
-import MainLayout from "@/layouts/MainLayout";
-import FormLayout from "@/layouts/FormLayout";
+import RootLayout from "@/app/layouts/root-layout";
+import MainLayout from "@/app/layouts/main-layout";
+import FormLayout from "@/app/layouts/form-layout";
 
-import LoginPage from "@/pages/LoginPage.tsx";
-import RegisterPage from "@/pages/RegisterPage.tsx";
-import HomePage from "@/pages/HomePage.tsx";
-import SearchPage from "@/pages/SearchPage";
-import DashboardPage from "@/pages/DashboardPage";
-import ProjectPage from "@/pages/ProjectPage";
+import LoginPage from "@/pages/login-page";
+import RegisterPage from "@/pages/register-page";
+import HomePage from "@/pages/home-page";
+import SearchPage from "@/pages/search-page";
+import DashboardPage from "@/pages/dashboard-page";
+import ProjectPage from "@/pages/project-page";
 
 import { authLoader } from "./auth.loader";
 

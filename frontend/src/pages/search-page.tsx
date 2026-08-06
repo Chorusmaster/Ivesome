@@ -1,5 +1,5 @@
-import DiscoveryCard from "@/features/search/ui/DiscoveryCard";
-import FiltersCard from "@/features/search/ui/FiltersCard";
+import DiscoveryCard from "@/features/search/ui/discovery-card";
+import FiltersCard from "@/features/search/ui/filters-card";
 
 function SearchPage() {
   return (
