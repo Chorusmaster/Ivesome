@@ -2,13 +2,13 @@ import { Lightbulb, BriefcaseBusiness } from "lucide-react";
 
 type ItemLogoProps = {
   type?: "idea" | "project";
-  size?: "md" | "xl";
+  size?: "md" | "lg";
   imageUrl?: string;
 };
 
 function ItemLogo({ type="idea", size="md", imageUrl }: ItemLogoProps) {
   return (
-    <div className={`${type == "idea" ? "border-accent bg-accent-light text-accent" : "border-primary bg-primary-light text-primary"} ${size == "md" ? "size-16" : "size-36"} shrink-0 border-3 rounded-xl flex items-center justify-center font-heading select-none`}>
+    <div className={`${type == "idea" ? "border-accent bg-accent-light text-accent" : "border-primary bg-primary-light text-primary"} ${size == "md" ? "size-16" : "size-28"} shrink-0 border-3 rounded-xl flex items-center justify-center font-heading select-none`}>
       {imageUrl ? (
         <img
           src={imageUrl}

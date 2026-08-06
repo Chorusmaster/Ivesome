@@ -1,4 +1,4 @@
-import Footer from "@/components/Footer";
+import Footer from "@/shared/ui/footer";
 import { Outlet } from "react-router-dom";
 
 function App() {

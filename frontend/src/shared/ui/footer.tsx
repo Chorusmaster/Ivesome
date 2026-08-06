@@ -6,7 +6,7 @@ function Footer() {
     year === 2026 ? "2026" : `2026 - ${year}`;
 
   return (
-    <footer className="bg-surface text-text-secondary px-24 py-6 flex-0 flex justify-between">
+    <footer className="bg-surface text-text-secondary px-24 py-6 flex-0 flex justify-between border-t border-border">
       <div>
         © {copyright} Ivesome
       </div>
