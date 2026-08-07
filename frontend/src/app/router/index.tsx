@@ -10,6 +10,7 @@ import HomePage from "@/pages/home-page";
 import SearchPage from "@/pages/search-page";
 import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/pages/project-page";
+import ProfilePage from "@/pages/profile-page";
 
 import { authLoader } from "./auth.loader";
 
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
           {
             path: "project/:slug",
             element: <ProjectPage />,
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
           },
         ],
       },

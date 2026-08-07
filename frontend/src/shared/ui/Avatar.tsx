@@ -1,6 +1,7 @@
 const sizes = {
   xs: "size-8 text-xs",
   md: "size-10 text-sm",
+  lg: "size-20 text-2xl",
 } as const;
 
 const themes = {

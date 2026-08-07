@@ -32,7 +32,7 @@ function DiscoveryCard({
       <div className="flex gap-4">
         <ItemLogo type={type}></ItemLogo>
 
-        <div className="min-w-0">
+        <div className="min-w-0 w-full">
           <div className="flex pb-4 justify-between items-start">
             <div className="w-[90%]">
               <Link to={`/project/${slug}`}>

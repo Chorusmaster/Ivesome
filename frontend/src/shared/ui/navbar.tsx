@@ -53,7 +53,9 @@ function Navbar() {
         <button className="button text-white bg-primary hover:bg-primary-hover">
           + New idea
         </button>
-        <Avatar name="Anonymous User" theme="accent" />
+        <Link to="/profile">
+          <Avatar name="Anonymous User" theme="accent" />
+        </Link>
         <button
           onClick={handleLogout}
           className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2 hidden"
