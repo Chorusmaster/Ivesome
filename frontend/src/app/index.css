@@ -89,7 +89,7 @@ body {
 }
 
 .heading {
-  @apply text-heading font-heading mb-4;
+  @apply text-heading font-heading mb-6;
 }
 
 .subheading {

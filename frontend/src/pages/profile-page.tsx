@@ -14,7 +14,6 @@ import {
 
 import Avatar from "@/shared/ui/avatar";
 import Card from "@/shared/ui/card";
-import Tags from "@/shared/ui/tags";
 import DiscoveryCard from "@/features/search/ui/discovery-card";
 
 const profile = {

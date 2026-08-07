@@ -50,9 +50,9 @@ function Navbar() {
             className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
           ></input>
         </div>
-        <button className="button text-white bg-primary hover:bg-primary-hover">
+        <Link to="ideas/new" className="button text-white bg-primary hover:bg-primary-hover">
           + New idea
-        </button>
+        </Link>
         <Link to="/profile">
           <Avatar name="Anonymous User" theme="accent" />
         </Link>

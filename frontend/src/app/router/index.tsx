@@ -12,6 +12,8 @@ import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/pages/project-page";
 import ProfilePage from "@/pages/profile-page";
 
+import NewIdeaPage from "@/pages/idea-editor-page";
+
 import { authLoader } from "./auth.loader";
 
 export const router = createBrowserRouter([
@@ -42,6 +44,10 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "ideas/new",
+            element: <NewIdeaPage />,
           },
         ],
       },
