@@ -80,10 +80,13 @@ function ProfilePage() {
             </div>
           </div>
 
-          <button className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0">
+          <Link
+            to="/profile/edit"
+            className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0"
+          >
             <Pencil size={16} />
             Edit profile
-          </button>
+          </Link>
         </div>
       </div>
 

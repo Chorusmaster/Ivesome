@@ -17,10 +17,10 @@ function Navbar() {
   return (
     <nav className="px-16 py-2 w-screen flex justify-between items-center bg-surface shadow-sm select-none border-b border-border">
       <div className="flex gap-2 py-2 items-center">
-        <Link to="/">
+        <Link className="flex items-center gap-2" to="/">
           <Logo className="size-8"></Logo>
+          <div className="text-2xl font-bold">Ivesome</div>
         </Link>
-        <div className="text-2xl font-bold">Ivesome</div>
         <div className="flex px-8 gap-8 items-center">
           <Link
             to="/"

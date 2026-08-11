@@ -11,6 +11,7 @@ import SearchPage from "@/pages/search-page";
 import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/pages/project-page";
 import ProfilePage from "@/pages/profile-page";
+import ProfileEditPage from "@/pages/profile-edit-page";
 
 import NewIdeaPage from "@/pages/idea-editor-page";
 
@@ -44,6 +45,10 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "profile/edit",
+            element: <ProfileEditPage />,
           },
           {
             path: "ideas/new",
