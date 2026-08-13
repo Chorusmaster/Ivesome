@@ -1,6 +1,27 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser } from "./auth.service.js";
+import { registerUser, loginUser, refreshAccessToken, revokeSession } from "./auth.service.js";
 import { JWT_COOKIE_MAX_AGE } from "../../config/jwt.js";
+import { env } from "../../config/env.js";
+
+function setAuthCookies(
+  res: Response,
+  accessToken: string,
+  refreshToken: string
+) {
+  res.cookie("accessToken", accessToken, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    maxAge: env.accessExpirationTime,
+  });
+
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: false, //true for production
+    sameSite: "lax", //Block some authomatic cross-site requests for sequrity reasons
+    maxAge: env.refreshExpirationTime,
+  });
+}
 
 export async function login(
   req: Request,
@@ -11,14 +32,9 @@ export async function login(
     req.body.password
   );
 
-  res.cookie("token", result.token, {
-    httpOnly: true,
-    secure: false, //true for production
-    sameSite: "lax", //Block some authomatic cross-site requests for sequrity reasons
-    maxAge: JWT_COOKIE_MAX_AGE,
-  });
+  setAuthCookies(res, result.accessToken, result.refreshToken);
 
-  res.json(result);
+  res.json(result.user);
 }
 
 export async function register(
@@ -30,24 +46,54 @@ export async function register(
     req.body.password
   );
 
-  res.cookie("token", result.token, {
-    httpOnly: true,
-    secure: false, //true for production
-    sameSite: "strict",
-    maxAge: JWT_COOKIE_MAX_AGE,
-  });
+  setAuthCookies(res, result.accessToken, result.refreshToken);
 
-  res.json(result);
+  res.json(result.user);
 }
 
-export const profile = (req: Request, res: Response) => {
+export const me = (req: Request, res: Response) => {
   res.status(204).json(req.user);
 };
 
-export const logout = (req: Request, res: Response) => {
-  res.clearCookie("token");
+export async function logout (
+  req: Request, 
+  res: Response
+) {
+  const token = req.cookies.token;
+
+  if (!token) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  await revokeSession(token);
+
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
 
   res.json({
     message: "Logged out",
+  });
+};
+
+export async function refresh(
+  req: Request, 
+  res: Response
+) {
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  const { accessToken:newAccessToken, refreshToken:newRefreshToken } = await refreshAccessToken(refreshToken);
+
+  setAuthCookies(res, newAccessToken, newRefreshToken);
+
+  res.json({
+    message: "Session refreshed",
   });
 };

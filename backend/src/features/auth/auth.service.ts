@@ -1,10 +1,45 @@
 import bcrypt from "bcrypt";
-import { generateToken } from "../../utils/jwt.js";
+import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "./auth.tokens.js";
 import { ApiError } from "../../types/error.types.js";
+import crypto from "node:crypto";
+import type { UserData } from "../user/user.types.js";
+
 import {
+  getUserById,
   getUserByEmail,
   createUser,
 } from "../user/user.repository.js";
+import {
+  createRefreshSessionId,
+  createRefreshSession,
+  getRefreshSessionById,
+  revokeRefreshSession,
+} from "./refresh-session.repository.js";
+
+async function createAuthSession(user: UserData) {
+  const accessToken = generateAccessToken(
+    user.id,
+    user.role
+  );
+
+  const sessionId = createRefreshSessionId();
+
+  const refreshToken = generateRefreshToken(
+    user.id,
+    sessionId
+  );
+
+  await createRefreshSession(
+    sessionId,
+    user.id,
+    refreshToken
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+}
 
 export async function registerUser(
   email: string,
@@ -18,15 +53,13 @@ export async function registerUser(
 
   const user = await createUser(email, passwordHash);
 
-  const token = generateToken(
-    user._id.toString(),
-    user.role
-  );
+  const { accessToken, refreshToken } = await createAuthSession(user);
 
   return {
-    token,
+    accessToken,
+    refreshToken,
     user: {
-      id: user._id,
+      id: user.id,
       email: user.email,
       role: user.role,
     },
@@ -52,17 +85,73 @@ export async function loginUser(
     throw new ApiError(422, "Password or email is invalid");
   }
 
-  const token = generateToken(
-    user._id.toString(),
-    user.role
-  );
+  const { accessToken, refreshToken } = await createAuthSession(user);
 
   return {
-    token,
+    accessToken,
+    refreshToken,
     user: {
-      id: user._id,
+      id: user.id,
       email: user.email,
       role: user.role,
     },
   };
+}
+
+export async function refreshAccessToken(refreshToken: string) {
+  const tokenData = verifyRefreshToken(refreshToken);
+
+  const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+  const session = await getRefreshSessionById(tokenData.jti);
+
+  if (
+    tokenHash !== session?.tokenHash ||
+    session?.revokedAt ||
+    session.expiresAt < new Date()
+  ) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+
+  const user = await getUserById(tokenData.sub);
+  if (!user) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+
+  const { accessToken:newAccessToken, refreshToken:newRefreshToken } = await createAuthSession(user);
+
+  await revokeRefreshSession(
+    session.id
+  );
+
+  return {
+    accessToken: newAccessToken,
+    refreshToken: newRefreshToken,
+  };
+}
+
+export async function revokeSession(refreshToken: string) {
+  const tokenData = verifyRefreshToken(refreshToken);
+
+  const tokenHash = crypto
+      .createHash("sha256")
+      .update(refreshToken)
+      .digest("hex");
+
+  const session = await getRefreshSessionById(tokenData.jti);
+
+  if (
+    tokenHash !== session?.tokenHash ||
+    session?.revokedAt ||
+    session.expiresAt < new Date()
+  ) {
+    throw new ApiError(401, "Invalid refresh token");
+  }
+
+  await revokeRefreshSession(
+    session.id
+  );
 }

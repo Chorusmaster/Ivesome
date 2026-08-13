@@ -1,7 +1,14 @@
 import { Schema, model } from "mongoose";
 import { UserRole } from "../features/user/user.types.js";
 
-const userSchema = new Schema(
+export interface IUser {
+  email: string;
+  passwordHash: string;
+  role: UserRole;
+  isBlocked: boolean;
+}
+
+const userSchema = new Schema<IUser>(
   {
     email: {
       type: String,
@@ -32,4 +39,4 @@ const userSchema = new Schema(
   }
 );
 
-export const User = model("User", userSchema);
+export const User = model<IUser>("User", userSchema);

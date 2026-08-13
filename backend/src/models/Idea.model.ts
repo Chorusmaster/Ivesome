@@ -1,7 +1,17 @@
 import { Schema, model } from "mongoose";
 import { IdeaVisibility, IdeaStatus } from "../features/idea/idea.types.js";
+import { Types } from "mongoose";
 
-const ideaSchema = new Schema(
+export interface IIdea {
+  authorId: Types.ObjectId,
+  title: string,
+  shortDescription: string,
+  fullDescription?: string,
+  visibility: IdeaVisibility,
+  status: IdeaStatus,
+}
+
+const ideaSchema = new Schema<IIdea>(
   {
     authorId: {
       type: Schema.Types.ObjectId,
@@ -43,4 +53,4 @@ const ideaSchema = new Schema(
   }
 );
 
-export const Idea = model("Idea", ideaSchema);
+export const Idea = model<IIdea>("Idea", ideaSchema);

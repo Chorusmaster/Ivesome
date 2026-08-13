@@ -13,7 +13,17 @@ export interface CreateIdeaData {
   authorId: string;
   title: string;
   shortDescription: string;
-  fullDescription: string;
+  fullDescription?: string;
+  visibility: IdeaVisibility;
+  status: IdeaStatus;
+}
+
+export interface IdeaData {
+  id: string;
+  authorId: string;
+  title: string;
+  shortDescription: string;
+  fullDescription?: string | undefined;
   visibility: IdeaVisibility;
   status: IdeaStatus;
 }

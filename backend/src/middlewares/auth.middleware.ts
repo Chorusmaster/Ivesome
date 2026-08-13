@@ -1,50 +1,21 @@
 import type { Request, Response, NextFunction } from "express";
-import jwt from "jsonwebtoken";
-import { env } from "../config/env.js";
-import { jwtSchema } from "../features/auth/jwt.schema.js";
+import { verifyAccessToken } from "../features/auth/auth.tokens.js";
 
 export function authenticate(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  // Old code for Bearer token
-
-  // const authHeader = req.headers.authorization;
-
-  // if (!authHeader) {
-  //   return res.status(401).json({
-  //     message: "Unauthorized",
-  //   });
-  // }
-
-  // const [type, token] = authHeader.split(" ");
-
-  // if (type !== "Bearer" || !token) {
-  //   return res.status(401).json({
-  //     message: "Invalid authorization header",
-  //   });
-  // }
-
   try {
-    const token = req.cookies.token;
+    const accessToken = req.cookies.accessToken;
 
-    if (!token) {
+    if (!accessToken) {
       return res.status(401).json({
         message: "Unauthorized",
       });
     }
     
-    const payload = jwt.verify(
-      token,
-      env.jwtSecret
-    );
-
-    const payloadCheckResult = jwtSchema.safeParse(payload);
-    
-    if (!payloadCheckResult.success) {
-      return res.status(400).json("");
-    }
+    const payload = verifyAccessToken(accessToken)
 
     req.user = payload;
 
