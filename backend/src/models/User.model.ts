@@ -1,11 +1,11 @@
 import { Schema, model } from "mongoose";
-import { UserRole } from "../features/user/user.types.js";
+import { UserRole, UserStatus } from "../features/user/user.types.js";
 
 export interface IUser {
   email: string;
   passwordHash: string;
   role: UserRole;
-  isBlocked: boolean;
+  status: UserStatus; 
 }
 
 const userSchema = new Schema<IUser>(
@@ -28,11 +28,12 @@ const userSchema = new Schema<IUser>(
       default: UserRole.USER,
     },
 
-    isBlocked: {
-      type: Boolean,
+    status: {
+      type: String,
+      enum: Object.values(UserStatus),
       required: true,
-      default: false,
-    },
+      default: UserStatus.UNVERIFIED,
+    }
   },
   {
     timestamps: true,

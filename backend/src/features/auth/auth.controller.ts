@@ -1,6 +1,11 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser, refreshAccessToken, revokeSession } from "./auth.service.js";
-import { JWT_COOKIE_MAX_AGE } from "../../config/jwt.js";
+import { 
+  registerUser, 
+  loginUser, 
+  refreshAccessToken, 
+  revokeSession, 
+  verifyEmailVerificationToken 
+} from "./auth.service.js";
 import { env } from "../../config/env.js";
 
 function setAuthCookies(
@@ -97,3 +102,22 @@ export async function refresh(
     message: "Session refreshed",
   });
 };
+
+export async function verifyEmail(
+  req: Request,
+  res: Response
+) {
+  const { token } = req.params;
+
+  if (!token || typeof token !== "string") {
+    return res.status(400).json({
+      message: "Invalid token",
+    });
+  }
+
+  await verifyEmailVerificationToken(req.user, token);
+
+  res.json({
+    message: "Email verified",
+  });
+}

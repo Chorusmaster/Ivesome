@@ -2,18 +2,16 @@ export interface CreateUserData {
   email: string;
   passwordHash: string;
   role: UserRole;
-  isBlocked: boolean;
-}
-
-export interface UserData {
-  id: string;
-  email: string;
-  passwordHash: string;
-  role: UserRole;
-  isBlocked: boolean;
+  status: UserStatus;
 }
 
 export enum UserRole {
   USER = "USER",
   ADMIN = "ADMIN",
+}
+
+export enum UserStatus {
+  UNVERIFIED = "UNVERIFIED",
+  ACTIVE = "ACTIVE",
+  BLOCKED = "BLOCKED",
 }

@@ -2,7 +2,11 @@ import bcrypt from "bcrypt";
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "./auth.tokens.js";
 import { ApiError } from "../../types/error.types.js";
 import crypto from "node:crypto";
-import type { UserData } from "../user/user.types.js";
+import type { IUser } from "../../models/User.model.js";
+import type { HydratedDocument } from "mongoose";
+import { createToken, encryptToken, verifyToken } from "../../utils/verification-token.js";
+import { sendVerificationEmail } from "../email/email.servise.js";
+import { completeEmailVerification, createEmailVerificationToken, getValidEmailVerificationToken } from "./auth.repository.js";
 
 import {
   getUserById,
@@ -14,24 +18,26 @@ import {
   createRefreshSession,
   getRefreshSessionById,
   revokeRefreshSession,
-} from "./refresh-session.repository.js";
+} from "./auth.repository.js";
 
-async function createAuthSession(user: UserData) {
+async function createAuthSession(user: HydratedDocument<IUser>) {
+  const userId = user._id.toString();
+
   const accessToken = generateAccessToken(
-    user.id,
+    userId,
     user.role
   );
 
   const sessionId = createRefreshSessionId();
 
   const refreshToken = generateRefreshToken(
-    user.id,
+    userId,
     sessionId
   );
 
   await createRefreshSession(
     sessionId,
-    user.id,
+    userId,
     refreshToken
   );
 
@@ -53,13 +59,23 @@ export async function registerUser(
 
   const user = await createUser(email, passwordHash);
 
+  const verificationToken = createToken();
+  const hashedVerificationToken = encryptToken(verificationToken);
+
+  await createEmailVerificationToken(
+    user._id.toString(),
+    hashedVerificationToken
+  );
+
+  await sendVerificationEmail(email, verificationToken);
+
   const { accessToken, refreshToken } = await createAuthSession(user);
 
   return {
     accessToken,
     refreshToken,
     user: {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       role: user.role,
     },
@@ -91,7 +107,7 @@ export async function loginUser(
     accessToken,
     refreshToken,
     user: {
-      id: user.id,
+      id: user._id.toString(),
       email: user.email,
       role: user.role,
     },
@@ -124,7 +140,7 @@ export async function refreshAccessToken(refreshToken: string) {
   const { accessToken:newAccessToken, refreshToken:newRefreshToken } = await createAuthSession(user);
 
   await revokeRefreshSession(
-    session.id
+    session._id.toString()
   );
 
   return {
@@ -152,6 +168,22 @@ export async function revokeSession(refreshToken: string) {
   }
 
   await revokeRefreshSession(
-    session.id
+    session._id.toString()
   );
+}
+
+export async function verifyEmailVerificationToken(
+  userId: string,
+  token: string
+) {
+  const storedToken = await getValidEmailVerificationToken(userId);
+
+  if (
+    !storedToken ||
+    !verifyToken(token, storedToken.tokenHash)
+  ) {
+    throw new ApiError(401, "Invalid verification token");
+  }
+
+  await completeEmailVerification(userId, storedToken._id.toString());
 }
