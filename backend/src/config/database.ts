@@ -5,7 +5,7 @@ export async function connectDatabase() {
   console.log(env)
 
   try {
-    await mongoose.connect(env.mongoUri);
+    await mongoose.connect(env.databaseUrl);
 
     console.log("MongoDB connected");
   } catch (error) {

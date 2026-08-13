@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { UserRole } from "../features/auth/auth.types.js";
+import { UserRole } from "../features/user/user.types.js";
 
 const userSchema = new Schema(
   {

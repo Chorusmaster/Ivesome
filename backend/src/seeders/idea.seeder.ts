@@ -1,17 +1,17 @@
 import { makeIdea } from "../features/idea/idea.factory.js";
-import { User } from "../models/User.model.js";
-import { Idea } from "../models/Idea.model.js";
+import { createIdeas, deleteAllIdeas } from "../features/idea/idea.repository.js";
+import { getAllUsers } from "../features/user/user.repository.js";
 
 export async function seedIdeas() {
-  await Idea.deleteMany({});
+  await deleteAllIdeas();
 
-  let users = await User.find();
+  let users = await getAllUsers();
 
-  if (!users ||users.length === 0) {
+  if (!users || users.length === 0) {
     throw new Error("No users found in the database. Please seed users first.");
   }
 
-  await Idea.insertMany(
+  await createIdeas(
     await Promise.all(
       Array.from({ length: 10 }, async () => {
         const user = users[Math.floor(Math.random() * users.length)];

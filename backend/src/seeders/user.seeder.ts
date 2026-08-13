@@ -1,14 +1,14 @@
-import { makeUser } from "../features/auth/user.factory.js";
-import { User } from "../models/User.model.js";
+import { makeUser } from "../features/user/user.factory.js";
+import { createUsers, deleteAllUsers } from "../features/user/user.repository.js";
 
 export async function seedUsers() {
-  await User.deleteMany({});
+  await deleteAllUsers();
 
-  await User.insertMany(
-      await Promise.all(
-        Array.from({ length: 10 }, async () => {
-          return makeUser({password: "password"});
-        })
-      )
-    );
+  await createUsers(
+    await Promise.all(
+      Array.from({ length: 10 }, async () => {
+        return makeUser({ password: "password" });
+      }),
+    ),
+  );
 }
