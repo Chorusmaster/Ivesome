@@ -2,18 +2,11 @@ export interface CreateUserData {
   email: string;
   passwordHash: string;
   role: UserRole;
-  isBlocked: boolean;
+  status: UserStatus;
 }
 
-export interface UserData {
-  id: string;
-  email: string;
-  passwordHash: string;
-  role: UserRole;
-  isBlocked: boolean;
-}
+export const USER_ROLE_VALUES = ["USER", "ADMIN"] as const;
+export type UserRole = typeof USER_ROLE_VALUES[number];
 
-export enum UserRole {
-  USER = "USER",
-  ADMIN = "ADMIN",
-}
+export const USER_STATUS_VALUES = ["UNVERIFIED", "ACTIVE", "BLOCKED"] as const;
+export type UserStatus = typeof USER_STATUS_VALUES[number];

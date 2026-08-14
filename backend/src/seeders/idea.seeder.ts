@@ -21,7 +21,7 @@ export async function seedIdeas() {
         }
 
         return makeIdea({
-          authorId: user.id,
+          authorId: user._id.toString(),
         });
       })
     )

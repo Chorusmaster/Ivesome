@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import type { SignOptions } from "jsonwebtoken";
 
 function requiredEnv(name: string): string {
   const value = process.env[name];
@@ -45,9 +44,20 @@ dotenv.config();
 export const env = {
   port: requiredEnv("PORT") || 5000,
   databaseUrl: requiredEnv("DATABASE_URL"),
+  frontendUrl: requiredEnv("FRONTEND_URL"),
+
   jwtSecret: requiredEnv("JWT_SECRET"),
   accessJwtExpiresIn: validateExpiresIn(requiredEnv("ACCESS_JWT_EXPIRES_IN")),
   refreshJwtExpiresIn: validateExpiresIn(requiredEnv("REFRESH_JWT_EXPIRES_IN")),
   accessExpirationTime: durationToMs(validateExpiresIn(requiredEnv("ACCESS_JWT_EXPIRES_IN"))),
   refreshExpirationTime: durationToMs(validateExpiresIn(requiredEnv("REFRESH_JWT_EXPIRES_IN"))),
+  emailVerificationExpirationTime: durationToMs(validateExpiresIn(requiredEnv("EMAIL_VERIFICATION_EXPIRES_IN"))),
+  passwordResetExpirationTime: durationToMs(validateExpiresIn(requiredEnv("PASSWORD_RESET_EXPIRES_IN"))),
+
+  SMTPPort: requiredEnv("SMTP_PORT"),
+  SMTPHost: requiredEnv("SMTP_HOST"),
+  SMTPUser: requiredEnv("SMTP_USER"),
+  SMTPPassword: requiredEnv("SMTP_PASSWORD"),
+  SMTPSenderName: requiredEnv("SMTP_SENDER_NAME"),
+  SMTPSenderEmail: requiredEnv("SMTP_SENDER_EMAIL"),
 };

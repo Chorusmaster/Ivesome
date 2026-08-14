@@ -2,7 +2,7 @@ import LoginForm from "@/features/auth/ui/login-form";
 
 function LoginPage() {
   return (
-    <div>
+    <div className="w-full max-w-md">
       <LoginForm />
     </div>
   );

@@ -1,3 +1,15 @@
+export type User = {
+  id: string;
+  email: string;
+  role: "USER" | "ADMIN";
+  status: "UNVERIFIED" | "ACTIVE" | "BLOCKED";
+  profile?: {
+    firstName: string,
+    lastName: string,
+    avatar: string
+  };
+};
+
 export type LoginPayload = {
   email: string,
   password: string

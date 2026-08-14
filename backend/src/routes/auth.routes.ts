@@ -1,8 +1,23 @@
 import { Router } from "express";
-import { login, register, me, logout, refresh } from "../features/auth/auth.controller.js";
+import { 
+  login, 
+  register, 
+  me, 
+  logout, 
+  refresh, 
+  verifyEmail,
+  forgotPassword,
+  changePassword
+} from "../features/auth/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { registerSchema } from "../features/auth/auth.schema.js";
+import { 
+  emailVerificationSchema, 
+  loginSchema, 
+  forgotPasswordSchema, 
+  passwordResetSchema, 
+  registerSchema 
+} from "../features/auth/auth.schema.js";
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -15,7 +30,14 @@ router.post(
   register
 );
 
-router.post("/login", login);
+router.post(
+  "/login", 
+  validate(loginSchema),
+  login
+);
+
+router.post("/logout", logout);
+router.post("/refresh", refresh);
 
 router.get(
   "/me",
@@ -23,8 +45,22 @@ router.get(
   me
 );
 
-router.post("/logout", logout);
+router.post(
+  "/verify-email", 
+  validate(emailVerificationSchema),
+  verifyEmail
+);
 
-router.post("/refresh", refresh);
+router.post(
+  "/forgot-password", 
+  validate(forgotPasswordSchema),
+  forgotPassword
+);
+
+router.post(
+  "/reset-password", 
+  validate(passwordResetSchema),
+  changePassword
+);
 
 export default router;

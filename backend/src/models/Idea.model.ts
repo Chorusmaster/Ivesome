@@ -1,14 +1,21 @@
 import { Schema, model } from "mongoose";
-import { IdeaVisibility, IdeaStatus } from "../features/idea/idea.types.js";
+import {
+  IDEA_VISIBILITY_VALUES,
+  IDEA_STATUS_VALUES,
+} from "../features/idea/idea.types.js";
+import type {
+  IdeaVisibility,
+  IdeaStatus,
+} from "../features/idea/idea.types.js";
 import { Types } from "mongoose";
 
 export interface IIdea {
-  authorId: Types.ObjectId,
-  title: string,
-  shortDescription: string,
-  fullDescription?: string,
-  visibility: IdeaVisibility,
-  status: IdeaStatus,
+  authorId: Types.ObjectId;
+  title: string;
+  shortDescription: string;
+  fullDescription?: string;
+  visibility: IdeaVisibility;
+  status: IdeaStatus;
 }
 
 const ideaSchema = new Schema<IIdea>(
@@ -36,21 +43,21 @@ const ideaSchema = new Schema<IIdea>(
 
     visibility: {
       type: String,
-      enum: Object.values(IdeaVisibility),
+      enum: IDEA_VISIBILITY_VALUES,
       required: true,
-      default: IdeaVisibility.PRIVATE,
+      default: "PRIVATE",
     },
 
     status: {
       type: String,
-      enum: Object.values(IdeaStatus),
+      enum: IDEA_STATUS_VALUES,
       required: true,
-      default: IdeaStatus.DRAFT,
+      default: "DRAFT",
     },
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 export const Idea = model<IIdea>("Idea", ideaSchema);

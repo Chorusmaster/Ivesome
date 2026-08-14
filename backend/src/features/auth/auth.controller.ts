@@ -1,6 +1,13 @@
 import type { Request, Response } from "express";
-import { registerUser, loginUser, refreshAccessToken, revokeSession } from "./auth.service.js";
-import { JWT_COOKIE_MAX_AGE } from "../../config/jwt.js";
+import { 
+  registerUser, 
+  loginUser, 
+  refreshAccessToken, 
+  revokeSession, 
+  verifyEmail as performEmailVerification,
+  changePassword as performPasswordChange,
+  createPasswordResetToken
+} from "./auth.service.js";
 import { env } from "../../config/env.js";
 
 function setAuthCookies(
@@ -52,7 +59,7 @@ export async function register(
 }
 
 export const me = (req: Request, res: Response) => {
-  res.status(204).json(req.user);
+  res.json(req.user);
 };
 
 export async function logout (
@@ -97,3 +104,36 @@ export async function refresh(
     message: "Session refreshed",
   });
 };
+
+export async function verifyEmail(
+  req: Request,
+  res: Response
+) {
+  await performEmailVerification(req.user, req.body.token);
+
+  res.json({
+    message: "Email verified",
+  });
+}
+
+export async function forgotPassword(
+  req: Request,
+  res: Response
+) {
+  await createPasswordResetToken(req.body.email);
+
+  res.json({
+    message: "Password reset token send",
+  });
+}
+
+export async function changePassword(
+  req: Request,
+  res: Response
+) {
+  await performPasswordChange(req.body.password, req.body.token);
+
+  res.json({
+    message: "Password successfully changed",
+  });
+}

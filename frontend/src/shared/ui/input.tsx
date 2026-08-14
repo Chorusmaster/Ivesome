@@ -3,12 +3,14 @@ import { useId } from "react";
 
 type InputProps = ComponentProps<"input"> & {
   label?: string;
+  error?: string;
 };
 
 function Input({
   id,
   label,
   className,
+  error,
   ...props
 }: InputProps) {
   const generatedId = useId();
@@ -27,6 +29,7 @@ function Input({
         className={"w-full border border-border p-2.5 mt-1 rounded-input placeholder:text-muted focus:outline-1 focus:outline-primary " + className}
         {...props}
       />
+      <div className="text-danger">{error}</div>
     </div>
   );
 }

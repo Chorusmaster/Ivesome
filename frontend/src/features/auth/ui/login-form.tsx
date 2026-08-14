@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from 'react';
-import { login } from '@/features/auth/auth.api.js';
+import { useState } from "react";
+import { login } from "@/features/auth/auth.api.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import Card from "@/shared/ui/card";
+import Input from "@/shared/ui/input";
 
 import type { LoginErrorResponse } from "@/features/auth/auth.types.js";
 
@@ -23,13 +26,11 @@ function LoginForm() {
       setPasswordError("");
       setGeneralError("");
 
-      const data = await login({ email, password });
-      navigate('/');
-    }
-    catch (error) {
+      await login({ email, password });
+      navigate("/");
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorResponse: LoginErrorResponse = error.response?.data;
-        console.log(errorResponse);
         if (errorResponse.errors) {
           if (errorResponse.errors.email) {
             setEmailError(errorResponse.errors.email);
@@ -37,42 +38,78 @@ function LoginForm() {
           if (errorResponse.errors.password) {
             setPasswordError(errorResponse.errors.password);
           }
+        } else if (errorResponse.message) {
+          setGeneralError(errorResponse.message);
         }
-        else {
-          if (errorResponse.message) {
-            setGeneralError(errorResponse.message);
-          }
-        }
-      }
-      else {
-        setGeneralError("An unexpected error occurred. Please try again later.");
+      } else {
+        setGeneralError(
+          "An unexpected error occurred. Please try again later.",
+        );
       }
     }
-  }
+  };
 
   return (
-    <form method="post" onSubmit={(e) => handleSubmit(e)} className="border-2 rounded-card border-primary p-8">
-      <h2 className="text-heading font-heading mb-12 mx-8">Log in into your account</h2>
-
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col">
-          <label htmlFor="email mb-2">Email</label>
-          <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-danger">{emailError}</div>
+    <div>
+      <Card className="w-full p-8">
+        <div className="mb-8">
+          <h2 className="text-heading font-heading text-text-primary">
+            Welcome back
+          </h2>
+          <p className="mt-2 text-small text-text-secondary">
+            Log in to your account to continue
+          </p>
         </div>
-        <div className="flex flex-col">
-          <label htmlFor="password mb-2">Password</label>
-          <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-danger">{passwordError}</div>
-        </div>
-      </div>
 
-      <div className="mt-6">
-        <div className="text-danger">{generalError}</div>
-        <input type="submit" value="Log in" className="bg-primary hover:bg-primary-hover text-white w-full py-2 mt-2 rounded-button"></input>
-        <div className="mt-4">Dont have an account? <Link to="/register" className='cursor-pointer text-primary hover:text-primary-hover font-button'>Create one</Link> now</div>
-      </div>
-    </form>
+        <form method="post" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-5">
+            <Input
+              id="email"
+              type="email"
+              label="Email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+              error={emailError}
+            />
+            <Input
+              id="password"
+              type="password"
+              label="Password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              onChange={(e) => setPassword(e.target.value)}
+              error={passwordError}
+            />
+          </div>
+
+          <div className="mt-6">
+            {generalError && (
+              <p className="mb-3 rounded-input bg-danger/10 px-3 py-2 text-small text-danger">
+                {generalError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="button w-full cursor-pointer bg-primary text-white transition-colors hover:bg-primary-hover"
+            >
+              Log in
+            </button>
+          </div>
+        </form>
+      </Card>
+
+      <p className="mt-6 text-center text-small text-text-secondary">
+        Don't have an account?{" "}
+        <Link
+          to="/register"
+          className="font-button text-primary transition-colors hover:text-primary-hover"
+        >
+          Create one
+        </Link>
+      </p>
+    </div>
   );
 }
 

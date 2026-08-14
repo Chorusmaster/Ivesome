@@ -1,14 +1,15 @@
 import { Schema, model, Types } from "mongoose";
+import type { AuthTokenType } from "../features/auth/auth.types.js";
 
-export interface IRefreshSession {
+export interface IAuthToken {
   userId: Types.ObjectId;
-  jti: string;
   tokenHash: string;
+  type: AuthTokenType;
   expiresAt: Date;
-  revokedAt?: Date | null;
+  usedAt?: Date | null;
 }
 
-const refreshSessionSchema = new Schema<IRefreshSession>(
+const authTokenSchema = new Schema<IAuthToken>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -16,12 +17,13 @@ const refreshSessionSchema = new Schema<IRefreshSession>(
       ref: "User",
     },
 
-    jti: {
+    tokenHash: {
       type: String,
       required: true,
+      unique: true,
     },
 
-    tokenHash: {
+    type: {
       type: String,
       required: true,
     },
@@ -31,7 +33,7 @@ const refreshSessionSchema = new Schema<IRefreshSession>(
       required: true,
     },
 
-    revokedAt: {
+    usedAt: {
       type: Date,
       required: false,
     },
@@ -41,4 +43,7 @@ const refreshSessionSchema = new Schema<IRefreshSession>(
   }
 );
 
-export const RefreshSession = model<IRefreshSession>("RefreshSession", refreshSessionSchema);
+export const AuthToken = model<IAuthToken>(
+  "AuthToken",
+  authTokenSchema
+);
