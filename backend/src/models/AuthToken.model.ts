@@ -1,13 +1,15 @@
 import { Schema, model, Types } from "mongoose";
+import type { AuthTokenType } from "../features/auth/auth.types.js";
 
-export interface IEmailVerificationToken {
+export interface IAuthToken {
   userId: Types.ObjectId;
   tokenHash: string;
+  type: AuthTokenType;
   expiresAt: Date;
   usedAt?: Date | null;
 }
 
-const emailVerificationTokenSchema = new Schema<IEmailVerificationToken>(
+const authTokenSchema = new Schema<IAuthToken>(
   {
     userId: {
       type: Schema.Types.ObjectId,
@@ -19,6 +21,11 @@ const emailVerificationTokenSchema = new Schema<IEmailVerificationToken>(
       type: String,
       required: true,
       unique: true,
+    },
+
+    type: {
+      type: String,
+      required: true,
     },
 
     expiresAt: {
@@ -36,7 +43,7 @@ const emailVerificationTokenSchema = new Schema<IEmailVerificationToken>(
   }
 );
 
-export const EmailVerificationToken = model<IEmailVerificationToken>(
-  "EmailVerificationToken",
-  emailVerificationTokenSchema
+export const AuthToken = model<IAuthToken>(
+  "AuthToken",
+  authTokenSchema
 );

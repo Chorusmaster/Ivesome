@@ -5,11 +5,19 @@ import {
   me, 
   logout, 
   refresh, 
-  verifyEmail 
+  verifyEmail,
+  forgotPassword,
+  changePassword
 } from "../features/auth/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { authenticate } from "../middlewares/auth.middleware.js";
-import { registerSchema } from "../features/auth/auth.schema.js";
+import { 
+  emailVerificationSchema, 
+  loginSchema, 
+  forgotPasswordSchema, 
+  passwordResetSchema, 
+  registerSchema 
+} from "../features/auth/auth.schema.js";
 
 const router = Router();
 router.get("/", (req, res) => {
@@ -22,7 +30,11 @@ router.post(
   register
 );
 
-router.post("/login", login);
+router.post(
+  "/login", 
+  validate(loginSchema),
+  login
+);
 
 router.post("/logout", logout);
 router.post("/refresh", refresh);
@@ -33,10 +45,22 @@ router.get(
   me
 );
 
-router.get(
-  "/verify-email:token", 
-  authenticate, 
+router.post(
+  "/verify-email", 
+  validate(emailVerificationSchema),
   verifyEmail
+);
+
+router.post(
+  "/forgot-password", 
+  validate(forgotPasswordSchema),
+  forgotPassword
+);
+
+router.post(
+  "/reset-password", 
+  validate(passwordResetSchema),
+  changePassword
 );
 
 export default router;

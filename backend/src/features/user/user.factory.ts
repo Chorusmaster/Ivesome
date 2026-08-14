@@ -1,6 +1,7 @@
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
-import { UserRole, UserStatus } from "../user/user.types.js";
+import { USER_ROLE_VALUES, USER_STATUS_VALUES } from "../user/user.types.js";
+import type { UserRole, UserStatus } from "../user/user.types.js";
 
 type UserFactoryOverrides = Partial<{
   email: string;
@@ -15,7 +16,7 @@ export async function makeUser(overrides: UserFactoryOverrides = {}) {
   return {
     email: overrides.email ?? faker.internet.email(),
     passwordHash: await bcrypt.hash(password, 10),
-    role: overrides.role ?? faker.helpers.arrayElement(Object.values(UserRole)),
-    UserStatus: overrides.status ?? faker.helpers.arrayElement(Object.values(UserStatus)),
+    role: overrides.role ?? faker.helpers.arrayElement(USER_ROLE_VALUES),
+    status: overrides.status ?? faker.helpers.arrayElement(USER_STATUS_VALUES),
   };
 }

@@ -56,3 +56,18 @@ export async function updateUserStatusWithSession(
     }
   );
 }
+
+export async function updateUserPassword(
+  userId: string, 
+  passwordHash: string,
+  session: ClientSession
+) {
+  return User.findByIdAndUpdate(
+    userId,
+    { passwordHash: passwordHash },
+    {
+      new: true,
+      session: session,
+    }
+  );
+}

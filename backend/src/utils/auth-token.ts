@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
 
-export function createToken() {
+export function createAuthToken() {
   return crypto.randomBytes(32).toString("hex");
 }
 
-export function encryptToken(token: string) {
+export function encryptAuthToken(token: string) {
   return crypto.createHash("sha256").update(token).digest("hex");
 }
 
-export function verifyToken(token: string, hashedToken: string) {
+export function verifyAuthToken(token: string, hashedToken: string) {
   return crypto.createHash("sha256").update(token).digest("hex") === hashedToken;
 }

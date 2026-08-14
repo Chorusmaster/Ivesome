@@ -1,4 +1,4 @@
-import { ZodType, ZodError, treeifyError } from "zod";
+import { ZodType, ZodError } from "zod";
 import type { Request, Response, NextFunction } from "express";
 
 export function validate(schema: ZodType) {

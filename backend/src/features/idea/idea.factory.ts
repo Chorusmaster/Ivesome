@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { IdeaVisibility, IdeaStatus } from "./idea.types.js";
+import { IDEA_VISIBILITY_VALUES, IDEA_STATUS_VALUES } from "./idea.types.js";
 
 export async function makeIdea(overrides = {}) {
   return {
@@ -7,8 +7,8 @@ export async function makeIdea(overrides = {}) {
     title: faker.lorem.sentence(),
     shortDescription: faker.lorem.paragraph(),
     fullDescription: faker.lorem.text(),
-    visibility: faker.helpers.arrayElement(Object.values(IdeaVisibility)),
-    status: faker.helpers.arrayElement(Object.values(IdeaStatus)),
+    visibility: faker.helpers.arrayElement(IDEA_VISIBILITY_VALUES),
+    status: faker.helpers.arrayElement(IDEA_STATUS_VALUES),
     ...overrides,
   };
 }

@@ -4,9 +4,16 @@ import { ApiError } from "../../types/error.types.js";
 import crypto from "node:crypto";
 import type { IUser } from "../../models/User.model.js";
 import type { HydratedDocument } from "mongoose";
-import { createToken, encryptToken, verifyToken } from "../../utils/verification-token.js";
+import { createAuthToken, encryptAuthToken, verifyAuthToken } from "../../utils/auth-token.js";
 import { sendVerificationEmail } from "../email/email.servise.js";
-import { completeEmailVerification, createEmailVerificationToken, getValidEmailVerificationToken } from "./auth.repository.js";
+import { 
+  completeEmailVerification, 
+  completePasswordChange, 
+  createAuthToken as createAuthTokenDocument, 
+  getValidAuthToken,
+  findAuthTokenByHash
+} from "./auth.repository.js";
+import { env } from "../../config/env.js";
 
 import {
   getUserById,
@@ -59,12 +66,14 @@ export async function registerUser(
 
   const user = await createUser(email, passwordHash);
 
-  const verificationToken = createToken();
-  const hashedVerificationToken = encryptToken(verificationToken);
+  const verificationToken = createAuthToken();
+  const hashedVerificationToken = encryptAuthToken(verificationToken);
 
-  await createEmailVerificationToken(
+  await createAuthTokenDocument(
     user._id.toString(),
-    hashedVerificationToken
+    hashedVerificationToken,
+    "EMAIL_VERIFICATION",
+    env.emailVerificationExpirationTime
   );
 
   await sendVerificationEmail(email, verificationToken);
@@ -172,18 +181,56 @@ export async function revokeSession(refreshToken: string) {
   );
 }
 
-export async function verifyEmailVerificationToken(
+export async function verifyEmail(
   userId: string,
   token: string
 ) {
-  const storedToken = await getValidEmailVerificationToken(userId);
+  const storedToken = await getValidAuthToken(userId, "EMAIL_VERIFICATION");
 
   if (
     !storedToken ||
-    !verifyToken(token, storedToken.tokenHash)
+    !verifyAuthToken(token, storedToken.tokenHash)
   ) {
-    throw new ApiError(401, "Invalid verification token");
+    throw new ApiError(401, "Invalid email verification token");
   }
 
   await completeEmailVerification(userId, storedToken._id.toString());
+}
+
+export async function createPasswordResetToken(
+  email: string
+) {
+  const user = await getUserByEmail(email);
+
+  if (!user) throw new ApiError(422, "User with this email does not exist")
+
+  const resetToken = createAuthToken();
+  const hashedResetToken = encryptAuthToken(resetToken);
+
+  await createAuthTokenDocument(
+    user._id.toString(),
+    hashedResetToken,
+    "PASSWORD_RESET",
+    env.passwordResetExpirationTime
+  );
+}
+
+export async function changePassword(
+  password: string,
+  token: string
+) {
+  const tokenHash = encryptAuthToken(token);
+  const storedToken = await findAuthTokenByHash(tokenHash, "PASSWORD_RESET");
+
+  if (
+    !storedToken ||
+    storedToken.usedAt ||
+    storedToken.expiresAt < new Date()
+  ) {
+    throw new ApiError(401, "Invalid password reset token");
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+
+  await completePasswordChange(storedToken.userId.toString(), passwordHash, storedToken._id.toString());
 }

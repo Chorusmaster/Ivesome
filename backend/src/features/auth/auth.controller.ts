@@ -4,7 +4,9 @@ import {
   loginUser, 
   refreshAccessToken, 
   revokeSession, 
-  verifyEmailVerificationToken 
+  verifyEmail as performEmailVerification,
+  changePassword as performPasswordChange,
+  createPasswordResetToken
 } from "./auth.service.js";
 import { env } from "../../config/env.js";
 
@@ -107,17 +109,31 @@ export async function verifyEmail(
   req: Request,
   res: Response
 ) {
-  const { token } = req.params;
-
-  if (!token || typeof token !== "string") {
-    return res.status(400).json({
-      message: "Invalid token",
-    });
-  }
-
-  await verifyEmailVerificationToken(req.user, token);
+  await performEmailVerification(req.user, req.body.token);
 
   res.json({
     message: "Email verified",
+  });
+}
+
+export async function forgotPassword(
+  req: Request,
+  res: Response
+) {
+  await createPasswordResetToken(req.body.email);
+
+  res.json({
+    message: "Password reset token send",
+  });
+}
+
+export async function changePassword(
+  req: Request,
+  res: Response
+) {
+  await performPasswordChange(req.body.password, req.body.token);
+
+  res.json({
+    message: "Password successfully changed",
   });
 }

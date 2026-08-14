@@ -52,6 +52,7 @@ export const env = {
   accessExpirationTime: durationToMs(validateExpiresIn(requiredEnv("ACCESS_JWT_EXPIRES_IN"))),
   refreshExpirationTime: durationToMs(validateExpiresIn(requiredEnv("REFRESH_JWT_EXPIRES_IN"))),
   emailVerificationExpirationTime: durationToMs(validateExpiresIn(requiredEnv("EMAIL_VERIFICATION_EXPIRES_IN"))),
+  passwordResetExpirationTime: durationToMs(validateExpiresIn(requiredEnv("PASSWORD_RESET_EXPIRES_IN"))),
 
   SMTPPort: requiredEnv("SMTP_HOST"),
   SMTPHost: requiredEnv("SMTP_PORT"),
