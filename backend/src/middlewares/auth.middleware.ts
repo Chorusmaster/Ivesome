@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction } from "express";
 import { verifyAccessToken } from "../features/auth/auth.tokens.js";
+import { getUserAuthStatus } from "../features/user/user.repository.js";
 
-export function authenticate(
+export async function authenticate(
   req: Request,
   res: Response,
   next: NextFunction
@@ -15,9 +16,20 @@ export function authenticate(
       });
     }
     
-    const payload = verifyAccessToken(accessToken)
+    const payload = verifyAccessToken(accessToken);
+    const statusObj = await getUserAuthStatus(payload.sub);
 
-    req.user = payload;
+    if (!statusObj?.status || statusObj.status == "BLOCKED") {
+      return res.status(401).json({
+        message: "Your account is blocked",
+      });
+    }
+
+    req.user = {
+      id: payload.sub,
+      role: payload.role,
+      status: statusObj.status,
+    };
 
     next();
   } catch {

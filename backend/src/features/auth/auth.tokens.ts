@@ -14,11 +14,11 @@ export function generateAccessToken(userId: string, role: string) {
   );
 }
 
-export function generateRefreshToken(userId: string, sessionId: string) {
+export function generateRefreshToken(userId: string, jti: string) {
   return generateToken(
     {
       sub: userId,
-      jti: sessionId,
+      jti: jti,
       type: "refresh",
     },
     env.refreshJwtExpiresIn ?? "7d"

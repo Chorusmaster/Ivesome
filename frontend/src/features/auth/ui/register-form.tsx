@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from 'react';
-import { register } from '@/features/auth/auth.api.js';
+import { useState } from "react";
+import { register } from "@/features/auth/auth.api.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+import Card from "@/shared/ui/card";
+import Input from "@/shared/ui/input";
 
 import type { RegisterErrorResponse } from "@/features/auth/auth.types.ts";
 
@@ -26,13 +29,12 @@ function RegisterForm() {
       setPasswordConfirmError("");
       setGeneralError("");
 
-      const data = await register({ email, password, passwordConfirm });
-      navigate('/');
-    }
-    catch (error) {
+      await register({ email, password, passwordConfirm });
+      sessionStorage.setItem("email", email);
+      navigate("/verify-email");
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorResponse: RegisterErrorResponse = error.response?.data;
-        console.log(errorResponse);
         if (errorResponse?.errors) {
           if (errorResponse.errors?.email) {
             setEmailError(errorResponse.errors.email);
@@ -43,47 +45,87 @@ function RegisterForm() {
           if (errorResponse.errors?.passwordConfirm) {
             setPasswordConfirmError(errorResponse.errors.passwordConfirm);
           }
+        } else if (errorResponse.message) {
+          setGeneralError(errorResponse.message);
         }
-        else {
-          if (errorResponse.message) {
-            setGeneralError(errorResponse.message);
-          }
-        }
-      }
-      else {
-        setGeneralError("An unexpected error occurred. Please try again later.");
+      } else {
+        setGeneralError(
+          "An unexpected error occurred. Please try again later.",
+        );
       }
     }
-  }
+  };
 
   return (
-    <form method="post" onSubmit={(e) => handleSubmit(e)} className="border-2 rounded-card border-primary p-8">
-      <h2 className="text-heading font-heading mb-12 mx-8">Create new Ivesome account</h2>
+    <div>
+      <Card className="w-full p-8">
+        <div className="mb-8">
+          <h2 className="text-heading font-heading text-text-primary">
+            Create your account
+          </h2>
+          <p className="mt-2 text-small text-text-secondary">
+            Join Ivesome and start sharing your ideas
+          </p>
+        </div>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex flex-col gap-2">
-          <label htmlFor="email">Email</label>
-          <input type="email" id="email" name="email" onChange={(e) => setEmail(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-danger">{emailError}</div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="password">Password</label>
-          <input type="password" id="password" name="password" onChange={(e) => setPassword(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-danger">{passwordError}</div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <label htmlFor="password">Confirm password</label>
-          <input type="password" id="password" name="password" onChange={(e) => setPasswordConfirm(e.target.value)} className="border rounded-input h-8 px-2"></input>
-          <div className="text-danger">{passwordConfirmError}</div>
-        </div>
-      </div>
+        <form method="post" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-5">
+            <Input
+              id="email"
+              type="email"
+              label="Email"
+              placeholder="you@example.com"
+              autoComplete="email"
+              onChange={(e) => setEmail(e.target.value)}
+              error={emailError}
+            />
+            <Input
+              id="password"
+              type="password"
+              label="Password"
+              placeholder="Create a password"
+              autoComplete="new-password"
+              onChange={(e) => setPassword(e.target.value)}
+              error={passwordError}
+            />
+            <Input
+              id="passwordConfirm"
+              type="password"
+              label="Confirm password"
+              placeholder="Confirm your password"
+              autoComplete="new-password"
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              error={passwordConfirmError}
+            />
+          </div>
 
-      <div className="mt-6">
-        <div className="text-danger">{generalError}</div>
-        <input type="submit" value="Create account" className="bg-primary hover:bg-primary-hover text-white w-full py-2 mt-2 rounded-button"></input>
-        <div className="mt-4">Already have an account? <Link to="/login" className='cursor-pointer text-primary hover:text-primary-hover font-button'>Log in</Link></div>
-      </div>
-    </form>
+          <div className="mt-6">
+            {generalError && (
+              <p className="mb-3 rounded-input bg-danger/10 px-3 py-2 text-small text-danger">
+                {generalError}
+              </p>
+            )}
+
+            <button
+              type="submit"
+              className="button w-full cursor-pointer bg-primary text-white transition-colors hover:bg-primary-hover"
+            >
+              Create account
+            </button>
+          </div>
+        </form>
+      </Card>
+
+      <p className="mt-6 text-center text-small text-text-secondary">
+        Already have an account?{" "}
+        <Link
+          to="/login"
+          className="font-button text-primary transition-colors hover:text-primary-hover"
+        >
+          Log in
+        </Link>
+      </p>
+    </div>
   );
 }
 

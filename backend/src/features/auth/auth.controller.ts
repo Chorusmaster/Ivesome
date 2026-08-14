@@ -59,7 +59,7 @@ export async function register(
 }
 
 export const me = (req: Request, res: Response) => {
-  res.status(204).json(req.user);
+  res.json(req.user);
 };
 
 export async function logout (

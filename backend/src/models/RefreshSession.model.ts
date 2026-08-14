@@ -2,6 +2,7 @@ import { Schema, model, Types } from "mongoose";
 
 export interface IRefreshSession {
   userId: Types.ObjectId;
+  jti: string;
   tokenHash: string;
   expiresAt: Date;
   revokedAt?: Date | null;
@@ -13,6 +14,11 @@ const refreshSessionSchema = new Schema<IRefreshSession>(
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
+    },
+
+    jti: {
+      type: String,
+      required: true,
     },
 
     tokenHash: {

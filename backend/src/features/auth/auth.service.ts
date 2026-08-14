@@ -21,11 +21,11 @@ import {
   createUser,
 } from "../user/user.repository.js";
 import {
-  createRefreshSessionId,
   createRefreshSession,
-  getRefreshSessionById,
+  getRefreshSessionByJti,
   revokeRefreshSession,
 } from "./auth.repository.js";
+import { randomUUID } from "node:crypto";
 
 async function createAuthSession(user: HydratedDocument<IUser>) {
   const userId = user._id.toString();
@@ -35,15 +35,15 @@ async function createAuthSession(user: HydratedDocument<IUser>) {
     user.role
   );
 
-  const sessionId = createRefreshSessionId();
+  const jti = randomUUID();
 
   const refreshToken = generateRefreshToken(
     userId,
-    sessionId
+    jti
   );
 
   await createRefreshSession(
-    sessionId,
+    jti,
     userId,
     refreshToken
   );
@@ -131,7 +131,7 @@ export async function refreshAccessToken(refreshToken: string) {
       .update(refreshToken)
       .digest("hex");
 
-  const session = await getRefreshSessionById(tokenData.jti);
+  const session = await getRefreshSessionByJti(tokenData.jti);
 
   if (
     tokenHash !== session?.tokenHash ||
@@ -166,7 +166,7 @@ export async function revokeSession(refreshToken: string) {
       .update(refreshToken)
       .digest("hex");
 
-  const session = await getRefreshSessionById(tokenData.jti);
+  const session = await getRefreshSessionByJti(tokenData.jti);
 
   if (
     tokenHash !== session?.tokenHash ||

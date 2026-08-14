@@ -21,6 +21,18 @@ export async function getUserByEmail(
   return User.findOne({ email });
 }
 
+export async function getUserAuthStatus(
+  id: string,
+): Promise<Pick<IUser, "status"> | null> {
+  if (!Types.ObjectId.isValid(id)) {
+    return null;
+  }
+
+  return User.findById(id)
+    .select("status")
+    .lean();
+}
+
 export async function createUser(
   email: string,
   passwordHash: string,

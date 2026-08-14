@@ -6,38 +6,34 @@ import {
 import type { IRefreshSession } from "../../models/RefreshSession.model.js";
 import { env } from "../../config/env.js";
 import crypto from "node:crypto";
-import { randomUUID } from "node:crypto";
 import { Types, type HydratedDocument } from "mongoose";
 import { updateUserStatusWithSession, updateUserPassword } from "../user/user.repository.js";
 import mongoose from "mongoose";
 import type { AuthTokenType } from "./auth.types.js";
 
-export function createRefreshSessionId() {
-  return randomUUID();
-}
-
 export async function createRefreshSession(
-  sessionId: string,
+  jti: string,
   userId: string,
   token: string,
 ): Promise<HydratedDocument<IRefreshSession>> {
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + env.refreshExpirationTime);
+  const expiresAt = new Date(
+    Date.now() + env.refreshExpirationTime
+  );
 
   const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
   return RefreshSession.create({
-    _id: sessionId,
+    jti,
     userId,
     tokenHash,
     expiresAt,
   });
 }
 
-export async function getRefreshSessionById(
-  id: string,
+export async function getRefreshSessionByJti(
+  jti: string,
 ): Promise<HydratedDocument<IRefreshSession> | null> {
-  return RefreshSession.findById(id);
+  return RefreshSession.findOne({jti: jti});
 }
 
 export async function revokeRefreshSession(id: string) {

@@ -3,9 +3,11 @@ import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "@/app/layouts/root-layout";
 import MainLayout from "@/app/layouts/main-layout";
 import FormLayout from "@/app/layouts/form-layout";
+import ProtectedLayout from "../layouts/protected-layout";
 
-import LoginPage from "@/pages/login-page";
-import RegisterPage from "@/pages/register-page";
+import LoginPage from "@/features/auth/pages/login-page";
+import RegisterPage from "@/features/auth/pages/register-page";
+import EmailVerificationPage from "@/features/auth/pages/email-verification-page";
 import HomePage from "@/pages/home-page";
 import SearchPage from "@/pages/search-page";
 import DashboardPage from "@/pages/dashboard-page";
@@ -15,16 +17,13 @@ import ProfileEditPage from "@/pages/profile-edit-page";
 
 import NewIdeaPage from "@/pages/idea-editor-page";
 
-import { authLoader } from "./auth.loader";
-
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <RootLayout />,
     children: [
       {
-        element: <MainLayout />,
-        loader: authLoader,
+        element: <ProtectedLayout />,
         children: [
           {
             index: true,
@@ -66,6 +65,10 @@ export const router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />,
+          },
+          {
+            path: "verify-email",
+            element: <EmailVerificationPage />,
           },
         ],
       }

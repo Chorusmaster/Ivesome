@@ -54,8 +54,10 @@ export const env = {
   emailVerificationExpirationTime: durationToMs(validateExpiresIn(requiredEnv("EMAIL_VERIFICATION_EXPIRES_IN"))),
   passwordResetExpirationTime: durationToMs(validateExpiresIn(requiredEnv("PASSWORD_RESET_EXPIRES_IN"))),
 
-  SMTPPort: requiredEnv("SMTP_HOST"),
-  SMTPHost: requiredEnv("SMTP_PORT"),
+  SMTPPort: requiredEnv("SMTP_PORT"),
+  SMTPHost: requiredEnv("SMTP_HOST"),
   SMTPUser: requiredEnv("SMTP_USER"),
   SMTPPassword: requiredEnv("SMTP_PASSWORD"),
+  SMTPSenderName: requiredEnv("SMTP_SENDER_NAME"),
+  SMTPSenderEmail: requiredEnv("SMTP_SENDER_EMAIL"),
 };

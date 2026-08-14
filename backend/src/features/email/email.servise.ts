@@ -6,7 +6,7 @@ export async function sendVerificationEmail(
     token: string
   ) {
     await transporter.sendMail({
-      from: env.SMTPUser,
+      from: `"${env.SMTPSenderName}" <${env.SMTPSenderEmail}>`,
       to: email,
       subject: "Verify your email",
       html: `
