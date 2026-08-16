@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { register } from "@/features/auth/auth.api.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../auth.context";
 
 import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
@@ -20,6 +20,7 @@ function RegisterForm() {
   const [generalError, setGeneralError] = useState("");
 
   const navigate = useNavigate();
+  const { register } = useAuth();
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -29,7 +30,7 @@ function RegisterForm() {
       setPasswordConfirmError("");
       setGeneralError("");
 
-      await register({ email, password, passwordConfirm });
+      await register(email, password, passwordConfirm);
       sessionStorage.setItem("email", email);
       navigate("/verify-email");
     } catch (error) {

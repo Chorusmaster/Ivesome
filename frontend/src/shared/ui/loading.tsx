@@ -21,7 +21,7 @@ function Loading({
 
   const container = fullScreen ? (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50"
+      className="fixed inset-0 flex items-center justify-center bg-background backdrop-blur-sm z-50"
       {...props}
     >
       <div className="flex flex-col items-center gap-3 bg-surface p-6 rounded-card shadow-lg">

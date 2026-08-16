@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { login } from "@/features/auth/auth.api.js";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../auth.context";
 
 import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
@@ -18,6 +18,7 @@ function LoginForm() {
   const [generalError, setGeneralError] = useState("");
 
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     try {
@@ -25,8 +26,9 @@ function LoginForm() {
       setEmailError("");
       setPasswordError("");
       setGeneralError("");
+      sessionStorage.setItem("email", email);
 
-      await login({ email, password });
+      await login(email, password);
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -89,6 +91,15 @@ function LoginForm() {
                 {generalError}
               </p>
             )}
+
+            <div className="mb-4 flex justify-end">
+              <Link
+                to="/forgot-password"
+                className="text-small text-primary transition-colors hover:text-primary-hover"
+              >
+                Forgot password?
+              </Link>
+            </div>
 
             <button
               type="submit"

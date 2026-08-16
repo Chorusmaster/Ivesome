@@ -63,7 +63,7 @@ export async function updateUserStatusWithSession(
     userId,
     { status: newStatus },
     {
-      new: true,
+      returnDocument: "after",
       session: session,
     }
   );
@@ -78,7 +78,7 @@ export async function updateUserPassword(
     userId,
     { passwordHash: passwordHash },
     {
-      new: true,
+      returnDocument: "after",
       session: session,
     }
   );

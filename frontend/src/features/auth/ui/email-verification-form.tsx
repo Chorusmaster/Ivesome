@@ -19,8 +19,7 @@ const content = {
   },
   invalid: {
     title: "Invalid link",
-    description:
-      "The verification link is invalid, expired or has already been used.",
+    description: "The verification link is invalid.",
     hint: "You can request a new verification link below. We'll send it to your registered email address.",
   },
 };
@@ -28,15 +27,15 @@ const content = {
 type EmailVerificationFormProps = {
   variant?: EmailVerificationFormVariant;
   email?: string | null;
+  error?: string;
   onResendEmail?: () => Promise<void> | void;
-  onRequestNewLink?: () => Promise<void> | void;
 };
 
 function EmailVerificationForm({
   variant = "verify",
   email = "your email",
+  error = content["invalid"].title,
   onResendEmail,
-  onRequestNewLink,
 }: EmailVerificationFormProps) {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -46,17 +45,6 @@ function EmailVerificationForm({
     setIsLoading(true);
     try {
       await onResendEmail();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleRequestNewLink = async () => {
-    if (!onRequestNewLink) return;
-
-    setIsLoading(true);
-    try {
-      await onRequestNewLink();
     } finally {
       setIsLoading(false);
     }
@@ -86,7 +74,7 @@ function EmailVerificationForm({
           </div>
 
           <h2 className="text-heading font-heading text-text-primary">
-            {content[variant].title}
+            {variant == "invalid" ? error : content[variant].title}
           </h2>
           <p className="mt-3 text-small text-text-secondary">
             {content[variant].description}
@@ -101,25 +89,14 @@ function EmailVerificationForm({
           </div>
 
           <div className="mt-4 w-full">
-            {variant == "verify" || variant == "resent" ? (
-              <button
-                type="button"
-                onClick={handleResendEmail}
-                disabled={isLoading}
-                className="w-full button bg-primary hover:bg-primary-hover text-white"
-              >
-                {isLoading ? "Sending..." : "Resend verification email"}
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={handleRequestNewLink}
-                disabled={isLoading}
-                className="button bg-primary hover:bg-primary-hover text-white w-full"
-              >
-                {isLoading ? "Sending..." : "Send new verification link"}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={handleResendEmail}
+              disabled={isLoading}
+              className="button bg-primary hover:bg-primary-hover text-white w-full"
+            >
+              {isLoading ? "Sending..." : "Send new verification link"}
+            </button>
 
             <div className="mt-4 w-full">
               <Link to="/login">

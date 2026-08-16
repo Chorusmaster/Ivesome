@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
-import { getMe, logout as performLogout } from "./auth.api";
+import { 
+  getMe, 
+  register as performRegister, 
+  login as performLogin, 
+  logout as performLogout, 
+  verifyEmail as performEmailVerification 
+} from "./auth.api";
 import { AuthContext } from "./auth.context";
 import type { User } from "./auth.types";
+import { refresh } from "./auth.api";
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -10,15 +17,45 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   async function refreshUser() {
     try {
       const user = await getMe();
-      console.log(user);
       setUser(user);
-    } catch {
-      setUser(null);
+    } 
+    catch {
+      try {
+        await refresh();
+        const user = await getMe();
+        setUser(user);
+      } 
+      catch {
+        setUser(null);
+      }
     }
   }
 
+  async function verifyEmail(token: string) {
+    setIsLoading(true);
+    const user = await performEmailVerification({ token });
+    setIsLoading(false);
+    setUser(user);
+  }
+
+  async function register(email: string, password: string, passwordConfirm: string) {
+    setIsLoading(true);
+    const user = await performRegister({ email, password, passwordConfirm });
+    setIsLoading(false);
+    setUser(user);
+  }
+
+  async function login(email: string, password: string) {
+    setIsLoading(true);
+    const user = await performLogin({ email, password });
+    setIsLoading(false);
+    setUser(user);
+  }
+
   async function logout() {
-    await performLogout()
+    setIsLoading(true);
+    await performLogout();
+    setIsLoading(false);
     setUser(null);
   }
 
@@ -44,7 +81,10 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         refreshUser,
+        register,
+        login,
         logout,
+        verifyEmail,
       }}
     >
       {children}

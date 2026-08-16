@@ -19,6 +19,19 @@ export type RegisterPayload = LoginPayload & {
   passwordConfirm: string
 };
 
+export type VerifyEmailPayload = {
+  token: string,
+}
+
+export type ForgotPasswordPayload = {
+  email: string,
+}
+
+export type ChangePasswordPayload = {
+  password: string,
+  token: string,
+}
+
 export type LoginSuccessResponse = {
   success: boolean,
   error?: string
