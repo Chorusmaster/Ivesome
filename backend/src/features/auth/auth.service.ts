@@ -11,9 +11,11 @@ import {
   completePasswordChange, 
   createAuthToken as createAuthTokenDocument, 
   getValidAuthToken,
-  findAuthTokenByHash
+  findAuthTokenByHash,
+  completeTokenResend
 } from "./auth.repository.js";
 import { env } from "../../config/env.js";
+import type { AuthTokenType } from "./auth.types.js";
 
 import {
   getUserById,
@@ -76,7 +78,7 @@ export async function registerUser(
     env.emailVerificationExpirationTime
   );
 
-  await sendVerificationEmail(email, verificationToken);
+  await sendVerificationEmail(email, 'EMAIL_VERIFICATION', verificationToken);
 
   const { accessToken, refreshToken } = await createAuthSession(user);
 
@@ -197,7 +199,33 @@ export async function verifyEmail(
   await completeEmailVerification(userId, storedToken._id.toString());
 }
 
-export async function createPasswordResetToken(
+export async function resendEmailVerificationLink(
+  userId: string,
+) {
+  const user = await getUserById(userId);
+  if (!user) throw new ApiError(401, "Unauthorized"); 
+
+  const verificationToken = createAuthToken();
+  const hashedVerificationToken = encryptAuthToken(verificationToken);
+
+  await completeTokenResend(user._id.toString(), 'EMAIL_VERIFICATION', hashedVerificationToken);
+  await sendVerificationEmail(user.email, 'EMAIL_VERIFICATION', verificationToken);
+}
+
+export async function resendPasswordResetLink(
+  email: string,
+) {
+  const user = await getUserByEmail(email);
+  if (!user) throw new ApiError(401, "Unauthorized"); 
+
+  const verificationToken = createAuthToken();
+  const hashedVerificationToken = encryptAuthToken(verificationToken);
+
+  await completeTokenResend(user._id.toString(), 'PASSWORD_RESET', hashedVerificationToken);
+  await sendVerificationEmail(user.email, 'PASSWORD_RESET', verificationToken);
+}
+
+export async function startPasswordReset(
   email: string
 ) {
   const user = await getUserByEmail(email);
@@ -213,6 +241,8 @@ export async function createPasswordResetToken(
     "PASSWORD_RESET",
     env.passwordResetExpirationTime
   );
+
+  await sendVerificationEmail(email, 'PASSWORD_RESET', resetToken);
 }
 
 export async function changePassword(

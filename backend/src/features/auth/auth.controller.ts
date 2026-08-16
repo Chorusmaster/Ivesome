@@ -6,7 +6,9 @@ import {
   revokeSession, 
   verifyEmail as performEmailVerification,
   changePassword as performPasswordChange,
-  createPasswordResetToken
+  startPasswordReset,
+  resendEmailVerificationLink as performEmailVerificationLinkResend,
+  resendPasswordResetLink as performPasswordResetLinkResend
 } from "./auth.service.js";
 import { env } from "../../config/env.js";
 
@@ -66,7 +68,7 @@ export async function logout (
   req: Request, 
   res: Response
 ) {
-  const token = req.cookies.token;
+  const token = req.cookies.refreshToken;
 
   if (!token) {
     return res.status(401).json({
@@ -109,10 +111,32 @@ export async function verifyEmail(
   req: Request,
   res: Response
 ) {
-  await performEmailVerification(req.user, req.body.token);
+  await performEmailVerification(req.user.id, req.body.token);
 
   res.json({
     message: "Email verified",
+  });
+}
+
+export async function resendEmailVerificationLink(
+  req: Request,
+  res: Response
+) {
+  await performEmailVerificationLinkResend(req.user.id);
+
+  res.json({
+    message: "Email resent",
+  });
+}
+
+export async function resendPasswordVerificationLink(
+  req: Request,
+  res: Response
+) {
+  await performPasswordResetLinkResend(req.body.email);
+
+  res.json({
+    message: "Email resent",
   });
 }
 
@@ -120,7 +144,7 @@ export async function forgotPassword(
   req: Request,
   res: Response
 ) {
-  await createPasswordResetToken(req.body.email);
+  await startPasswordReset(req.body.email);
 
   res.json({
     message: "Password reset token send",

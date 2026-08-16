@@ -6,6 +6,8 @@ import {
   logout, 
   refresh, 
   verifyEmail,
+  resendEmailVerificationLink,
+  resendPasswordVerificationLink,
   forgotPassword,
   changePassword
 } from "../features/auth/auth.controller.js";
@@ -48,13 +50,26 @@ router.get(
 router.post(
   "/verify-email", 
   validate(emailVerificationSchema),
+  authenticate,
   verifyEmail
+);
+
+router.post(
+  "/verify-email/resend", 
+  authenticate,
+  resendEmailVerificationLink
 );
 
 router.post(
   "/forgot-password", 
   validate(forgotPasswordSchema),
   forgotPassword
+);
+
+router.post(
+  "/forgot-password/resend", 
+  validate(forgotPasswordSchema),
+  resendPasswordVerificationLink
 );
 
 router.post(

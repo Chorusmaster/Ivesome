@@ -27,8 +27,7 @@ export type loginPayload = z.infer<typeof loginSchema>;
 
 
 export const emailVerificationSchema = z.object({
-  email: z.email(),
-  password: z.string().min(8),
+  token: z.string(),
 });
 
 export type emailVerificationPayload = z.infer<typeof emailVerificationSchema>;
@@ -44,8 +43,8 @@ export type forgotPasswordPayload = z.infer<typeof forgotPasswordSchema>;
 
 
 export const passwordResetSchema = z.object({
-  token: z.string(),
   password: z.string().min(8),
+  token: z.string(),
 });
 
 export type passwordResetPayload = z.infer<typeof passwordResetSchema>;

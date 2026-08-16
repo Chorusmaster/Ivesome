@@ -1,5 +1,5 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { logout } from "@/features/auth/auth.api";
+import { useAuth } from "@/features/auth/auth.context";
 
 import Logo from "@/assets/logo.svg?react";
 import { Search } from "lucide-react";
@@ -8,6 +8,7 @@ import Avatar from "@/shared/ui/avatar";
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -58,7 +59,7 @@ function Navbar() {
         </Link>
         <button
           onClick={handleLogout}
-          className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2 hidden"
+          className="text-primary hover:text-primary-hover rounded-button font-button py-1 px-2"
         >
           Log out
         </button>

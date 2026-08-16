@@ -93,6 +93,40 @@ export async function getValidAuthToken(
   });
 }
 
+export async function deleteValidAuthToken(
+  userId: string,
+  type: AuthTokenType,
+) {
+  return await AuthToken.findOneAndDelete({
+    userId,
+    expiresAt: { $gt: new Date() },
+    type,
+    usedAt: null,
+  });
+}
+
+export async function completeTokenResend(
+  userId: string,
+  type: AuthTokenType,
+  tokenHash: string,
+) {
+  const session = await mongoose.startSession();
+
+  try {
+    await session.withTransaction(async () => {
+      await deleteValidAuthToken(userId, type);
+      await createAuthToken(
+        userId.toString(),
+        tokenHash,
+        type,
+        env.emailVerificationExpirationTime
+      );
+    });
+  } finally {
+    await session.endSession();
+  }
+}
+
 export async function completeEmailVerification(
   userId: string,
   tokenId: string,
