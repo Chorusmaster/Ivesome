@@ -1,20 +1,9 @@
-import mongoose from "mongoose";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "../generated/prisma/client.js";
 import { env } from "./env.js";
 
-export async function connectDatabase() {
-  console.log(env)
+const adapter = new PrismaPg({
+  connectionString: env.databaseUrl,
+});
 
-  try {
-    await mongoose.connect(env.databaseUrl);
-
-    console.log("MongoDB connected");
-  } catch (error) {
-    console.error("MongoDB connection error", error);
-    process.exit(1);
-  }
-}
-
-export async function disconnectDatabase() {
-  await mongoose.disconnect();
-  console.log("MongoDB disconnected");
-}
+export const prisma = new PrismaClient({ adapter });

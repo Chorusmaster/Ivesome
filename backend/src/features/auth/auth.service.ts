@@ -1,22 +1,27 @@
 import bcrypt from "bcrypt";
-import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from "./auth.tokens.js";
+import {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyRefreshToken,
+} from "./auth.tokens.js";
 import { ApiError } from "../../types/error.types.js";
 import crypto from "node:crypto";
-import type { IUser } from "../../models/User.model.js";
-import type { HydratedDocument } from "mongoose";
-import { createAuthToken, encryptAuthToken, verifyAuthToken } from "../../utils/auth-token.js";
+import type { User } from "../../generated/prisma/client.js";
+import {
+  createAuthToken,
+  encryptAuthToken,
+  verifyAuthToken,
+} from "../../utils/auth-token.js";
 import { sendVerificationEmail } from "../email/email.servise.js";
-import { 
-  completeEmailVerification, 
-  completePasswordChange, 
-  createAuthToken as createAuthTokenDocument, 
+import {
+  completeEmailVerification,
+  completePasswordChange,
+  createAuthToken as createAuthTokenDocument,
   getValidAuthToken,
   findAuthTokenByHash,
-  completeTokenResend
+  completeTokenResend,
 } from "./auth.repository.js";
 import { env } from "../../config/env.js";
-import type { AuthTokenType } from "./auth.types.js";
-
 import {
   getUserById,
   getUserByEmail,
@@ -29,26 +34,14 @@ import {
 } from "./auth.repository.js";
 import { randomUUID } from "node:crypto";
 
-async function createAuthSession(user: HydratedDocument<IUser>) {
-  const userId = user._id.toString();
+async function createAuthSession(user: Pick<User, "id" | "email" | "role">) {
+  const userId = user.id;
 
-  const accessToken = generateAccessToken(
-    userId,
-    user.role
-  );
-
+  const accessToken = generateAccessToken(userId, user.role);
   const jti = randomUUID();
+  const refreshToken = generateRefreshToken(userId, jti);
 
-  const refreshToken = generateRefreshToken(
-    userId,
-    jti
-  );
-
-  await createRefreshSession(
-    jti,
-    userId,
-    refreshToken
-  );
+  await createRefreshSession(jti, userId, refreshToken);
 
   return {
     accessToken,
@@ -56,29 +49,27 @@ async function createAuthSession(user: HydratedDocument<IUser>) {
   };
 }
 
-export async function registerUser(
-  email: string,
-  password: string,
-) {
+export async function registerUser(email: string, password: string) {
   if (await getUserByEmail(email)) {
-    throw new ApiError(409, "Validation failed", {email: 'User with this email already exist'});
+    throw new ApiError(409, "Validation failed", {
+      email: "User with this email already exist",
+    });
   }
 
   const passwordHash = await bcrypt.hash(password, 12);
-
   const user = await createUser(email, passwordHash);
 
   const verificationToken = createAuthToken();
   const hashedVerificationToken = encryptAuthToken(verificationToken);
 
   await createAuthTokenDocument(
-    user._id.toString(),
+    user.id,
     hashedVerificationToken,
     "EMAIL_VERIFICATION",
-    env.emailVerificationExpirationTime
+    env.emailVerificationExpirationTime,
   );
 
-  await sendVerificationEmail(email, 'EMAIL_VERIFICATION', verificationToken);
+  await sendVerificationEmail(email, "EMAIL_VERIFICATION", verificationToken);
 
   const { accessToken, refreshToken } = await createAuthSession(user);
 
@@ -86,27 +77,21 @@ export async function registerUser(
     accessToken,
     refreshToken,
     user: {
-      id: user._id.toString(),
+      id: user.id,
       email: user.email,
       role: user.role,
     },
   };
 }
 
-export async function loginUser(
-  email: string,
-  password: string
-) {
+export async function loginUser(email: string, password: string) {
   const user = await getUserByEmail(email);
 
   if (!user) {
     throw new ApiError(422, "Password or email is invalid");
   }
 
-  const isPasswordValid = await bcrypt.compare(
-    password,
-    user.passwordHash
-  );
+  const isPasswordValid = await bcrypt.compare(password, user.passwordHash);
 
   if (!isPasswordValid) {
     throw new ApiError(422, "Password or email is invalid");
@@ -118,7 +103,7 @@ export async function loginUser(
     accessToken,
     refreshToken,
     user: {
-      id: user._id.toString(),
+      id: user.id,
       email: user.email,
       role: user.role,
     },
@@ -129,10 +114,9 @@ export async function refreshAccessToken(refreshToken: string) {
   const tokenData = verifyRefreshToken(refreshToken);
 
   const tokenHash = crypto
-      .createHash("sha256")
-      .update(refreshToken)
-      .digest("hex");
-
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
   const session = await getRefreshSessionByJti(tokenData.jti);
 
   if (
@@ -148,11 +132,10 @@ export async function refreshAccessToken(refreshToken: string) {
     throw new ApiError(401, "Invalid refresh token");
   }
 
-  const { accessToken:newAccessToken, refreshToken:newRefreshToken } = await createAuthSession(user);
+  const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+    await createAuthSession(user);
 
-  await revokeRefreshSession(
-    session._id.toString()
-  );
+  await revokeRefreshSession(session.id);
 
   return {
     accessToken: newAccessToken,
@@ -164,10 +147,9 @@ export async function revokeSession(refreshToken: string) {
   const tokenData = verifyRefreshToken(refreshToken);
 
   const tokenHash = crypto
-      .createHash("sha256")
-      .update(refreshToken)
-      .digest("hex");
-
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
   const session = await getRefreshSessionByJti(tokenData.jti);
 
   if (
@@ -178,77 +160,68 @@ export async function revokeSession(refreshToken: string) {
     throw new ApiError(401, "Invalid refresh token");
   }
 
-  await revokeRefreshSession(
-    session._id.toString()
-  );
+  await revokeRefreshSession(session.id);
 }
 
-export async function verifyEmail(
-  userId: string,
-  token: string
-) {
+export async function verifyEmail(userId: string, token: string) {
   const storedToken = await getValidAuthToken(userId, "EMAIL_VERIFICATION");
 
-  if (
-    !storedToken ||
-    !verifyAuthToken(token, storedToken.tokenHash)
-  ) {
+  if (!storedToken || !verifyAuthToken(token, storedToken.tokenHash)) {
     throw new ApiError(401, "Invalid email verification token");
   }
 
-  await completeEmailVerification(userId, storedToken._id.toString());
+  await completeEmailVerification(userId, storedToken.id);
 }
 
-export async function resendEmailVerificationLink(
-  userId: string,
-) {
+export async function resendEmailVerificationLink(userId: string) {
   const user = await getUserById(userId);
-  if (!user) throw new ApiError(401, "Unauthorized"); 
+  if (!user) throw new ApiError(401, "Unauthorized");
 
   const verificationToken = createAuthToken();
   const hashedVerificationToken = encryptAuthToken(verificationToken);
 
-  await completeTokenResend(user._id.toString(), 'EMAIL_VERIFICATION', hashedVerificationToken);
-  await sendVerificationEmail(user.email, 'EMAIL_VERIFICATION', verificationToken);
+  await completeTokenResend(
+    user.id,
+    "EMAIL_VERIFICATION",
+    hashedVerificationToken,
+  );
+  await sendVerificationEmail(
+    user.email,
+    "EMAIL_VERIFICATION",
+    verificationToken,
+  );
 }
 
-export async function resendPasswordResetLink(
-  email: string,
-) {
+export async function resendPasswordResetLink(email: string) {
   const user = await getUserByEmail(email);
-  if (!user) throw new ApiError(401, "Unauthorized"); 
+  if (!user) throw new ApiError(401, "Unauthorized");
 
   const verificationToken = createAuthToken();
   const hashedVerificationToken = encryptAuthToken(verificationToken);
 
-  await completeTokenResend(user._id.toString(), 'PASSWORD_RESET', hashedVerificationToken);
-  await sendVerificationEmail(user.email, 'PASSWORD_RESET', verificationToken);
+  await completeTokenResend(user.id, "PASSWORD_RESET", hashedVerificationToken);
+  await sendVerificationEmail(user.email, "PASSWORD_RESET", verificationToken);
 }
 
-export async function startPasswordReset(
-  email: string
-) {
+export async function startPasswordReset(email: string) {
   const user = await getUserByEmail(email);
 
-  if (!user) throw new ApiError(422, "User with this email does not exist")
+  if (!user) throw new ApiError(422, "User with this email does not exist");
 
   const resetToken = createAuthToken();
   const hashedResetToken = encryptAuthToken(resetToken);
 
   await createAuthTokenDocument(
-    user._id.toString(),
+    user.id,
     hashedResetToken,
     "PASSWORD_RESET",
-    env.passwordResetExpirationTime
+    env.passwordResetExpirationTime,
   );
 
-  await sendVerificationEmail(email, 'PASSWORD_RESET', resetToken);
+  await sendVerificationEmail(email, "PASSWORD_RESET", resetToken);
 }
 
-export async function changePassword(
-  password: string,
-  token: string
-) {
+export async function changePassword(password: string, token: string) {
   const tokenHash = encryptAuthToken(token);
   const storedToken = await findAuthTokenByHash(tokenHash, "PASSWORD_RESET");
 
@@ -262,5 +235,9 @@ export async function changePassword(
 
   const passwordHash = await bcrypt.hash(password, 12);
 
-  await completePasswordChange(storedToken.userId.toString(), passwordHash, storedToken._id.toString());
+  await completePasswordChange(
+    storedToken.userId,
+    passwordHash,
+    storedToken.id,
+  );
 }

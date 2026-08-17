@@ -1,95 +1,79 @@
-import { RefreshSession } from "../../models/RefreshSession.model.js";
-import {
-  AuthToken,
-  type IAuthToken,
-} from "../../models/AuthToken.model.js";
-import type { IRefreshSession } from "../../models/RefreshSession.model.js";
 import { env } from "../../config/env.js";
+import { prisma } from "../../config/database.js";
 import crypto from "node:crypto";
-import { Types, type HydratedDocument } from "mongoose";
-import { updateUserStatusWithSession, updateUserPassword } from "../user/user.repository.js";
-import mongoose from "mongoose";
+import {
+  updateUserStatusWithSession,
+  updateUserPassword,
+} from "../user/user.repository.js";
 import type { AuthTokenType } from "./auth.types.js";
 
 export async function createRefreshSession(
   jti: string,
   userId: string,
   token: string,
-): Promise<HydratedDocument<IRefreshSession>> {
-  const expiresAt = new Date(
-    Date.now() + env.refreshExpirationTime
-  );
-
+) {
+  const expiresAt = new Date(Date.now() + env.refreshExpirationTime);
   const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
 
-  return RefreshSession.create({
-    jti,
-    userId,
-    tokenHash,
-    expiresAt,
+  return prisma.refreshSession.create({
+    data: {
+      jti,
+      userId,
+      tokenHash,
+      expiresAt,
+    },
   });
 }
 
-export async function getRefreshSessionByJti(
-  jti: string,
-): Promise<HydratedDocument<IRefreshSession> | null> {
-  return RefreshSession.findOne({jti: jti});
+export async function getRefreshSessionByJti(jti: string) {
+  return prisma.refreshSession.findUnique({ where: { jti } });
 }
 
 export async function revokeRefreshSession(id: string) {
-  return RefreshSession.findByIdAndUpdate(
-    id,
-    {
-      $set: {
-        revokedAt: new Date(),
-      },
-    },
-    { new: true },
-  );
+  return prisma.refreshSession.update({
+    where: { id },
+    data: { revokedAt: new Date() },
+  });
 }
 
 export async function revokeAllUserSessions(userId: string) {
-  return RefreshSession.updateMany(
-    {
+  return prisma.refreshSession.updateMany({
+    where: {
       userId,
-      revokedAt: { $exists: false },
+      revokedAt: null,
     },
-    {
-      $set: {
-        revokedAt: new Date(),
-      },
+    data: {
+      revokedAt: new Date(),
     },
-  );
+  });
 }
-
-
 
 export async function createAuthToken(
   userId: string,
   tokenHash: string,
   type: AuthTokenType,
   expirationTime: number,
-): Promise<HydratedDocument<IAuthToken> | null> {
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + expirationTime);
+) {
+  const expiresAt = new Date(Date.now() + expirationTime);
 
-  return AuthToken.create({
-    userId: new Types.ObjectId(userId),
-    tokenHash,
-    type,
-    expiresAt: expiresAt,
+  return prisma.authToken.create({
+    data: {
+      userId,
+      tokenHash,
+      type,
+      expiresAt,
+    },
   });
 }
 
-export async function getValidAuthToken(
-  userId: string,
-  type: AuthTokenType,
-): Promise<HydratedDocument<IAuthToken> | null> {
-  return await AuthToken.findOne({
-    userId,
-    expiresAt: { $gt: new Date() },
-    type,
-    usedAt: null,
+export async function getValidAuthToken(userId: string, type: AuthTokenType) {
+  return prisma.authToken.findFirst({
+    where: {
+      userId,
+      expiresAt: { gt: new Date() },
+      type,
+      usedAt: null,
+    },
   });
 }
 
@@ -97,12 +81,18 @@ export async function deleteValidAuthToken(
   userId: string,
   type: AuthTokenType,
 ) {
-  return await AuthToken.findOneAndDelete({
-    userId,
-    expiresAt: { $gt: new Date() },
-    type,
-    usedAt: null,
+  const token = await prisma.authToken.findFirst({
+    where: {
+      userId,
+      expiresAt: { gt: new Date() },
+      type,
+      usedAt: null,
+    },
   });
+
+  if (!token) return null;
+
+  return prisma.authToken.delete({ where: { id: token.id } });
 }
 
 export async function completeTokenResend(
@@ -110,45 +100,42 @@ export async function completeTokenResend(
   type: AuthTokenType,
   tokenHash: string,
 ) {
-  const session = await mongoose.startSession();
+  return prisma.$transaction(async (tx) => {
+    await tx.authToken.deleteMany({
+      where: {
+        userId,
+        type,
+        usedAt: null,
+        expiresAt: { gt: new Date() },
+      },
+    });
 
-  try {
-    await session.withTransaction(async () => {
-      await deleteValidAuthToken(userId, type);
-      await createAuthToken(
-        userId.toString(),
+    await tx.authToken.create({
+      data: {
+        userId,
         tokenHash,
         type,
-        env.emailVerificationExpirationTime
-      );
+        expiresAt: new Date(Date.now() + env.emailVerificationExpirationTime),
+      },
     });
-  } finally {
-    await session.endSession();
-  }
+  });
 }
 
 export async function completeEmailVerification(
   userId: string,
   tokenId: string,
 ) {
-  const session = await mongoose.startSession();
-
-  try {
-    await session.withTransaction(async () => {
-      await updateUserStatusWithSession(userId, "ACTIVE", session);
-      await AuthToken.findByIdAndDelete(tokenId, { session });
-    });
-  } finally {
-    await session.endSession();
-  }
+  return prisma.$transaction(async (tx) => {
+    await updateUserStatusWithSession(userId, "ACTIVE", tx);
+    await tx.authToken.delete({ where: { id: tokenId } });
+  });
 }
 
 export async function findAuthTokenByHash(
   tokenHash: string,
   type: AuthTokenType,
-): Promise<HydratedDocument<IAuthToken> | null> {
-  const token = AuthToken.findOne({tokenHash: tokenHash, type: type});
-  return token;
+) {
+  return prisma.authToken.findFirst({ where: { tokenHash, type } });
 }
 
 export async function completePasswordChange(
@@ -156,14 +143,8 @@ export async function completePasswordChange(
   passwordHash: string,
   tokenId: string,
 ) {
-  const session = await mongoose.startSession();
-
-  try {
-    await session.withTransaction(async () => {
-      await updateUserPassword(userId, passwordHash, session);
-      await AuthToken.findByIdAndDelete(tokenId, { session });
-    });
-  } finally {
-    await session.endSession();
-  }
+  return prisma.$transaction(async (tx) => {
+    await updateUserPassword(userId, passwordHash, tx);
+    await tx.authToken.delete({ where: { id: tokenId } });
+  });
 }
