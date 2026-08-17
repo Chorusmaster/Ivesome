@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from "cors";
 import routes from "./routes/index.js";
-import { connectDatabase } from "./config/database.js";
 import { errorHandler } from './middlewares/error.middleware.js';
 import cookieParser from "cookie-parser";
 
@@ -16,7 +15,5 @@ app.use(cookieParser());
 
 app.use("/api", routes);
 app.use(errorHandler);
-
-connectDatabase();
 
 export default app;

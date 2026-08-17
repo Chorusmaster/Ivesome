@@ -1,85 +1,71 @@
-import { User } from "../../models/User.model.js";
+import { prisma } from "../../config/database.js";
+import { Prisma } from "../../generated/prisma/client.js";
+import type { User } from "../../generated/prisma/client.js";
 import type { CreateUserData } from "./user.types.js";
-import type { IUser } from "../../models/User.model.js";
-import { Types, type HydratedDocument } from "mongoose";
 import type { UserStatus } from "../user/user.types.js";
-import type { ClientSession } from "mongoose";
 
-export async function getUserById(
-  id: string,
-): Promise<HydratedDocument<IUser> | null> {
-  if (!Types.ObjectId.isValid(id)) {
-    return null;
-  }
-
-  return User.findById(id);
+export async function getUserById(id: string): Promise<User | null> {
+  return prisma.user.findUnique({ where: { id } });
 }
 
-export async function getUserByEmail(
-  email: string,
-): Promise<HydratedDocument<IUser> | null> {
-  return User.findOne({ email });
+export async function getUserByEmail(email: string): Promise<User | null> {
+  return prisma.user.findUnique({ where: { email } });
 }
 
 export async function getUserAuthStatus(
   id: string,
-): Promise<Pick<IUser, "status"> | null> {
-  if (!Types.ObjectId.isValid(id)) {
-    return null;
-  }
-
-  return User.findById(id)
-    .select("status")
-    .lean();
+): Promise<Pick<User, "status"> | null> {
+  return prisma.user.findUnique({
+    where: { id },
+    select: { status: true },
+  });
 }
 
 export async function createUser(
   email: string,
   passwordHash: string,
-): Promise<HydratedDocument<IUser>> {
-  return User.create({ email, passwordHash });
+): Promise<User> {
+  return prisma.user.create({
+    data: { email, passwordHash },
+  });
 }
 
-export async function createUsers(
-  users: CreateUserData[],
-): Promise<HydratedDocument<IUser>[]> {
-  return User.insertMany(users);
+export async function createUsers(users: CreateUserData[]): Promise<User[]> {
+  return Promise.all(
+    users.map(({ email, passwordHash, role, status }) =>
+      prisma.user.create({
+        data: { email, passwordHash, role, status },
+      }),
+    ),
+  );
 }
 
-export async function getAllUsers(): Promise<HydratedDocument<IUser>[]> {
-  return User.find();
+export async function getAllUsers(): Promise<User[]> {
+  return prisma.user.findMany();
 }
 
 export async function deleteAllUsers() {
-  return User.deleteMany({});
+  return prisma.user.deleteMany({});
 }
 
 export async function updateUserStatusWithSession(
   userId: string,
   newStatus: UserStatus,
-  session: ClientSession
+  tx: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
-  return User.findByIdAndUpdate(
-    userId,
-    { status: newStatus },
-    {
-      returnDocument: "after",
-      session: session,
-    }
-  );
+  return tx.user.update({
+    where: { id: userId },
+    data: { status: newStatus },
+  });
 }
 
 export async function updateUserPassword(
-  userId: string, 
+  userId: string,
   passwordHash: string,
-  session: ClientSession
+  tx: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
-  return User.findByIdAndUpdate(
-    userId,
-    { passwordHash: passwordHash },
-    {
-      returnDocument: "after",
-      session: session,
-    }
-  );
+  return tx.user.update({
+    where: { id: userId },
+    data: { passwordHash },
+  });
 }

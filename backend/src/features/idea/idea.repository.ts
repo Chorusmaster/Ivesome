@@ -1,19 +1,40 @@
-import { Idea } from "../../models/Idea.model.js";
-import type { IIdea } from "../../models/Idea.model.js";
+import { prisma } from "../../config/database.js";
 import type { CreateIdeaData } from "./idea.types.js";
-import { Types, type HydratedDocument } from "mongoose";
 
-export async function createIdeas(
-  ideas: CreateIdeaData[],
-): Promise<HydratedDocument<IIdea>[]> {
-  return Idea.insertMany(
-    ideas.map((idea) => ({
-      ...idea,
-      authorId: new Types.ObjectId(idea.authorId),
-    })),
-  );
+export async function createIdeas(ideas: CreateIdeaData[]) {
+  return prisma.$transaction(async (tx) => {
+    const createdProjects = await Promise.all(
+      ideas.map(async (idea) => {
+        const project = await tx.project.create({
+          data: {
+            title: idea.title,
+            shortDescription: idea.shortDescription,
+            description: idea.fullDescription ?? idea.shortDescription,
+            stage: "IDEA",
+            visibility: idea.visibility,
+            status:
+              idea.status === "DRAFT" || idea.status === "PUBLISHED"
+                ? "ACTIVE"
+                : "BLOCKED",
+          },
+        });
+
+        await tx.projectMember.create({
+          data: {
+            projectId: project.id,
+            userId: idea.authorId,
+            role: "OWNER",
+          },
+        });
+
+        return project;
+      }),
+    );
+
+    return createdProjects;
+  });
 }
 
 export async function deleteAllIdeas() {
-  return Idea.deleteMany({});
+  return prisma.project.deleteMany({});
 }
