@@ -1,5 +1,6 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth/auth.context";
+import { filePathToUrl } from "../lib/utils";
 
 import Logo from "@/assets/logo.svg?react";
 import { Search } from "lucide-react";
@@ -8,7 +9,7 @@ import Avatar from "@/shared/ui/avatar";
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { logout } = useAuth();
+  const {user, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -55,7 +56,13 @@ function Navbar() {
           + New idea
         </Link>
         <Link to="/profile">
-          <Avatar name="Anonymous User" theme="accent" />
+          <Avatar name={
+              (user?.firstName && user?.lastName) ?
+              user.firstName + " " + user.lastName :
+              (user?.login ?? "Anonymous")
+            } 
+          theme="accent"
+          imageUrl={filePathToUrl(user?.avatarLink)} />
         </Link>
         <button
           onClick={handleLogout}

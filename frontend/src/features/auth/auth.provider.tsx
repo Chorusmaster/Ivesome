@@ -9,6 +9,8 @@ import {
 import { AuthContext } from "./auth.context";
 import type { User } from "./auth.types";
 import { refresh } from "./auth.api";
+import { updateProfile as performProfileUpdate } from "../profile/profile.api";
+import type { UpdateProfileData } from "../profile/profile.types";
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -38,9 +40,9 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(user);
   }
 
-  async function register(email: string, password: string, passwordConfirm: string) {
+  async function register(login: string, email: string, password: string, passwordConfirm: string) {
     setIsLoading(true);
-    const user = await performRegister({ email, password, passwordConfirm });
+    const user = await performRegister({ login, email, password, passwordConfirm });
     setIsLoading(false);
     setUser(user);
   }
@@ -57,6 +59,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     await performLogout();
     setIsLoading(false);
     setUser(null);
+  }
+
+  async function updateProfile(data: UpdateProfileData) {
+    setIsLoading(true);
+    const user = await performProfileUpdate(data);
+    setIsLoading(false);
+    setUser(user);
   }
 
   useEffect(() => {
@@ -85,6 +94,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         login,
         logout,
         verifyEmail,
+        updateProfile
       }}
     >
       {children}

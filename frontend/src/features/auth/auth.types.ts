@@ -1,13 +1,20 @@
+import type { ProfileLink } from "../profile/profile.types";
+
 export type User = {
   id: string;
   email: string;
+  login: string;
   role: "USER" | "ADMIN";
   status: "UNVERIFIED" | "ACTIVE" | "BLOCKED";
-  profile?: {
-    firstName: string,
-    lastName: string,
-    avatar: string
-  };
+  firstName?: string,
+  lastName?: string,
+  bio?: string,
+  about?: string,
+  location?: string,
+  skills?: string[],
+  links?: ProfileLink[],
+  avatarLink?: string,
+  createdAt: string,
 };
 
 export type LoginPayload = {
@@ -16,6 +23,7 @@ export type LoginPayload = {
 };
 
 export type RegisterPayload = LoginPayload & {
+  login: string,
   passwordConfirm: string
 };
 
@@ -39,17 +47,18 @@ export type LoginSuccessResponse = {
 
 export type LoginErrorResponse = {
   errors?: {
-    email: string,
-    password: string
+    email?: string,
+    password?: string
   },
   message: string
 }
 
 export type RegisterErrorResponse = {
   errors?: {
-    email: string,
-    password: string
-    passwordConfirm: string
+    email?: string,
+    login?: string,
+    password?: string
+    passwordConfirm?: string
   },
   message: string
 }

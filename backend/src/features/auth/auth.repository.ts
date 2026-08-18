@@ -3,9 +3,10 @@ import { prisma } from "../../config/database.js";
 import crypto from "node:crypto";
 import {
   updateUserStatusWithSession,
-  updateUserPassword,
+  updateUser,
 } from "../user/user.repository.js";
 import type { AuthTokenType } from "./auth.types.js";
+import type { UpdateUserData } from "../user/user.types.js";
 
 export async function createRefreshSession(
   jti: string,
@@ -144,7 +145,7 @@ export async function completePasswordChange(
   tokenId: string,
 ) {
   return prisma.$transaction(async (tx) => {
-    await updateUserPassword(userId, passwordHash, tx);
+    await updateUser(userId, { passwordHash: passwordHash }, tx);
     await tx.authToken.delete({ where: { id: tokenId } });
   });
 }
