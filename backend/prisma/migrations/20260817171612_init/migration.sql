@@ -59,28 +59,22 @@ CREATE TABLE "RefreshSession" (
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
+    "login" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "firstName" TEXT,
+    "lastName" TEXT,
+    "avatarLink" TEXT,
     "passwordHash" TEXT NOT NULL,
     "role" "UserRole" NOT NULL DEFAULT 'USER',
     "status" "UserStatus" NOT NULL DEFAULT 'UNVERIFIED',
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "Profile" (
-    "id" TEXT NOT NULL,
-    "userId" TEXT NOT NULL,
-    "firstName" TEXT NOT NULL,
-    "lastName" TEXT NOT NULL,
     "location" TEXT,
     "bio" TEXT,
     "about" TEXT,
-    "skills" TEXT[],
-    "links" JSONB NOT NULL,
+    "skills" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "links" JSONB NOT NULL DEFAULT '[]',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "Profile_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -235,10 +229,10 @@ CREATE INDEX "RefreshSession_userId_idx" ON "RefreshSession"("userId");
 CREATE INDEX "RefreshSession_expiresAt_idx" ON "RefreshSession"("expiresAt");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_login_key" ON "User"("login");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Profile_userId_key" ON "Profile"("userId");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Workspace_projectId_key" ON "Workspace"("projectId");
@@ -257,9 +251,6 @@ ALTER TABLE "AuthToken" ADD CONSTRAINT "AuthToken_userId_fkey" FOREIGN KEY ("use
 
 -- AddForeignKey
 ALTER TABLE "RefreshSession" ADD CONSTRAINT "RefreshSession_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Profile" ADD CONSTRAINT "Profile_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Workspace" ADD CONSTRAINT "Workspace_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -22,6 +22,7 @@ import {
 } from "../features/auth/auth.schema.js";
 
 const router = Router();
+
 router.get("/", (req, res) => {
   res.send("Hello World from Express!");
 });

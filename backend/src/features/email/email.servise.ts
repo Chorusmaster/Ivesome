@@ -7,8 +7,9 @@ export async function sendVerificationEmail(
     type: AuthTokenType,
     token: string
   ) {
+    let info;
     if (type == 'EMAIL_VERIFICATION') {
-      await transporter.sendMail({
+      info = await transporter.sendMail({
         from: `"${env.SMTPSenderName}" <${env.SMTPSenderEmail}>`,
         to: email,
         subject: "Verify your email",
@@ -19,6 +20,7 @@ export async function sendVerificationEmail(
           </a>
         `,
       });
+      console.log("MAIL RESULT:", info);
     } else {
       await transporter.sendMail({
         from: `"${env.SMTPSenderName}" <${env.SMTPSenderEmail}>`,

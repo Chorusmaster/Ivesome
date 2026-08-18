@@ -10,6 +10,7 @@ import {
   resendEmailVerificationLink as performEmailVerificationLinkResend,
   resendPasswordResetLink as performPasswordResetLinkResend
 } from "./auth.service.js";
+import { getUser } from "../user/user.service.js";
 import { env } from "../../config/env.js";
 
 function setAuthCookies(
@@ -51,6 +52,7 @@ export async function register(
   res: Response
 ) {
   const result = await registerUser(
+    req.body.login,
     req.body.email,
     req.body.password
   );
@@ -60,8 +62,13 @@ export async function register(
   res.json(result.user);
 }
 
-export const me = (req: Request, res: Response) => {
-  res.json(req.user);
+export async function me(
+  req: Request, 
+  res: Response
+) {
+  if (!req.user.id) return res.status(401).json({ message: "Unauthorized" });
+  const user = await getUser(req.user.id);
+  res.json(user);
 };
 
 export async function logout (

@@ -25,6 +25,7 @@ import { env } from "../../config/env.js";
 import {
   getUserById,
   getUserByEmail,
+  getUserByLogin,
   createUser,
 } from "../user/user.repository.js";
 import {
@@ -49,15 +50,21 @@ async function createAuthSession(user: Pick<User, "id" | "email" | "role">) {
   };
 }
 
-export async function registerUser(email: string, password: string) {
+export async function registerUser(login: string, email: string, password: string) {
   if (await getUserByEmail(email)) {
     throw new ApiError(409, "Validation failed", {
       email: "User with this email already exist",
     });
   }
 
+  if (await getUserByLogin(login)) {
+    throw new ApiError(409, "Validation failed", {
+      login: "This login has already been taken",
+    });
+  }
+
   const passwordHash = await bcrypt.hash(password, 12);
-  const user = await createUser(email, passwordHash);
+  const user = await createUser(login, email, passwordHash);
 
   const verificationToken = createAuthToken();
   const hashedVerificationToken = encryptAuthToken(verificationToken);

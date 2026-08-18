@@ -11,71 +11,72 @@ import {
   Triangle,
   Globe,
 } from "lucide-react";
+import { useEffect } from "react";
+import { useAuth } from "@/features/auth/auth.context";
 
 import Avatar from "@/shared/ui/avatar";
 import Card from "@/shared/ui/card";
 import DiscoveryCard from "@/features/search/ui/discovery-card";
-
-const profile = {
-  name: "Ferko Mrkvička",
-  role: "Product designer & founder",
-  email: "ferko@ivesome.app",
-  location: "Bratislava, SK",
-  joinedAt: new Date("2024-03-12"),
-  bio: "Building tools for remote teams. Looking for co-founders who care about craft and shipping.",
-  about: "I spent the last few years designing collaboration products for distributed teams. On Ivesome I share early ideas, gather feedback, and look for people who want to turn promising concepts into real products. Currently focused on habit-building tools and lightweight analytics for Slack-first workflows.",
-  skills: ["product design", "saas", "b2b", "remote teams", "ux research"],
-  links: {
-    website: "https://ferko.dev",
-    linkedin: "https://linkedin.com/in/ferko",
-  },
-  stats: {
-    ideas: 4,
-    projects: 2,
-    upvotes: 286,
-  },
-};
+import { filePathToUrl } from "@/shared/lib/utils";
 
 function ProfilePage() {
+  const { user, refreshUser } = useAuth();
+
+  useEffect(() => {
+    const loadUser = async () => {
+      await refreshUser();
+    };
+
+    if (!user) loadUser();
+  }, [user]);
+
   return (
     <div>
       <div className="px-16 py-12 bg-surface border-b border-border">
         <div className="flex justify-between items-start gap-8">
           <div className="flex gap-6 items-start min-w-0">
-            <Avatar name={profile.name} size="lg" theme="primary" />
+            <Avatar name={
+              (user?.firstName && user?.lastName) ?
+              user.firstName + " " + user.lastName :
+              (user?.login ?? "Anonymous")
+            } 
+            size="lg" 
+            theme="primary" 
+            imageUrl={filePathToUrl(user?.avatarLink)}
+            />
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-1">
                 <h1 className="text-display font-heading text-text-primary">
-                  {profile.name}
+                  {user?.firstName ?? "Anonymous"}{" "}{user?.lastName ?? ""}
                 </h1>
               </div>
 
               <p className="text-text-secondary text-body mb-3">
-                {profile.role}
+                @{user?.login ?? "anonymous"}
               </p>
 
               <p className="text-text-secondary text-body mb-4 max-w-2xl">
-                {profile.bio}
+                {user?.bio ?? "No bio yet"}
               </p>
 
               <div className="flex flex-wrap gap-4 text-muted text-small">
-                <span className="flex items-center gap-1.5">
+                {user?.location && <span className="flex items-center gap-1.5">
                   <MapPin size={16} />
-                  {profile.location}
-                </span>
-                <span className="flex items-center gap-1.5">
+                  {user.location}
+                </span>}
+                {user?.createdAt && <span className="flex items-center gap-1.5">
                   <Calendar size={16} />
                   Joined{" "}
-                  {formatDistanceToNowStrict(profile.joinedAt, {
+                  {formatDistanceToNowStrict(user.createdAt, {
                     locale: enUS,
                     addSuffix: true,
                   })}
-                </span>
-                <span className="flex items-center gap-1.5">
+                </span>}
+                {user?.email && <span className="flex items-center gap-1.5">
                   <Mail size={16} />
-                  {profile.email}
-                </span>
+                  {user.email}
+                </span>}
               </div>
             </div>
           </div>
@@ -92,12 +93,12 @@ function ProfilePage() {
 
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
-          <Card>
+          {user?.about && <Card>
             <h2 className="heading">About</h2>
             <p className="text-text-secondary whitespace-pre-line">
-              {profile.about}
+              {user.about}
             </p>
-          </Card>
+          </Card>}
 
           <Card>
             <div className="flex justify-between items-baseline mb-8">
@@ -147,7 +148,7 @@ function ProfilePage() {
                   Ideas
                 </span>
                 <span className="font-heading text-text-primary">
-                  {profile.stats.ideas}
+                  {0}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -156,7 +157,7 @@ function ProfilePage() {
                   Projects
                 </span>
                 <span className="font-heading text-text-primary">
-                  {profile.stats.projects}
+                  {0}
                 </span>
               </div>
               <div className="flex items-center justify-between">
@@ -165,46 +166,39 @@ function ProfilePage() {
                   Upvotes received
                 </span>
                 <span className="font-heading text-text-primary">
-                  {profile.stats.upvotes}
+                  {0}
                 </span>
               </div>
             </div>
           </Card>
 
-          <Card>
+          {(user?.links && user.links.length > 0) && <Card>
             <h2 className="subheading">Links</h2>
             <div className="flex flex-col gap-3">
-              <a
-                href={profile.links.website}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 text-text-secondary hover:text-primary transition"
-              >
-                <Globe size={18} />
-                Website
-              </a>
-              <a
-                href={profile.links.linkedin}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center gap-2 text-text-secondary hover:text-primary transition"
-              >
-                <Globe size={18} />
-                LinkedIn
-              </a>
+              {user.links.map((link, id) => (
+                <a
+                  href={link.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 text-text-secondary hover:text-primary transition"
+                >
+                  <Globe size={18} />
+                  {link.link}
+                </a>
+              ))}
             </div>
-          </Card>
+          </Card>}
 
-          <Card>
+          {(user?.skills && user.skills.length > 0 && user.skills[0].length > 0) && <Card>
             <h2 className="subheading">Skills & interests</h2>
             <div className="flex flex-wrap gap-2">
-              {profile.skills.map((skill) => (
+              {user.skills.map((skill) => (
                 <span key={skill} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">
                   {skill}
                 </span>
               ))}
             </div>
-          </Card>
+          </Card>}
         </aside>
       </div>
     </div>

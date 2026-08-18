@@ -1,8 +1,3 @@
-export type ProfileLinks = {
-  website: string;
-  linkedin: string;
-};
-
 export type ProfileStats = {
   ideas: number;
   projects: number;
@@ -10,19 +5,32 @@ export type ProfileStats = {
 };
 
 export type Profile = {
-  name: string;
-  role: string;
-  email: string;
-  location: string;
-  joinedAt: Date;
-  bio: string;
-  about: string;
+  location?: string;
+  bio?: string;
+  about?: string;
   skills: string[];
-  links: ProfileLinks;
+  links: ProfileLinkInput[];
   stats: ProfileStats;
 };
 
-export type ProfileFormData = Pick<
-  Profile,
-  "name" | "role" | "location" | "bio" | "about" | "skills" | "links"
->;
+export interface UpdateProfileData {
+  firstName: string;
+  lastName: string;
+  login: string;
+  location?: string;
+  bio?: string;
+  about?: string;
+  skills: string[];
+  links: ProfileLinkInput[];
+  avatar?: File;
+}
+
+export type ProfileLinkInput = {
+  id: string;
+  link: string;
+};
+
+export interface ProfileLink {
+  type: "GITHUB" | "LINKEDIN" | "UNKNOWN"
+  link: string
+}

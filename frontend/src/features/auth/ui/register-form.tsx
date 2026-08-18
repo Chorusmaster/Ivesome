@@ -13,10 +13,12 @@ function RegisterForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
+  const [login, setLogin] = useState("");
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [passwordConfirmError, setPasswordConfirmError] = useState("");
+  const [loginError, setLoginError] = useState("");
   const [generalError, setGeneralError] = useState("");
 
   const navigate = useNavigate();
@@ -26,11 +28,12 @@ function RegisterForm() {
     try {
       e.preventDefault();
       setEmailError("");
+      setLoginError("");
       setPasswordError("");
       setPasswordConfirmError("");
       setGeneralError("");
 
-      await register(email, password, passwordConfirm);
+      await register(login, email, password, passwordConfirm);
       sessionStorage.setItem("email", email);
       navigate("/verify-email");
     } catch (error) {
@@ -45,6 +48,9 @@ function RegisterForm() {
           }
           if (errorResponse.errors?.passwordConfirm) {
             setPasswordConfirmError(errorResponse.errors.passwordConfirm);
+          }
+          if (errorResponse.errors?.login) {
+            setLoginError(errorResponse.errors.login);
           }
         } else if (errorResponse.message) {
           setGeneralError(errorResponse.message);
@@ -79,6 +85,15 @@ function RegisterForm() {
               autoComplete="email"
               onChange={(e) => setEmail(e.target.value)}
               error={emailError}
+            />
+            <Input
+              id="login"
+              type="text"
+              label="Login"
+              placeholder="your-nickname"
+              autoComplete="login"
+              onChange={(e) => setLogin(e.target.value)}
+              error={loginError}
             />
             <Input
               id="password"

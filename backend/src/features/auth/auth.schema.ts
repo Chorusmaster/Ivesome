@@ -2,6 +2,13 @@ import z from 'zod';
 
 export const registerSchema = z.object({
   email: z.email(),
+  login: z.string()
+  .min(3, "Login must be at least 3 characters")
+  .max(30, "Login must be at most 30 characters")
+  .regex(
+    /^[a-zA-Z0-9_]+$/,
+    "Login can contain only letters, numbers and underscores"
+  ),
   password: z.string().min(8),
   passwordConfirm: z.string().min(8),
 })
