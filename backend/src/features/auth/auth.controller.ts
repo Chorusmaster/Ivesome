@@ -1,14 +1,14 @@
 import type { Request, Response } from "express";
-import { 
-  registerUser, 
-  loginUser, 
-  refreshAccessToken, 
-  revokeSession, 
-  verifyEmail as performEmailVerification,
-  changePassword as performPasswordChange,
+import {
+  register as performRegister,
+  login as performLogin,
+  refreshToken as performRefreshToken,
+  revoke as performRevoke,
+  verifyEmail,
+  changePassword,
   startPasswordReset,
-  resendEmailVerificationLink as performEmailVerificationLinkResend,
-  resendPasswordResetLink as performPasswordResetLinkResend
+  resendEmailVerificationLink,
+  resendPasswordResetLink,
 } from "./auth.service.js";
 import { getUser } from "../user/user.service.js";
 import { env } from "../../config/env.js";
@@ -16,7 +16,7 @@ import { env } from "../../config/env.js";
 function setAuthCookies(
   res: Response,
   accessToken: string,
-  refreshToken: string
+  refreshToken: string,
 ) {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
@@ -33,28 +33,19 @@ function setAuthCookies(
   });
 }
 
-export async function login(
-  req: Request,
-  res: Response
-) {
-  const result = await loginUser(
-    req.body.email,
-    req.body.password
-  );
+export async function loginHandler(req: Request, res: Response) {
+  const result = await performLogin(req.body.email, req.body.password);
 
   setAuthCookies(res, result.accessToken, result.refreshToken);
 
   res.json(result.user);
 }
 
-export async function register(
-  req: Request,
-  res: Response
-) {
-  const result = await registerUser(
+export async function registerHandler(req: Request, res: Response) {
+  const result = await performRegister(
     req.body.login,
     req.body.email,
-    req.body.password
+    req.body.password,
   );
 
   setAuthCookies(res, result.accessToken, result.refreshToken);
@@ -62,19 +53,13 @@ export async function register(
   res.json(result.user);
 }
 
-export async function me(
-  req: Request, 
-  res: Response
-) {
+export async function getMeHandler(req: Request, res: Response) {
   if (!req.user.id) return res.status(401).json({ message: "Unauthorized" });
   const user = await getUser(req.user.id);
   res.json(user);
-};
+}
 
-export async function logout (
-  req: Request, 
-  res: Response
-) {
+export async function logoutHandler(req: Request, res: Response) {
   const token = req.cookies.refreshToken;
 
   if (!token) {
@@ -83,7 +68,7 @@ export async function logout (
     });
   }
 
-  await revokeSession(token);
+  await performRevoke(token);
 
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
@@ -91,12 +76,9 @@ export async function logout (
   res.json({
     message: "Logged out",
   });
-};
+}
 
-export async function refresh(
-  req: Request, 
-  res: Response
-) {
+export async function refreshHandler(req: Request, res: Response) {
   const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
@@ -105,52 +87,47 @@ export async function refresh(
     });
   }
 
-  const { accessToken:newAccessToken, refreshToken:newRefreshToken } = await refreshAccessToken(refreshToken);
+  const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+    await performRefreshToken(refreshToken);
 
   setAuthCookies(res, newAccessToken, newRefreshToken);
 
   res.json({
     message: "Session refreshed",
   });
-};
+}
 
-export async function verifyEmail(
-  req: Request,
-  res: Response
-) {
-  await performEmailVerification(req.user.id, req.body.token);
+export async function verifyEmailHandler(req: Request, res: Response) {
+  await verifyEmail(req.user.id, req.body.token);
 
   res.json({
     message: "Email verified",
   });
 }
 
-export async function resendEmailVerificationLink(
+export async function resendEmailVerificationLinkHandler(
   req: Request,
-  res: Response
+  res: Response,
 ) {
-  await performEmailVerificationLinkResend(req.user.id);
+  await resendEmailVerificationLink(req.user.id);
 
   res.json({
     message: "Email resent",
   });
 }
 
-export async function resendPasswordVerificationLink(
+export async function resendPasswordResetLinkHandler(
   req: Request,
-  res: Response
+  res: Response,
 ) {
-  await performPasswordResetLinkResend(req.body.email);
+  await resendPasswordResetLink(req.body.email);
 
   res.json({
     message: "Email resent",
   });
 }
 
-export async function forgotPassword(
-  req: Request,
-  res: Response
-) {
+export async function forgotPasswordHandler(req: Request, res: Response) {
   await startPasswordReset(req.body.email);
 
   res.json({
@@ -158,11 +135,8 @@ export async function forgotPassword(
   });
 }
 
-export async function changePassword(
-  req: Request,
-  res: Response
-) {
-  await performPasswordChange(req.body.password, req.body.token);
+export async function changePasswordHandler(req: Request, res: Response) {
+  await changePassword(req.body.password, req.body.token);
 
   res.json({
     message: "Password successfully changed",
