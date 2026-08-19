@@ -81,14 +81,16 @@ CREATE TABLE "User" (
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
-    "shortDescription" TEXT,
+    "shortDescription" TEXT NOT NULL,
     "description" TEXT,
     "stage" "ProjectStage" NOT NULL,
     "visibility" "ProjectVisibility" NOT NULL,
     "status" "ProjectStatus" NOT NULL DEFAULT 'ACTIVE',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "media" JSONB,
+    "tags" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "logoLink" TEXT,
+    "mediaLinks" JSONB,
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -194,8 +196,18 @@ CREATE TABLE "Notification" (
 CREATE TABLE "Favourite" (
     "userId" TEXT NOT NULL,
     "projectId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Favourite_pkey" PRIMARY KEY ("userId","projectId")
+);
+
+-- CreateTable
+CREATE TABLE "Upvote" (
+    "userId" TEXT NOT NULL,
+    "projectId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Upvote_pkey" PRIMARY KEY ("userId","projectId")
 );
 
 -- CreateTable
@@ -305,6 +317,12 @@ ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_userId_fkey" FOREIGN KEY ("use
 
 -- AddForeignKey
 ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Upvote" ADD CONSTRAINT "Upvote_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Upvote" ADD CONSTRAINT "Upvote_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Report" ADD CONSTRAINT "Report_reporterId_fkey" FOREIGN KEY ("reporterId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

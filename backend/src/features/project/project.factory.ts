@@ -17,7 +17,9 @@ type ProjectFactoryOverrides = Partial<{
   stage: ProjectStage;
   visibility: ProjectVisibility;
   status: ProjectStatus;
-  media: string[];
+  tags: string[];
+  logoLink: string;
+  mediaLinks: string[];
 }>;
 
 export async function makeProject(overrides: ProjectFactoryOverrides = {}) {
@@ -34,6 +36,27 @@ export async function makeProject(overrides: ProjectFactoryOverrides = {}) {
     status:
       overrides.status ?? 
       faker.helpers.arrayElement(PROJECT_STATUS_VALUES),
-    media: overrides.media ?? [],
+    tags: overrides.tags ?? 
+    faker.helpers.arrayElements(
+      [
+        "saas",
+        "b2b",
+        "b2c",
+        "fintech",
+        "healthtech",
+        "ai",
+        "productivity",
+        "education",
+        "ecommerce",
+        "marketing",
+        "analytics",
+        "startup",
+      ],
+      { min: 2, max: 5 }
+    ),
+    ...(overrides.logoLink !== undefined && {
+      logoLink: overrides.logoLink,
+    }),
+    mediaLinks: overrides.mediaLinks ?? [],
   };
 }

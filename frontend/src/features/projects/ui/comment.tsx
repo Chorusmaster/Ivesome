@@ -13,7 +13,7 @@ function Comment({ author, text, date }: CommentProps) {
     <div>
       <hr className="border-border mt-6 mb-6"></hr>
       <div className="flex gap-4">
-        <Avatar name={author} theme="primary_light"></Avatar>
+        <Avatar customText={author} theme="primary_light"></Avatar>
         <div className="flex flex-col gap-1 text-text-secondary">
           <div>
             <span className="text-text-primary font-medium">

@@ -1,21 +1,25 @@
 export interface CreateProjectData {
   title: string;
-  shortDescription?: string;
+  shortDescription: string;
   description?: string;
   stage: ProjectStage;
   visibility: ProjectVisibility;
   status?: ProjectStatus;
-  media?: string[];
+  tags?: string[];
+  logoLink?: string;
+  mediaLinks?: string[];
 }
 
 export interface UpdateProjectData {
   title?: string;
-  shortDescription?: string;
+  shortDescription: string;
   description?: string;
   stage?: ProjectStage;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
-  media?: string[];
+  tags?: string[];
+  logoLink?: string;
+  mediaLinks?: string[];
 }
 
 export const PROJECT_STAGE_VALUES = [

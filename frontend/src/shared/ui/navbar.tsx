@@ -56,11 +56,8 @@ function Navbar() {
           + New idea
         </Link>
         <Link to="/profile">
-          <Avatar name={
-              (user?.firstName && user?.lastName) ?
-              user.firstName + " " + user.lastName :
-              (user?.login ?? "Anonymous")
-            } 
+          <Avatar 
+          user={user ?? undefined}
           theme="accent"
           imageUrl={filePathToUrl(user?.avatarLink)} />
         </Link>

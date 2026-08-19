@@ -2,7 +2,6 @@ import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.middleware.js";
 import {
   getProjectHandler,
-  listProjectsHandler,
   listUserProjectsHandler,
   listPublicProjectsHandler,
   createProjectHandler,
@@ -11,6 +10,7 @@ import {
   addMemberHandler,
   removeMemberHandler,
 } from "./project.controller.js";
+import { upload } from "../storage/storage.service.js";
 
 const router = Router();
 
@@ -18,36 +18,32 @@ router.get("/", listPublicProjectsHandler);
 
 router.get("/user/:userId", listUserProjectsHandler);
 
-router.get("/:id", getProjectHandler);
+router.get("/:projectId", getProjectHandler);
 
 router.post(
-  "/", 
-  authenticate, 
-  createProjectHandler
+  "/",
+  authenticate,
+  upload.fields([
+    { name: "media", maxCount: 10 },
+    { name: "logo", maxCount: 1 },
+  ]),
+  createProjectHandler,
 );
 
 router.put(
-  "/:id", 
-  authenticate, 
-  updateProjectHandler
+  "/:id",
+  authenticate,
+  upload.fields([
+    { name: "media", maxCount: 10 },
+    { name: "logo", maxCount: 1 },
+  ]),
+  updateProjectHandler,
 );
 
-router.delete(
-  "/:id", 
-  authenticate, 
-  deleteProjectHandler
-);
+router.delete("/:id", authenticate, deleteProjectHandler);
 
-router.post(
-  "/:projectId/members/:userId", 
-  authenticate, 
-  addMemberHandler
-);
+router.post("/:projectId/members/:userId", authenticate, addMemberHandler);
 
-router.delete(
-  "/:projectId/members/:userId", 
-  authenticate, 
-  removeMemberHandler
-);
+router.delete("/:projectId/members/:userId", authenticate, removeMemberHandler);
 
 export default router;

@@ -124,6 +124,7 @@ model User {
   messages              Message[]
   notifications         Notification[]
   favourites            Favourite[]
+  upvotes               Upvote[]
   reports               Report[]
   authTokens            AuthToken[]
   refreshSessions       RefreshSession[]
@@ -132,18 +133,21 @@ model User {
 model Project {
   id               String            @id @default(uuid())
   title            String
-  shortDescription String?
+  shortDescription String
   description      String?
   stage            ProjectStage
   visibility       ProjectVisibility
   status           ProjectStatus     @default(ACTIVE)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  media            Json?
+  tags             String[]          @default([])
+  logoLink         String?
+  mediaLinks       Json?
 
   members               ProjectMember[]
   participationRequests ParticipationRequest[]
   comments              Comment[]
+  upvotes               Upvote[]
   favorites             Favourite[]
   workspace             Workspace?
 }
@@ -261,12 +265,25 @@ model Notification {
 model Favourite {
   userId    String
   projectId String
+  createdAt DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   @@id([userId, projectId])
 }
+
+model Upvote {
+  userId    String
+  projectId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@id([userId, projectId])
+}
+
 
 model Report {
   id         String  @id @default(uuid())

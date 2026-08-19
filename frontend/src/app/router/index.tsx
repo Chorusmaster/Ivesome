@@ -11,13 +11,13 @@ import ForgotPasswordPage from "@/features/auth/pages/forgot-password-page";
 import ResetPasswordPage from "@/features/auth/pages/reset-password-page";
 import EmailVerificationPage from "@/features/auth/pages/email-verification-page";
 import HomePage from "@/pages/home-page";
-import SearchPage from "@/pages/search-page";
+import SearchPage from "@/features/search/pages/search-page";
 import DashboardPage from "@/pages/dashboard-page";
-import ProjectPage from "@/pages/project-page";
+import ProjectPage from "@/features/projects/pages/project-page";
 import ProfilePage from "@/pages/profile-page";
 import ProfileEditPage from "@/pages/profile-edit-page";
 
-import NewIdeaPage from "@/pages/idea-editor-page";
+import NewIdeaPage from "@/features/projects/pages/project-editor-page";
 
 export const router = createBrowserRouter([
   {
@@ -25,7 +25,7 @@ export const router = createBrowserRouter([
     element: <RootLayout />,
     children: [
       {
-        element: <ProtectedLayout />,
+        element: <MainLayout />,
         children: [
           {
             index: true,
@@ -36,12 +36,17 @@ export const router = createBrowserRouter([
             element: <SearchPage />,
           },
           {
+            path: "project/:id",
+            element: <ProjectPage />,
+          }
+        ]
+      },
+      {
+        element: <ProtectedLayout />,
+        children: [
+          {
             path: "dashboard",
             element: <DashboardPage />,
-          },
-          {
-            path: "project/:slug",
-            element: <ProjectPage />,
           },
           {
             path: "profile",

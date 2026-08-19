@@ -111,8 +111,9 @@ export async function updateProject(
       ...(data.stage !== undefined && { stage: data.stage }),
       ...(data.visibility !== undefined && { visibility: data.visibility }),
       ...(data.status !== undefined && { status: data.status }),
-      ...(data.media !== undefined && {
-        media: data.media as Prisma.InputJsonValue,
+      ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
+      ...(data.mediaLinks !== undefined && {
+        mediaLinks: data.mediaLinks as Prisma.InputJsonValue,
       }),
     },
     include: {

@@ -10,3 +10,17 @@ export function filePathToUrl(path?: string | null) {
 
   return `${import.meta.env.VITE_BACKEND_URL}${path}`;
 }
+
+export function toSentenceCase(value: string): string {
+  const words = value.toLowerCase().split("_").filter(Boolean);
+
+  if (!words.length) return "";
+
+  return words
+    .map((word, index) =>
+      index === 0
+        ? word.charAt(0).toUpperCase() + word.slice(1)
+        : word
+    )
+    .join(" ");
+}

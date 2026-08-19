@@ -13,18 +13,35 @@ import {
 import type { CreateProjectData, UpdateProjectData } from "./project.types.js";
 import { ApiError } from "../../types/error.types.js";
 
+function getUploadedFiles(req: Request) {
+  if (!req.files || Array.isArray(req.files)) {
+    return { mediaLinks: [], logoLink: undefined };
+  }
+
+  return {
+    mediaLinks: (req.files.media ?? []).map(
+      (file) => `/uploads/images/${file.filename}`,
+    ),
+    logoLink: req.files.logo?.[0]
+      ? `/uploads/images/${req.files.logo[0].filename}`
+      : undefined,
+  };
+}
+
+function parseArrayField(value: unknown): string[] | undefined {
+  if (typeof value !== "string") {
+    return value as string[] | undefined;
+  }
+
+  return JSON.parse(value) as string[];
+}
+
 export async function getProjectHandler(req: Request, res: Response) {
-  if (!req.params.id || typeof req.params.id !== "string") {
+  if (!req.params.projectId || typeof req.params.projectId !== "string") {
     throw new ApiError(422, "Invalid project id");
   }
 
-  const userId = req.user?.id;
-  if (!userId) {
-    res.status(401).json({ error: "Unauthorized" });
-    return;
-  }
-
-  const project = await getProject(req.params.id, req.user.id);
+  const project = await getProject(req.params.projectId, req.user?.id);
 
   res.json(project);
 }
@@ -61,14 +78,13 @@ export async function createProjectHandler(req: Request, res: Response) {
     return;
   }
 
+  const { mediaLinks, logoLink } = getUploadedFiles(req);
   const data: CreateProjectData = {
-    title: req.body.title,
-    shortDescription: req.body.shortDescription,
-    description: req.body.description,
-    stage: req.body.stage,
-    visibility: req.body.visibility,
-    status: req.body.status || "ACTIVE",
-    media: req.body.media,
+    ...req.body,
+    tags: parseArrayField(req.body.tags),
+    mediaLinks,
+    ...(logoLink !== undefined && { logoLink }),
+    status: req.body.status ?? "ACTIVE",
   };
 
   const project = await createProject(data, userId);
@@ -87,15 +103,15 @@ export async function updateProjectHandler(req: Request, res: Response) {
   }
 
   const project = await getProject(req.params.id, userId);
+  const { mediaLinks, logoLink } = getUploadedFiles(req);
 
   const data: UpdateProjectData = {
-    title: req.body.title,
-    shortDescription: req.body.shortDescription,
-    description: req.body.description,
-    stage: req.body.stage,
-    visibility: req.body.visibility,
-    status: req.body.status,
-    media: req.body.media,
+    ...req.body,
+    ...(req.body.tags !== undefined && {
+      tags: parseArrayField(req.body.tags),
+    }),
+    ...(mediaLinks.length > 0 && { mediaLinks }),
+    ...(logoLink !== undefined && { logoLink }),
   };
 
   const updatedProject = await updateProject(req.params.id, userId, data);
@@ -130,7 +146,11 @@ export async function addMemberHandler(req: Request, res: Response) {
 
   const { role } = req.body;
 
-  const member = await addMember(req.params.projectId, req.params.userId, role || "MEMBER");
+  const member = await addMember(
+    req.params.projectId,
+    req.params.userId,
+    role || "MEMBER",
+  );
   res.status(201).json(member);
 }
 
@@ -138,7 +158,7 @@ export async function removeMemberHandler(req: Request, res: Response) {
   if (!req.params.projectId || typeof req.params.projectId !== "string") {
     throw new ApiError(422, "Invalid project id");
   }
-  
+
   if (!req.params.userId || typeof req.params.userId !== "string") {
     throw new ApiError(422, "Invalid user id");
   }
