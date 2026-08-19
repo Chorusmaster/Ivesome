@@ -50,7 +50,7 @@ export async function getAllUsers(): Promise<User[]> {
 }
 
 export async function deleteAllUsers() {
-  return prisma.user.deleteMany({});
+  return prisma.user.deleteMany();
 }
 
 export async function updateUserStatusWithSession(

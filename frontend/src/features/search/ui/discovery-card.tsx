@@ -5,39 +5,47 @@ import { Triangle, MessageCircle, Clock } from "lucide-react";
 import ItemLogo from "../../../shared/ui/item-logo";
 import { Link } from "react-router-dom";
 import Tags from "@/shared/ui/tags";
+import AvatarGroup from "@/shared/ui/avatar-group";
+import type { ProjectMember } from "@/features/projects/projects.types";
+import type { ProjectStage } from "@/features/projects/projects.types";
+import { toSentenceCase } from "@/shared/lib/utils";
 
 type DiscoveryCardProps = {
-  slug: string;
+  id: string;
   title: string;
   description: string;
   tags: Array<string>;
   upvotes: number;
   comments: number;
   publishedAt: Date;
-  type?: "idea" | "project";
+  stage?: ProjectStage;
+  teamMembers?: ProjectMember[];
+  logoUrl?: string;
 };
 
 function DiscoveryCard({
-  slug,
+  id,
   title,
   description,
   tags = [],
   upvotes,
   comments,
   publishedAt,
-  type = "idea",
+  stage = "IDEA",
+  teamMembers = [],
+  logoUrl,
 }: DiscoveryCardProps) {
   return (
     <Card hoverable>
       <div className="flex gap-4">
-        <ItemLogo type={type}></ItemLogo>
+        <ItemLogo imageUrl={logoUrl} type={stage}></ItemLogo>
 
         <div className="min-w-0 w-full">
           <div className="flex pb-4 justify-between items-start">
             <div className="w-[90%]">
-              <Link to={`/project/${slug}`}>
+              <Link to={`/project/${id}`}>
                 <h2
-                  className={`font-heading text-heading cursor-pointer mb-3 ${type == "idea" ? "hover:text-text-accent" : "hover:text-primary"} transition`}
+                  className={`font-heading text-heading cursor-pointer mb-3 ${stage == "IDEA" ? "hover:text-text-accent" : "hover:text-primary"} transition`}
                 >
                   {title}
                 </h2>
@@ -45,9 +53,9 @@ function DiscoveryCard({
               <div className="text-text-secondary">{description}</div>
             </div>
             <div
-              className={`rounded-full ${type === "idea" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}
+              className={`rounded-full ${stage === "IDEA" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}
             >
-              {type === "idea" ? "Idea" : "Project"}
+              {stage === "IDEA" ? "Idea" : "Project"}
             </div>
           </div>
 
@@ -57,21 +65,13 @@ function DiscoveryCard({
 
           <div className="flex justify-between">
             <div className="flex gap-4 items-center">
-              <div className="flex">
-                <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center select-none">
-                  MK
-                </div>
-                <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">
-                  MD
-                </div>
-                <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">
-                  YB
-                </div>
-                <div className="rounded-full bg-primary-light border-2 border-white text-xs text-primary w-6 h-6 flex items-center justify-center -ml-2 select-none">
-                  +2
-                </div>
-              </div>
-              <div className="text-muted text-sm">Team formation</div>
+              <AvatarGroup
+                users={teamMembers.map((member) => member.user)}
+                size="xs"
+                theme="primary_light"
+                maxVisible={3}
+              />
+              <div className="text-muted text-sm">{toSentenceCase(stage)}</div>
             </div>
 
             <div className="flex gap-4">

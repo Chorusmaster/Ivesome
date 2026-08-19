@@ -50,7 +50,7 @@ async function createAuthSession(user: Pick<User, "id" | "email" | "role">) {
   };
 }
 
-export async function registerUser(login: string, email: string, password: string) {
+export async function register(login: string, email: string, password: string) {
   if (await getUserByEmail(email)) {
     throw new ApiError(409, "Validation failed", {
       email: "User with this email already exist",
@@ -91,7 +91,7 @@ export async function registerUser(login: string, email: string, password: strin
   };
 }
 
-export async function loginUser(email: string, password: string) {
+export async function login(email: string, password: string) {
   const user = await getUserByEmail(email);
 
   if (!user) {
@@ -117,7 +117,7 @@ export async function loginUser(email: string, password: string) {
   };
 }
 
-export async function refreshAccessToken(refreshToken: string) {
+export async function refreshToken(refreshToken: string) {
   const tokenData = verifyRefreshToken(refreshToken);
 
   const tokenHash = crypto
@@ -150,7 +150,7 @@ export async function refreshAccessToken(refreshToken: string) {
   };
 }
 
-export async function revokeSession(refreshToken: string) {
+export async function revoke(refreshToken: string) {
   const tokenData = verifyRefreshToken(refreshToken);
 
   const tokenHash = crypto

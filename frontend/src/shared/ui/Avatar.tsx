@@ -1,5 +1,8 @@
+import type { User } from "@/features/auth/auth.types";
+import { filePathToUrl } from "../lib/utils";
+
 const sizes = {
-  xs: "size-8 text-xs",
+  xs: "size-6 text-xs",
   md: "size-10 text-sm",
   lg: "size-20 text-2xl",
 } as const;
@@ -13,31 +16,34 @@ const themes = {
 
 
 type AvatarProps = {
-  name: string;
+  user?: User;
+  customText?: string;
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
   imageUrl?: string;
 };
 
-function Avatar({ name, size="md", theme="primary", imageUrl }: AvatarProps) {
+function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
+  const name = (user && user.login) ? 
+    ((user.firstName && user.lastName) ? [user.firstName, user.lastName] : [user.login]) :
+    ["Anonymous", "User"]
+
   const initials = name
-    .split(" ")
     .map(part => part[0])
-    .slice(0, 2)
     .join("")
     .toUpperCase();
 
   return (
     <div className={`${sizes[size]} rounded-full ${themes[theme]} flex items-center justify-center font-medium select-none`}>
-      {imageUrl ? (
+      {user?.avatarLink ? (
         <img
-          src={imageUrl}
-          alt={name}
+          src={filePathToUrl(user.avatarLink)}
+          alt={name.join(" ")}
           className="size-full rounded-full object-cover"
         />
-      ) : (
-        initials
-      )}
+      ) : 
+        customText ? customText : initials
+      }
     </div>
   );
 }

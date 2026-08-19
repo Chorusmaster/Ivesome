@@ -35,11 +35,8 @@ function ProfilePage() {
       <div className="px-16 py-12 bg-surface border-b border-border">
         <div className="flex justify-between items-start gap-8">
           <div className="flex gap-6 items-start min-w-0">
-            <Avatar name={
-              (user?.firstName && user?.lastName) ?
-              user.firstName + " " + user.lastName :
-              (user?.login ?? "Anonymous")
-            } 
+            <Avatar 
+            user={user ?? undefined}
             size="lg" 
             theme="primary" 
             imageUrl={filePathToUrl(user?.avatarLink)}
@@ -115,24 +112,24 @@ function ProfilePage() {
 
             <div className="flex flex-col gap-4">
               <DiscoveryCard
-                slug="nudge"
+                id="1"
                 title="Nudge — a habit tracker for remote development teams"
                 description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
                 tags={["productivity", "saas", "b2b"]}
                 upvotes={142}
                 comments={38}
                 publishedAt={new Date("2024-06-01")}
-                type="idea"
+                stage="IDEA"
               />
               <DiscoveryCard
-                slug="nudge"
+                id="1"
                 title="Nudge — a habit tracker for remote development teams"
                 description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
                 tags={["productivity", "saas", "b2b"]}
                 upvotes={142}
                 comments={38}
                 publishedAt={new Date("2024-06-01")}
-                type="project"
+                stage="TEAM_BUILDING"
               />
             </div>
           </Card>
