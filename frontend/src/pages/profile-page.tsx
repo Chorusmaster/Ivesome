@@ -11,16 +11,20 @@ import {
   Triangle,
   Globe,
 } from "lucide-react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/features/auth/auth.context";
 
 import Avatar from "@/shared/ui/avatar";
 import Card from "@/shared/ui/card";
 import DiscoveryCard from "@/features/search/ui/discovery-card";
 import { filePathToUrl } from "@/shared/lib/utils";
+import type { Project } from "@/features/projects/projects.types";
+import { getUserProjects } from "@/features/projects/projects.api";
 
 function ProfilePage() {
   const { user, refreshUser } = useAuth();
+  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 
   useEffect(() => {
     const loadUser = async () => {
@@ -28,6 +32,22 @@ function ProfilePage() {
     };
 
     if (!user) loadUser();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const loadProjects = async () => {
+      try {
+        setLoading(true);
+        const projects = await getUserProjects(user.id);
+        setProjects(projects);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProjects();
   }, [user]);
 
   return (
@@ -111,26 +131,18 @@ function ProfilePage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <DiscoveryCard
-                id="1"
-                title="Nudge — a habit tracker for remote development teams"
-                description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
-                tags={["productivity", "saas", "b2b"]}
-                upvotes={142}
-                comments={38}
-                publishedAt={new Date("2024-06-01")}
-                stage="IDEA"
-              />
-              <DiscoveryCard
-                id="1"
-                title="Nudge — a habit tracker for remote development teams"
-                description="A lightweight Slack bot that turns daily stand-ups into quick, private habits, complete with team productivity analytics, and without any extra meetings."
-                tags={["productivity", "saas", "b2b"]}
-                upvotes={142}
-                comments={38}
-                publishedAt={new Date("2024-06-01")}
-                stage="TEAM_BUILDING"
-              />
+              {loading ? (
+                <p>Loading...</p>
+              ) : (projects && projects.length > 0) ? (
+                  projects.map((project) => (
+                    <DiscoveryCard
+                      key={project.id}
+                      project={project}
+                    />
+                  ))
+                ) : (
+                  <p>No projects yet</p>
+                )}
             </div>
           </Card>
         </div>

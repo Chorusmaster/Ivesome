@@ -54,6 +54,24 @@ export async function listPublicProjects(skip?: number, take?: number) {
   });
 }
 
+export async function listFavouriteProjects(
+  userId: string, 
+  skip?: number, 
+  take?: number
+) {
+  return await getAllProjects({
+    where: {
+      favourites: {
+        some: {
+          userId,
+        },
+      },
+    },
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take })
+  });
+}
+
 export async function createProject(data: CreateProjectData, ownerId: string) {
   return await createProjectDb(data, ownerId);
 }

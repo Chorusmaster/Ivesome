@@ -5,6 +5,20 @@ import {
 import { ApiError } from "../../types/error.types.js";
 import type { ProjectRole } from "../../generated/prisma/enums.js";
 
+export async function assertNotProjectMember(
+  projectId: string,
+  userId: string,
+) {
+  const role = await getProjectMemberRole(
+    projectId,
+    userId,
+  );
+
+  if (role) {
+    throw new ApiError(422, "Already a project member");
+  }
+}
+
 export async function assertProjectPermission(
   projectId: string,
   userId: string,

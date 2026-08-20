@@ -5,8 +5,6 @@ import type {
   UpdateProjectPayload,
   AddMemberPayload,
 } from "./projects.types";
-import { nanoid } from "nanoid";
-import slugify from "slugify";
 
 export const getProjects = async (skip?: number, take?: number) => {
   const { data } = await api.get<Project[]>("/projects", {
@@ -42,17 +40,24 @@ export const getUserProjects = async (
   return data;
 };
 
+export const getFavouriteProjects = async (skip?: number, take?: number) => {
+  const { data } = await api.get<Project[]>("/projects/favourite", {
+    params: {
+      ...(skip !== undefined && { skip }),
+      ...(take !== undefined && { take }),
+    },
+  });
+  return data;
+};
+
 export const getProject = async (projectId: string) => {
   const { data } = await api.get<Project>(`/projects/${projectId}`);
   return data;
 };
 
 export const createProject = async (payload: CreateProjectPayload) => {
-  const slug = `${slugify(payload.title, { lower: true, strict: true })}-${nanoid(8)}`;
-
   const formData = new FormData();
 
-  formData.append("slug", slug);
   formData.append("title", payload.title);
   formData.append("visibility", payload.visibility);
   formData.append("stage", payload.stage);

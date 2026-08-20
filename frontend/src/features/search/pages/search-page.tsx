@@ -39,17 +39,7 @@ function SearchPage() {
             <div className="text-muted text-subheading">Nothing has been found :/</div> :
             projects.map((project) => (
               <DiscoveryCard
-                id={project.id}
-                title={project.title}
-                description={project.shortDescription ?? ""}
-                tags={project.tags}
-                upvotes={142}
-                comments={38}
-                publishedAt={new Date(project.createdAt)}
-                key={project.id}
-                stage={project.stage}
-                teamMembers={project.members}
-                logoUrl={filePathToUrl(project.logoLink)}
+                project={project}
               />
           ))}
         </div>

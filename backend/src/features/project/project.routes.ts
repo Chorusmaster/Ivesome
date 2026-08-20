@@ -9,8 +9,10 @@ import {
   deleteProjectHandler,
   addMemberHandler,
   removeMemberHandler,
+  listFavouriteProjectsHandler,
 } from "./project.controller.js";
 import { upload } from "../storage/storage.service.js";
+import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
 
 const router = Router();
 
@@ -18,7 +20,17 @@ router.get("/", listPublicProjectsHandler);
 
 router.get("/user/:userId", listUserProjectsHandler);
 
-router.get("/:projectId", getProjectHandler);
+router.get(
+  "/favourite",
+  authenticate,
+  listFavouriteProjectsHandler,
+);
+
+router.get(
+  "/:projectId", 
+  optionalAuth, 
+  getProjectHandler
+);
 
 router.post(
   "/",

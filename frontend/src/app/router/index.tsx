@@ -16,6 +16,7 @@ import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/features/projects/pages/project-page";
 import ProfilePage from "@/pages/profile-page";
 import ProfileEditPage from "@/pages/profile-edit-page";
+import FavouritesPage from "@/features/favourites/pages/favourites-page";
 
 import NewIdeaPage from "@/features/projects/pages/project-editor-page";
 
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
           {
             path: "project/:id",
             element: <ProjectPage />,
+          },
+          {
+            path: "favourites",
+            element: <FavouritesPage />,
           }
         ]
       },

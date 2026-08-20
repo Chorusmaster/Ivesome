@@ -1,4 +1,3 @@
-import type { User } from "@/features/auth/auth.types";
 import { filePathToUrl } from "../lib/utils";
 
 const sizes = {
@@ -16,7 +15,12 @@ const themes = {
 
 
 type AvatarProps = {
-  user?: User;
+  user?: {
+    login: string,
+    firstName?: string,
+    lastName?: string,
+    avatarLink?: string
+  };
   customText?: string;
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
