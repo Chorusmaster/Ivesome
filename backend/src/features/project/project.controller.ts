@@ -4,6 +4,7 @@ import {
   listProjects,
   listUserProjects,
   listPublicProjects,
+  listFavouriteProjects,
   createProject,
   updateProject,
   deleteProject,
@@ -12,6 +13,7 @@ import {
 } from "./project.service.js";
 import type { CreateProjectData, UpdateProjectData } from "./project.types.js";
 import { ApiError } from "../../types/error.types.js";
+import { getParam } from "../../utils/validation.js";
 
 function getUploadedFiles(req: Request) {
   if (!req.files || Array.isArray(req.files)) {
@@ -55,7 +57,7 @@ export async function listProjectsHandler(req: Request, res: Response) {
 
 export async function listUserProjectsHandler(req: Request, res: Response) {
   if (!req.params.userId || typeof req.params.userId !== "string") {
-    throw new ApiError(422, "Invalid project id");
+    throw new ApiError(422, "Invalid user id");
   }
 
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
@@ -68,6 +70,13 @@ export async function listPublicProjectsHandler(req: Request, res: Response) {
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
   const projects = await listPublicProjects(skip, take);
+  res.json(projects);
+}
+
+export async function listFavouriteProjectsHandler(req: Request, res: Response) {
+  const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
+  const take = req.query.take ? parseInt(req.query.take as string) : undefined;
+  const projects = await listFavouriteProjects(getParam(req.user?.id, "user id"), skip, take);
   res.json(projects);
 }
 

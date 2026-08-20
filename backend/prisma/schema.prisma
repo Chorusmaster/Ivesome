@@ -148,7 +148,7 @@ model Project {
   participationRequests ParticipationRequest[]
   comments              Comment[]
   upvotes               Upvote[]
-  favorites             Favourite[]
+  favourites            Favourite[]
   workspace             Workspace?
 }
 

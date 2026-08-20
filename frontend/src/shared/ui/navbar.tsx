@@ -42,6 +42,12 @@ function Navbar() {
           >
             Dashboard
           </Link>
+          <Link
+            to="/favourites"
+            className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
+          >
+            Favourites
+          </Link>
         </div>
       </div>
       <div className="flex gap-4">

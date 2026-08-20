@@ -7,6 +7,13 @@ export async function getProjectById(id: string): Promise<Project | null> {
   return prisma.project.findUnique({
     where: { id },
     include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
       members: {
         include: {
           user: {
@@ -43,6 +50,13 @@ export async function getAllProjects({
     ...(orderBy && { orderBy }),
 
     include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
       members: {
         include: {
           user: {
@@ -77,6 +91,13 @@ export async function createProject(
       },
     },
     include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
       members: {
         include: {
           user: {
@@ -117,6 +138,13 @@ export async function updateProject(
       }),
     },
     include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
       members: {
         include: {
           user: {

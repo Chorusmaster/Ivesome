@@ -9,7 +9,19 @@ type ItemLogoProps = {
 
 function ItemLogo({ type="IDEA", size="md", imageUrl }: ItemLogoProps) {
   return (
-    <div className={`${type == "IDEA" ? "border-accent bg-accent-light text-accent" : "border-primary bg-primary-light text-primary"} ${size == "md" ? "size-16" : "size-28"} shrink-0 border-3 rounded-xl flex items-center justify-center font-heading select-none overflow-hidden`}>
+    <div className={`
+  ${type === "IDEA"
+    ? "bg-accent-light text-accent"
+    : "bg-primary-light text-primary"
+  }
+  ${size === "md" ? "size-16" : "size-28"}
+  ${!imageUrl
+    ? type === "IDEA" ? "border-accent" : "border-primary"
+    : "border-transparent"
+  }
+  shrink-0 border-3 rounded-xl flex items-center justify-center
+  font-heading select-none overflow-hidden
+`}>
       {imageUrl ? (
         <img
           src={imageUrl}

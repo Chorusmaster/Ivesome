@@ -19,6 +19,11 @@ export interface Project {
   mediaLinks: string[];
   tags: string[];
   members: ProjectMember[];
+  _count: {
+    favourites: number;
+    upvotes: number;
+    comments: number;
+  };
 }
 
 export interface ProjectMember {

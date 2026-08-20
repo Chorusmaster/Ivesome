@@ -2,7 +2,6 @@ import ProjectEditorForm from "@/features/projects/ui/project-editor-form";
 import { createProject, getProject } from "../projects.api";
 import { useNavigate } from "react-router-dom";
 import type { CreateProjectPayload } from "../projects.types";
-import { useEffect } from "react";
 
 function NewIdeaPage() {
   const navigate = useNavigate();
