@@ -5,6 +5,7 @@ import projectRoutes from "../features/project/project.routes.js";
 import favouriteRoutes from "../features/favourite/favourite.routes.js";
 import upvoteRoutes from "../features/upvote/upvote.routes.js";
 import commentRoutes from "../features/comment/comment.routes.js";
+import participationRequestRoutes from "../features/participation-request/participation-request.routes.js";
 
 const router = Router();
 
@@ -14,5 +15,6 @@ router.use(userRoutes);
 router.use(favouriteRoutes);
 router.use(upvoteRoutes);
 router.use(commentRoutes);
+router.use(participationRequestRoutes);
 
 export default router;

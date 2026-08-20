@@ -20,6 +20,7 @@ import {
   updateComment,
   type ProjectComment,
 } from "../comments.api";
+import { createParticipationRequest, getMyParticipationRequests } from "../participation-requests.api";
 
 import {
   Carousel,
@@ -58,6 +59,10 @@ function ProjectPage() {
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [commentsError, setCommentsError] = useState("");
   const [commentSubmitting, setCommentSubmitting] = useState(false);
+  const [requestMessage, setRequestMessage] = useState("");
+  const [requestSubmitting, setRequestSubmitting] = useState(false);
+  const [requestSent, setRequestSent] = useState(false);
+  const [requestError, setRequestError] = useState("");
 
   useEffect(() => {
     if (!id) return;
@@ -75,7 +80,16 @@ function ProjectPage() {
       }
     }
 
+    async function loadParticipationRequests() {
+      const requests = await getMyParticipationRequests();
+      const isSentRequest = requests.some(
+        request => request.projectId === projectId
+      );
+      setRequestSent(isSentRequest);
+    }
+
     loadComments();
+    loadParticipationRequests();
   }, [id]);
 
   async function handleCreateComment(event: React.FormEvent<HTMLFormElement>) {
@@ -156,6 +170,20 @@ function ProjectPage() {
 
   const handleShare = async () => {
     await navigator.clipboard.writeText(window.location.href);
+  };
+
+  const handleParticipationRequest = async () => {
+    setRequestSubmitting(true);
+    setRequestError("");
+    try {
+      await createParticipationRequest(id, requestMessage.trim());
+      setRequestSent(true);
+      setRequestMessage("");
+    } catch {
+      setRequestError("Unable to send participation request");
+    } finally {
+      setRequestSubmitting(false);
+    }
   };
 
   return (
@@ -300,9 +328,10 @@ function ProjectPage() {
             <div className="flex flex-col gap-4 justify-center">
               <Dialog>
                 <DialogTrigger
-                  className="button text-white bg-primary hover:bg-primary-hover flex gap-2 justify-center items-center"
+                  disabled={requestSent}
+                  className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center"
                 >
-                  <Users /> Send participation request
+                  <Users /> {requestSent ? "Request sent" : "Send participation request"}
                 </DialogTrigger>
                 <DialogContent className="bg-surface ring-border">
                   <DialogHeader>
@@ -310,14 +339,25 @@ function ProjectPage() {
                     <DialogDescription>
                       Tell the project owner why you'd like to join their team.
                     </DialogDescription>
-                    <Textarea 
+                    {<Textarea
+                      value={requestMessage}
+                      onChange={(event) => setRequestMessage(event.target.value)}
                       className="min-h-16 max-h-32"
-                    />
+                      maxLength={2000}
+                    />}
+                    {requestError && <p className="text-danger">{requestError}</p>}
                   </DialogHeader>
                   <DialogFooter className="sm:justify-start bg-surface border-0 -mt-4">
                     <div className="flex w-full gap-4 justify-end">
                       <DialogClose render={<button type="button" className="hover:text-text-secondary">Close</button>} />
-                      <button className="hover:text-text-secondary">Send request</button>
+                      <button
+                        type="button"
+                        onClick={handleParticipationRequest}
+                        disabled={requestSubmitting}
+                        className="hover:text-text-secondary disabled:opacity-50"
+                      >
+                        {requestSubmitting ? "Sending..." : "Send request"}
+                      </button>
                     </div>
                   </DialogFooter>
                 </DialogContent>
@@ -343,7 +383,10 @@ function ProjectPage() {
                   onClick={toggleFavourite}
                   className={`button border hover:text-accent hover:border-accent transition ${isFavourite ? "text-accent border-accent" : "border-border text-muted"}`}
                 >
-                  <Bookmark size={20} />
+                  <Bookmark 
+                    size={20} 
+                    fill={isFavourite ? "currentColor" : "none"}
+                  />
                 </button>
                 <button className="button border border-border text-muted hover:text-danger hover:border-danger transition">
                   <Flag size={20} />

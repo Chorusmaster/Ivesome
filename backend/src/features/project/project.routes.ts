@@ -12,6 +12,7 @@ import {
   listFavouriteProjectsHandler,
 } from "./project.controller.js";
 import { upload } from "../storage/storage.service.js";
+import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
 
 const router = Router();
 
@@ -25,7 +26,11 @@ router.get(
   listFavouriteProjectsHandler,
 );
 
-router.get("/:projectId", getProjectHandler);
+router.get(
+  "/:projectId", 
+  optionalAuth, 
+  getProjectHandler
+);
 
 router.post(
   "/",
