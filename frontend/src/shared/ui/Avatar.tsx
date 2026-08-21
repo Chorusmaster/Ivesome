@@ -38,7 +38,7 @@ function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
     .toUpperCase();
 
   return (
-    <div className={`${sizes[size]} rounded-full ${themes[theme]} flex items-center justify-center font-medium select-none`}>
+    <div className={`${sizes[size]} rounded-full ${user?.avatarLink ? "bg-surface" : themes[theme]} flex items-center justify-center font-medium select-none`}>
       {user?.avatarLink ? (
         <img
           src={filePathToUrl(user.avatarLink)}

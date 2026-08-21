@@ -31,7 +31,9 @@ export function toSentenceCase(value: string): string {
     .join(" ");
 }
 
-export function formatMessageDate(date: Date | string) {
+export function formatMessageDate(date: Date | string | undefined) {
+  if (date === undefined) return "n/d";
+
   const value = new Date(date);
 
   if (isToday(value)) {

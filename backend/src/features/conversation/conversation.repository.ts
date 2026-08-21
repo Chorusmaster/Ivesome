@@ -26,6 +26,19 @@ const conversationInclude = {
           avatarLink: true,
         },
       },
+      parent: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              login: true,
+              firstName: true,
+              lastName: true,
+              avatarLink: true,
+            },
+          },
+        },
+      },
     },
   },
 };
