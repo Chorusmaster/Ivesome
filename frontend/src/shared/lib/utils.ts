@@ -1,5 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import {
+  isToday,
+  isYesterday,
+  isThisYear,
+  format,
+} from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -23,4 +29,24 @@ export function toSentenceCase(value: string): string {
         : word
     )
     .join(" ");
+}
+
+export function formatMessageDate(date: Date | string | undefined) {
+  if (date === undefined) return "n/d";
+
+  const value = new Date(date);
+
+  if (isToday(value)) {
+    return format(value, "HH:mm");
+  }
+
+  if (isYesterday(value)) {
+    return "Yesterday";
+  }
+
+  if (isThisYear(value)) {
+    return format(value, "MMM d");
+  }
+
+  return format(value, "MMM d, yyyy");
 }

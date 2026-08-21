@@ -3,7 +3,7 @@ import FiltersCard from "@/features/search/ui/filters-card";
 import { getProjects } from "@/features/projects/projects.api";
 import { useState, useEffect } from "react";
 import type { Project } from "@/features/projects/projects.types";
-import { filePathToUrl } from "@/shared/lib/utils";
+import Select from "@/shared/ui/select";
 
 function SearchPage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -30,7 +30,14 @@ function SearchPage() {
           <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Startups</button>
           <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">People</button>
         </div>
-        <div>Sorted: <span className="font-bold">By rating</span></div>
+        <div className="flex items-center">
+          <span>Sorted: </span>
+          <select className="px-1 text-primary focus:outline-none">
+            <option className="text-text-primary hover:bg-background">Newest first</option>
+            <option className="text-text-primary hover:bg-background">Oldest first</option>
+            <option className="text-text-primary hover:bg-background">Popular first</option>
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-8">

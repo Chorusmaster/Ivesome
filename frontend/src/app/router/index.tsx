@@ -14,9 +14,10 @@ import HomePage from "@/pages/home-page";
 import SearchPage from "@/features/search/pages/search-page";
 import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/features/projects/pages/project-page";
-import ProfilePage from "@/pages/profile-page";
+import ProfilePage from "@/features/profile/pages/profile-page";
 import ProfileEditPage from "@/pages/profile-edit-page";
 import FavouritesPage from "@/features/favourites/pages/favourites-page";
+import ConversationsPage from "@/features/conversations/pages/conversations-page";
 
 import NewIdeaPage from "@/features/projects/pages/project-editor-page";
 
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
           {
             path: "project/:id",
             element: <ProjectPage />,
+          },
+          {
+            path: "users/:userId",
+            element: <ProfilePage />,
           },
           {
             path: "favourites",
@@ -64,6 +69,14 @@ export const router = createBrowserRouter([
           {
             path: "ideas/new",
             element: <NewIdeaPage />,
+          },
+          {
+            path: "conversations",
+            element: <ConversationsPage />,
+          },
+          {
+            path: "conversations/:conversationId",
+            element: <ConversationsPage />,
           },
         ],
       },
