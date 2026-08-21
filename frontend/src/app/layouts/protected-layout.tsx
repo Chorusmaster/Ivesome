@@ -22,7 +22,7 @@ function ProtectedLayout() {
   return (
     <>
       <Navbar />
-        <main className="flex-1 bg-background">
+        <main className="min-h-0 flex-1 bg-background">
           <Outlet />
         </main>
       <Footer />

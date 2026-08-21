@@ -17,7 +17,7 @@ function Input({
   const inputId = id ?? generatedId;
 
   return (
-    <div>
+    <div className="w-full">
       {label && (
         <label htmlFor={inputId} className="font-medium text-text-primary">
           {label}

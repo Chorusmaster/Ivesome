@@ -92,7 +92,7 @@ function ProjectPage() {
     loadParticipationRequests();
   }, [id]);
 
-  async function handleCreateComment(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreateComment(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!id || !commentText.trim()) return;
 
@@ -400,13 +400,15 @@ function ProjectPage() {
             <div className="flex flex-col gap-2">
               {project.members.map((member) => (
                 <div key={member.user.id} className="flex gap-2">
-                  <Avatar user={member.user} theme="primary_light" />
+                  <Link to={`/users/${member.user.id}`}><Avatar user={member.user} theme="primary_light" /></Link>
                   <div>
-                    <div className="text-body">
-                      {member.user.firstName && member.user.lastName
-                        ? `${member.user.firstName} ${member.user.firstName}`
-                        : member.user.login}
-                    </div>
+                    <Link to={`/users/${member.user.id}`}>
+                      <div className="text-body hover:text-primary">
+                        {member.user.firstName && member.user.lastName
+                          ? `${member.user.firstName} ${member.user.firstName}`
+                          : member.user.login}
+                      </div>
+                    </Link>
                     <div className="text-caption text-muted">
                       {toSentenceCase(member.role)}
                     </div>

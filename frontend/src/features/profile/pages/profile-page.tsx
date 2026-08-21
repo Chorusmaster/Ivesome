@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { formatDistanceToNowStrict } from "date-fns";
 import { enUS } from "date-fns/locale";
 import {
@@ -10,6 +10,7 @@ import {
   BriefcaseBusiness,
   Triangle,
   Globe,
+  MessageSquare
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/features/auth/auth.context";
@@ -20,35 +21,58 @@ import DiscoveryCard from "@/features/search/ui/discovery-card";
 import { filePathToUrl } from "@/shared/lib/utils";
 import type { Project } from "@/features/projects/projects.types";
 import { getUserProjects } from "@/features/projects/projects.api";
+import type { User } from "@/features/auth/auth.types";
+import { getUser } from "@/features/profile/profile.api";
+import { createConversation } from "@/features/conversations/conversations.api";
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
-  const { user, refreshUser } = useAuth();
+  const { userId } = useParams<{ userId: string }>();
+  const {
+    user: currentUser,
+    refreshUser,
+  } = useAuth();
+  const navigate = useNavigate();
+
+  const [profileUser, setProfileUser] = useState<User>();
+  const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [projects, setProjects] = useState<Project[] | undefined>(undefined);
+
+  async function startConversation(userId: string) {
+    const conversation = await createConversation(userId);
+    navigate(`/conversations/${conversation.id}`);
+  }
 
   useEffect(() => {
-    const loadUser = async () => {
-      await refreshUser();
-    };
-
-    if (!user) loadUser();
-  }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    const loadProjects = async () => {
+    const loadData = async () => {
       try {
-        setLoading(true);
-        const projects = await getUserProjects(user.id);
-        setProjects(projects);
-      } finally {
-        setLoading(false);
-      }
-    };
+          setLoading(true);
 
-    loadProjects();
-  }, [user]);
+          const targetUser = userId
+            ? await getUser(userId)
+            : currentUser ?? await refreshUser();
+
+          setProfileUser(targetUser);
+
+          const projects = await getUserProjects(targetUser.id);
+          setProjects(projects);
+        } finally {
+          setLoading(false);
+        }
+      };
+
+    loadData();
+  }, [userId]);
+
+  const isOwnProfile = currentUser && profileUser && currentUser.id === profileUser.id;
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (!profileUser) {
+    return <p>User not found</p>;
+  }
 
   return (
     <div>
@@ -56,64 +80,73 @@ function ProfilePage() {
         <div className="flex justify-between items-start gap-8">
           <div className="flex gap-6 items-start min-w-0">
             <Avatar 
-            user={user ?? undefined}
+            user={profileUser ?? undefined}
             size="lg" 
             theme="primary" 
-            imageUrl={filePathToUrl(user?.avatarLink)}
+            imageUrl={filePathToUrl(profileUser?.avatarLink)}
             />
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 mb-1">
                 <h1 className="text-display font-heading text-text-primary">
-                  {user?.firstName ?? "Anonymous"}{" "}{user?.lastName ?? ""}
+                  {profileUser?.firstName ?? "Anonymous"}{" "}{profileUser?.lastName ?? ""}
                 </h1>
               </div>
 
               <p className="text-text-secondary text-body mb-3">
-                @{user?.login ?? "anonymous"}
+                @{profileUser?.login ?? "anonymous"}
               </p>
 
               <p className="text-text-secondary text-body mb-4 max-w-2xl">
-                {user?.bio ?? "No bio yet"}
+                {profileUser?.bio ?? "No bio yet"}
               </p>
 
               <div className="flex flex-wrap gap-4 text-muted text-small">
-                {user?.location && <span className="flex items-center gap-1.5">
+                {profileUser?.location && <span className="flex items-center gap-1.5">
                   <MapPin size={16} />
-                  {user.location}
+                  {profileUser.location}
                 </span>}
-                {user?.createdAt && <span className="flex items-center gap-1.5">
+                {profileUser?.createdAt && <span className="flex items-center gap-1.5">
                   <Calendar size={16} />
                   Joined{" "}
-                  {formatDistanceToNowStrict(user.createdAt, {
+                  {formatDistanceToNowStrict(profileUser.createdAt, {
                     locale: enUS,
                     addSuffix: true,
                   })}
                 </span>}
-                {user?.email && <span className="flex items-center gap-1.5">
+                {profileUser?.email && <span className="flex items-center gap-1.5">
                   <Mail size={16} />
-                  {user.email}
+                  {profileUser.email}
                 </span>}
               </div>
             </div>
           </div>
 
+          {isOwnProfile ?
           <Link
             to="/profile/edit"
             className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0"
           >
             <Pencil size={16} />
             Edit profile
-          </Link>
+          </Link> : 
+          <button
+            onClick={() => startConversation(profileUser.id)}
+            className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0"
+          >
+            <MessageSquare size={16} />
+            Send message
+          </button>
+          }
         </div>
       </div>
 
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
-          {user?.about && <Card>
+          {profileUser?.about && <Card>
             <h2 className="heading">About</h2>
             <p className="text-text-secondary whitespace-pre-line">
-              {user.about}
+              {profileUser.about}
             </p>
           </Card>}
 
@@ -181,10 +214,10 @@ function ProfilePage() {
             </div>
           </Card>
 
-          {(user?.links && user.links.length > 0) && <Card>
+          {(profileUser?.links && profileUser.links.length > 0) && <Card>
             <h2 className="subheading">Links</h2>
             <div className="flex flex-col gap-3">
-              {user.links.map((link, id) => (
+              {profileUser.links.map((link, id) => (
                 <a
                   href={link.link}
                   target="_blank"
@@ -198,10 +231,10 @@ function ProfilePage() {
             </div>
           </Card>}
 
-          {(user?.skills && user.skills.length > 0 && user.skills[0].length > 0) && <Card>
+          {(profileUser?.skills && profileUser.skills.length > 0 && profileUser.skills[0].length > 0) && <Card>
             <h2 className="subheading">Skills & interests</h2>
             <div className="flex flex-wrap gap-2">
-              {user.skills.map((skill) => (
+              {profileUser.skills.map((skill) => (
                 <span key={skill} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">
                   {skill}
                 </span>
