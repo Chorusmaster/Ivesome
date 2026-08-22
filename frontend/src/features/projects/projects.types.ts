@@ -19,6 +19,9 @@ export interface Project {
   mediaLinks: string[];
   tags: string[];
   members: ProjectMember[];
+  workspace?: {
+    id: string
+  },
   _count: {
     favourites: number;
     upvotes: number;
@@ -38,7 +41,6 @@ export interface CreateProjectPayload {
   title: string;
   shortDescription: string;
   description?: string;
-  stage: ProjectStage;
   visibility: ProjectVisibility;
   status?: ProjectStatus;
   tags?: string[];
@@ -47,11 +49,9 @@ export interface CreateProjectPayload {
 }
 
 export interface UpdateProjectPayload {
-  id: string;
   title?: string;
   shortDescription?: string;
   description?: string;
-  stage?: ProjectStage;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
   tags?: string[];

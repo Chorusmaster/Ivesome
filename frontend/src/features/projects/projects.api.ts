@@ -60,7 +60,6 @@ export const createProject = async (payload: CreateProjectPayload) => {
 
   formData.append("title", payload.title);
   formData.append("visibility", payload.visibility);
-  formData.append("stage", payload.stage);
   formData.append("shortDescription", payload.shortDescription);
 
   if (payload.status) {
@@ -107,10 +106,6 @@ export const updateProject = async (
     formData.append("description", payload.description);
   }
 
-  if (payload.stage !== undefined) {
-    formData.append("stage", payload.stage);
-  }
-
   if (payload.visibility !== undefined) {
     formData.append("visibility", payload.visibility);
   }
@@ -134,6 +129,11 @@ export const updateProject = async (
   }
 
   const { data } = await api.put<Project>(`/projects/${projectId}`, formData);
+  return data;
+};
+
+export const turnIdeaIntoProject = async (projectId: string) => {
+  const { data } = await api.post<Project>(`/projects/${projectId}/turn-into-project`);
   return data;
 };
 

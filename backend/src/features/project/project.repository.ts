@@ -3,7 +3,7 @@ import { Prisma } from "../../generated/prisma/client.js";
 import type { Project } from "../../generated/prisma/client.js";
 import type { CreateProjectData, ProjectRole, UpdateProjectData } from "./project.types.js";
 
-export async function getProjectById(id: string): Promise<Project | null> {
+export async function getProjectById(id: string) {
   return prisma.project.findUnique({
     where: { id },
     include: {
@@ -28,6 +28,11 @@ export async function getProjectById(id: string): Promise<Project | null> {
           },
         },
       },
+      workspace: {
+        select: {
+          id: true
+        }
+      }
     },
   });
 }
@@ -83,6 +88,7 @@ export async function createProject(
   return tx.project.create({
     data: {
       ...data,
+      stage: "IDEA",
       members: {
         create: {
           userId: ownerId,
@@ -136,6 +142,47 @@ export async function updateProject(
       ...(data.mediaLinks !== undefined && {
         mediaLinks: data.mediaLinks as Prisma.InputJsonValue,
       }),
+    },
+    include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
+      members: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              login: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatarLink: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function turnIdeaIntoProject(
+  projectId: string,
+): Promise<Project> {
+  return prisma.project.update({
+    where: { id: projectId },
+    data: {
+      stage: "TEAM_BUILDING",
+      workspace: {
+        create: {
+          conversation: {
+            create: {},
+          },
+        },
+      },
     },
     include: {
       _count: {

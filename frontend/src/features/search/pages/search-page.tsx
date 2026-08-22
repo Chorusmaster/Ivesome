@@ -3,7 +3,6 @@ import FiltersCard from "@/features/search/ui/filters-card";
 import { getProjects } from "@/features/projects/projects.api";
 import { useState, useEffect } from "react";
 import type { Project } from "@/features/projects/projects.types";
-import Select from "@/shared/ui/select";
 
 function SearchPage() {
   const [projects, setProjects] = useState<Project[]>([]);

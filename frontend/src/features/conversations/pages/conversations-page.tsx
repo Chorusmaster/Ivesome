@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Send, X } from "lucide-react";
+import { Send, X, ArrowLeft } from "lucide-react";
 
 import Input from "@/shared/ui/input";
 import Conversation from "../ui/conversation";
@@ -15,11 +15,15 @@ import { formatMessageDate } from "@/shared/lib/utils";
 import Avatar from "@/shared/ui/avatar";
 import { useAuth } from "@/features/auth/auth.context";
 import type { ConversationMessage } from "../conversations.types";
+import { Link } from "react-router-dom";
+import Navbar from "@/shared/ui/navbar";
 
 function ConversationsPage() {
   const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [messageContent, setMessageContent] = useState("");
-  const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(null);
+  const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(
+    null,
+  );
   const { conversationId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -63,24 +67,30 @@ function ConversationsPage() {
     );
     setMessageContent("");
     setReplyingTo(null);
-  }
+  };
 
   async function handleEditMessage(messageId: string, content: string) {
     const updatedMessage = await updateMessage(messageId, content);
-    setConversations((current) => current.map((conversation) => ({
-      ...conversation,
-      messages: conversation.messages.map((message) =>
-        message.id === messageId ? updatedMessage : message,
-      ),
-    })));
+    setConversations((current) =>
+      current.map((conversation) => ({
+        ...conversation,
+        messages: conversation.messages.map((message) =>
+          message.id === messageId ? updatedMessage : message,
+        ),
+      })),
+    );
   }
 
   async function handleDeleteMessage(messageId: string) {
     await deleteMessage(messageId);
-    setConversations((current) => current.map((conversation) => ({
-      ...conversation,
-      messages: conversation.messages.filter((message) => message.id !== messageId),
-    })));
+    setConversations((current) =>
+      current.map((conversation) => ({
+        ...conversation,
+        messages: conversation.messages.filter(
+          (message) => message.id !== messageId,
+        ),
+      })),
+    );
   }
 
   function processConversationList(current: ConversationType[]) {
@@ -92,7 +102,7 @@ function ConversationsPage() {
           return new Date(item.createdAt) > new Date(latest.createdAt)
             ? item
             : latest;
-        });
+        }, null as ConversationMessage | null);
         const otherMember = conversation.members.find(
           (member) => member.userId !== user?.id,
         );
@@ -101,98 +111,116 @@ function ConversationsPage() {
           lastMessage: lastMessage,
           otherMember: otherMember,
           messages: [...conversation.messages],
-        }}
-      )
-      .sort((latest, item) => {
-        return new Date(item?.lastMessage.createdAt ?? 0).getTime()
-          - new Date(latest?.lastMessage.createdAt ?? 0).getTime();
+        };
       })
+      .sort((latest, item) => {
+        return (
+          new Date(item?.lastMessage?.createdAt ?? 0).getTime() -
+          new Date(latest?.lastMessage?.createdAt ?? 0).getTime()
+        );
+      });
   }
 
   return (
-    <div className="flex-1 grid grid-cols-5 h-[calc(100vh-138px)] min-h-0 overflow-hidden">
-      <aside className="bg-surface col-span-1 border-r border-border overflow-y-auto">
-        {processConversationList(conversations).map((conversation) => {
-          return (
-            <button
-              key={conversation.id}
-              type="button"
-              onClick={() => setConversation(conversation.id)}
-              className="w-full text-left"
-            >
-              <div
-                className={`${conversationId == conversation.id ? "bg-background" : "bg-surface"} flex items-center gap-3 border-b border-border p-3 hover:bg-background cursor-pointer`}
+    <div className="h-screen bg-background">
+      <Navbar />
+      <div className="flex-1 grid grid-cols-5 min-h-0 h-[calc(100vh-66px)] overflow-hidden">
+        <aside className="bg-surface col-span-1 border-r border-border overflow-y-auto">
+          {processConversationList(conversations).map((conversation) => {
+            return (
+              <button
+                key={conversation.id}
+                type="button"
+                onClick={() => setConversation(conversation.id)}
+                className="w-full text-left"
               >
-                <Avatar user={conversation.otherMember?.user} />
+                <div
+                  className={`${conversationId == conversation.id ? "bg-background" : "bg-surface"} flex items-center gap-3 border-b border-border p-3 hover:bg-background cursor-pointer`}
+                >
+                  <Avatar user={conversation.otherMember?.user} />
 
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-medium">
-                    {conversation.otherMember?.user?.firstName && conversation.otherMember?.user?.lastName
-                      ? `${conversation.otherMember.user.firstName} ${conversation.otherMember.user.lastName}`
-                      : conversation.otherMember?.user?.login
-                        ? conversation.otherMember.user.login
-                        : "Anonymous user"}
-                  </p>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">
+                      {conversation.otherMember?.user?.firstName &&
+                      conversation.otherMember?.user?.lastName
+                        ? `${conversation.otherMember.user.firstName} ${conversation.otherMember.user.lastName}`
+                        : conversation.otherMember?.user?.login
+                          ? conversation.otherMember.user.login
+                          : "Anonymous user"}
+                    </p>
 
-                  <p className="truncate text-small text-text-secondary">
-                    {conversation.lastMessage?.content ?? ""}
-                  </p>
+                    <p className="truncate text-small text-text-secondary">
+                      {conversation.lastMessage?.content ?? ""}
+                    </p>
+                  </div>
+
+                  <div className="shrink-0 text-small text-muted">
+                    {formatMessageDate(conversation.lastMessage?.createdAt)}
+                  </div>
                 </div>
+              </button>
+            );
+          })}
+        </aside>
 
-                <div className="shrink-0 text-small text-muted">
-                  {formatMessageDate(conversation.lastMessage?.createdAt)}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </aside>
-
-      <div className="col-span-4 flex flex-col min-h-0">
-        {selectedConversation ? (
-          <Conversation
-            messages={selectedConversation.messages}
-            onEdit={handleEditMessage}
-            onDelete={handleDeleteMessage}
-            onReply={setReplyingTo}
-          />
-        ) : (
-          <div className="flex-1 flex items-center justify-center text-text-secondary">
-            Select a conversation
-          </div>
-        )}
-
-        <form
-          onSubmit={handleSubmit}
-          className="shrink-0 bg-surface border-t border-border py-4 px-8 flex items-end gap-4"
-        >
-          <div className="flex-1 min-w-0">
-            {replyingTo && (
-              <div className="flex items-center justify-between text-small text-text-secondary mb-1">
-                <span>Replying to {replyingTo.author?.login ?? "Anonymous user"}</span>
-                <button type="button" aria-label="Cancel reply" onClick={() => setReplyingTo(null)}>
-                  <X size={14} />
-                </button>
-              </div>
-            )}
-            <Input
-              autoComplete="off"
-              className="bg-background"
-              placeholder="Type your message here"
-              value={messageContent}
-              onChange={(event) => setMessageContent(event.target.value)}
-              disabled={!selectedConversation}
+        <div className="col-span-4 flex flex-col min-h-0">
+          {selectedConversation ? (
+            <Conversation
+              messages={selectedConversation.messages}
+              onEdit={handleEditMessage}
+              onDelete={handleDeleteMessage}
+              onReply={setReplyingTo}
             />
-          </div>
+          ) : conversations.length == 0 ?
+          (
+            <div className="flex-1 flex items-center justify-center text-text-secondary">
+              No conversations yet
+            </div>
+          ) :
+          (
+            <div className="flex-1 flex items-center justify-center text-text-secondary">
+              Select a conversation
+            </div>
+          )}
 
-          <button
-            type="submit"
-            disabled={!selectedConversation || !messageContent.trim()}
-            className="py-3 px-4 mb-0.5 font-button rounded-button bg-primary hover:bg-primary-hover text-white shrink-0"
+          <form
+            onSubmit={handleSubmit}
+            className="shrink-0 bg-surface border-t border-border py-4 px-8 flex items-end gap-4"
           >
-            <Send size={18} />
-          </button>
-        </form>
+            <div className="flex-1 min-w-0">
+              {replyingTo && (
+                <div className="flex items-center justify-between text-small text-text-secondary mb-1">
+                  <span>
+                    Replying to {replyingTo.author?.login ?? "Anonymous user"}
+                  </span>
+                  <button
+                    type="button"
+                    aria-label="Cancel reply"
+                    onClick={() => setReplyingTo(null)}
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              )}
+              <Input
+                autoComplete="off"
+                className="bg-background"
+                placeholder="Type your message here"
+                value={messageContent}
+                onChange={(event) => setMessageContent(event.target.value)}
+                disabled={!selectedConversation}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!selectedConversation || !messageContent.trim()}
+              className="py-3 px-4 mb-0.5 font-button rounded-button bg-primary hover:bg-primary-hover disabled:bg-primary-hover text-white shrink-0"
+            >
+              <Send size={18} />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

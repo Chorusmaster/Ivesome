@@ -10,7 +10,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu"
+} from "@/shared/ui/dropdown-menu";
 import { Check, MessageSquareReply, SquarePen, X } from "lucide-react";
 
 type ConversationProps = {
@@ -20,7 +20,12 @@ type ConversationProps = {
   onReply: (message: ConversationMessage) => void;
 };
 
-function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps) {
+function Conversation({
+  messages,
+  onEdit,
+  onDelete,
+  onReply,
+}: ConversationProps) {
   const { user } = useAuth();
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState("");
@@ -39,7 +44,9 @@ function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps
         <p className="font-medium">
           {message.parent?.author?.login ?? "Original message"}
         </p>
-        <p className="truncate">{message.parent?.content ?? "Message unavailable"}</p>
+        <p className="truncate">
+          {message.parent?.content ?? "Message unavailable"}
+        </p>
       </div>
     );
   }
@@ -56,12 +63,11 @@ function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps
       setSavingMessageId(null);
     }
   }
- 
+
   return (
     <div className="flex-1 overflow-y-auto p-8 space-y-4">
-      {messages.map((message) => (
-        (message.author?.id == user?.id) ?
-        (
+      {messages.map((message) =>
+        message.author?.id == user?.id ? (
           <div key={message.id} className="flex justify-end items-end gap-2">
             <div className="max-w-[70%]">
               {editingMessageId === message.id ? (
@@ -81,27 +87,44 @@ function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps
                 </div>
               )}
 
-              {editingMessageId === message.id ? 
-              (
+              {editingMessageId === message.id ? (
                 <div className="flex items-center justify-end gap-1 mt-1 text-xs text-muted">
-                  <button type="button" aria-label="Save message" onClick={() => saveEditing(message.id)}>
-                    <Check size={16}  className="text-muted/70 hover:text-muted mt-px"/>
+                  <button
+                    type="button"
+                    aria-label="Save message"
+                    onClick={() => saveEditing(message.id)}
+                  >
+                    <Check
+                      size={16}
+                      className="text-muted/70 hover:text-muted mt-px"
+                    />
                   </button>
-                  <button type="button" aria-label="Cancel editing" onClick={() => setEditingMessageId(null)}>
-                    <X size={16}  className="text-muted/70 hover:text-muted mt-px"/>
+                  <button
+                    type="button"
+                    aria-label="Cancel editing"
+                    onClick={() => setEditingMessageId(null)}
+                  >
+                    <X
+                      size={16}
+                      className="text-muted/70 hover:text-muted mt-px"
+                    />
                   </button>
                 </div>
-              ) :
-              (
+              ) : (
                 <div className="flex items-center justify-end gap-2 mt-1 text-xs text-muted">
                   <span>{formatMessageDate(message.createdAt)}</span>
-              
+
                   <DropdownMenu>
-                    <DropdownMenuTrigger render={
-                      <button type="button" aria-label="Message actions">
-                        <SquarePen size={13} className="text-muted/70 hover:text-muted mt-px" />
-                      </button>
-                    } />
+                    <DropdownMenuTrigger
+                      render={
+                        <button type="button" aria-label="Message actions">
+                          <SquarePen
+                            size={13}
+                            className="text-muted/70 hover:text-muted mt-px"
+                          />
+                        </button>
+                      }
+                    />
                     <DropdownMenuContent className="ring-border bg-surface">
                       <DropdownMenuGroup>
                         <DropdownMenuItem
@@ -122,10 +145,9 @@ function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps
                 </div>
               )}
             </div>
-            <Avatar size="md" user={message.author} />
+            <Avatar size="md" theme="accent" user={message.author} />
           </div>
-        ) :
-        (
+        ) : (
           <div key={message.id} className="flex justify-start items-end gap-2">
             <Avatar size="md" user={message.author} />
             <div className="max-w-[70%]">
@@ -133,21 +155,30 @@ function Conversation({ messages, onEdit, onDelete, onReply }: ConversationProps
                 {renderTargetMessage(message)}
                 <p>{message.content}</p>
               </div>
-              <div className={`flex items-center "justify-start gap-2 mt-1 text-xs text-muted`}>
+              <div
+                className={`flex items-center "justify-start gap-2 mt-1 text-xs text-muted`}
+              >
                 <span>{message.author?.login ?? "Anonymous user"}</span>
                 <span>·</span>
                 <span>{formatMessageDate(message.createdAt)}</span>
                 <span>·</span>
                 <span>
-                  <button type="button" aria-label="Reply to message" onClick={() => onReply(message)}>
-                    <MessageSquareReply size={13} className="text-muted/70 hover:text-muted mt-px" />
+                  <button
+                    type="button"
+                    aria-label="Reply to message"
+                    onClick={() => onReply(message)}
+                  >
+                    <MessageSquareReply
+                      size={13}
+                      className="text-muted/70 hover:text-muted mt-px"
+                    />
                   </button>
                 </span>
               </div>
             </div>
           </div>
-        )
-      ))}
+        ),
+      )}
     </div>
   );
 }

@@ -14,7 +14,7 @@ export interface UpdateProjectData {
   title?: string;
   shortDescription: string;
   description?: string;
-  stage?: ProjectStage;
+  stage?: Exclude<ProjectStage, "IDEA">;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
   tags?: string[];

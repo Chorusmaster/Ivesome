@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/features/auth/auth.context";
 
-import Card from "@/shared/ui/card";
 import type { Project } from "@/features/projects/projects.types";
 import { getUserProjects } from "@/features/projects/projects.api";
 import type { User } from "@/features/auth/auth.types";

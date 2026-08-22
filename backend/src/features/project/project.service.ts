@@ -4,6 +4,7 @@ import {
   getAllProjects,
   createProject as createProjectDb,
   updateProject as updateProjectDb,
+  turnIdeaIntoProject as turnIdeaIntoProjectDb,
   deleteProject as deleteProjectDb,
   addProjectMember,
   removeProjectMember,
@@ -13,6 +14,8 @@ import {
   assertCanViewProject, 
   assertProjectPermission 
 } from "./project.authorization.js";
+import { ApiError } from "../../types/error.types.js";
+import { prisma } from "../../config/database.js";
 
 export async function getProject(projectId: string, userId: string) {
   await assertCanViewProject(projectId, userId);
@@ -87,7 +90,39 @@ export async function updateProject(
     ["OWNER"],
   );
 
+  if (data.stage) {
+    const project = await getProjectById(projectId);
+    if (!project?.workspace?.id) {
+      throw new ApiError(409, "Turn idea into project first to change stage")
+    }
+  }
+
   return await updateProjectDb(projectId, data);
+}
+
+export async function turnIdeaIntoProject(projectId: string, userId: string) {
+  await assertProjectPermission(projectId, userId, ["OWNER"]);
+
+  const existingProject = await prisma.project.findUnique({
+    where: { id: projectId },
+    include: {
+      workspace: true,
+    },
+  });
+
+  if (!existingProject) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  if (existingProject.stage !== "IDEA") {
+    throw new ApiError(409, "Project is not in idea stage");
+  }
+
+  if (existingProject.workspace) {
+    throw new ApiError(409, "Project workspace already exists");
+  }
+
+  return turnIdeaIntoProjectDb(projectId);
 }
 
 export async function deleteProject( 

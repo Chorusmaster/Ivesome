@@ -1,8 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import RootLayout from "@/app/layouts/root-layout";
 import MainLayout from "@/app/layouts/main-layout";
-import FormLayout from "@/app/layouts/form-layout";
+import AuthLayout from "@/app/layouts/auth-layout";
 import ProtectedLayout from "../layouts/protected-layout";
 
 import LoginPage from "@/features/auth/pages/login-page";
@@ -18,13 +17,13 @@ import ProfilePage from "@/features/profile/pages/profile-page";
 import ProfileEditPage from "@/pages/profile-edit-page";
 import FavouritesPage from "@/features/favourites/pages/favourites-page";
 import ConversationsPage from "@/features/conversations/pages/conversations-page";
+import WorkspacePage from "@/features/workspace/pages/workspace-page";
 
-import NewIdeaPage from "@/features/projects/pages/project-editor-page";
+import ProjectEditorPage from "@/features/projects/pages/project-editor-page";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,
     children: [
       {
         element: <MainLayout />,
@@ -48,27 +47,37 @@ export const router = createBrowserRouter([
           {
             path: "favourites",
             element: <FavouritesPage />,
-          }
-        ]
+          },
+        ],
       },
+
       {
         element: <ProtectedLayout />,
         children: [
           {
-            path: "dashboard",
-            element: <DashboardPage />,
-          },
-          {
-            path: "profile",
-            element: <ProfilePage />,
-          },
-          {
-            path: "profile/edit",
-            element: <ProfileEditPage />,
-          },
-          {
-            path: "ideas/new",
-            element: <NewIdeaPage />,
+            element: <MainLayout />,
+            children: [
+              {
+                path: "dashboard",
+                element: <DashboardPage />,
+              },
+              {
+                path: "profile",
+                element: <ProfilePage />,
+              },
+              {
+                path: "profile/edit",
+                element: <ProfileEditPage />,
+              },
+              {
+                path: "ideas/new",
+                element: <ProjectEditorPage />,
+              },
+              {
+                path: "project/:id/edit",
+                element: <ProjectEditorPage />,
+              },
+            ],
           },
           {
             path: "conversations",
@@ -78,10 +87,15 @@ export const router = createBrowserRouter([
             path: "conversations/:conversationId",
             element: <ConversationsPage />,
           },
+          {
+            path: "workspace/:workspaceId",
+            element: <WorkspacePage />,
+          },
         ],
       },
+
       {
-        element: <FormLayout />,
+        element: <AuthLayout />,
         children: [
           {
             path: "login",
@@ -104,7 +118,7 @@ export const router = createBrowserRouter([
             element: <EmailVerificationPage />,
           },
         ],
-      }
+      },
     ],
   },
 ]);

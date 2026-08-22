@@ -30,7 +30,9 @@ function ProjectDiscussion({
   onEdit,
   onDelete,
 }: ProjectDiscussionProps) {
-  const commentCount = comments.length + comments.reduce((count, comment) => count + comment.replies.length, 0);
+  const commentCount =
+    comments.length +
+    comments.reduce((count, comment) => count + comment.replies.length, 0);
 
   return (
     <section>
@@ -49,18 +51,35 @@ function ProjectDiscussion({
               placeholder="Leave a comment or question for the author..."
               maxLength={2000}
             />
-            <button disabled={commentSubmitting || !commentText.trim()} className="button bg-primary hover:bg-primary-hover text-white mt-2 disabled:opacity-50">
+            <button
+              disabled={commentSubmitting || !commentText.trim()}
+              className="button bg-primary hover:bg-primary-hover text-white mt-2 disabled:opacity-50"
+            >
               Publish
             </button>
           </form>
         </div>
-      ) : <p className="text-text-secondary">Sign in to join the discussion.</p>}
-      {commentsLoading && <p className="text-text-secondary mt-6">Loading discussion...</p>}
+      ) : (
+        <p className="text-text-secondary">Sign in to join the discussion.</p>
+      )}
+      {commentsLoading && (
+        <p className="text-text-secondary mt-6">Loading discussion...</p>
+      )}
       {commentsError && <p className="text-danger mt-6">{commentsError}</p>}
-      {!commentsLoading && !commentsError && comments.length === 0 && <p className="text-text-secondary mt-6">No comments yet.</p>}
-      {!commentsLoading && comments.map((comment) => (
-        <Comment key={comment.id} comment={comment} currentUserId={user?.id} onReply={onReply} onEdit={onEdit} onDelete={onDelete} />
-      ))}
+      {!commentsLoading && !commentsError && comments.length === 0 && (
+        <p className="text-text-secondary mt-6">No comments yet.</p>
+      )}
+      {!commentsLoading &&
+        comments.map((comment) => (
+          <Comment
+            key={comment.id}
+            comment={comment}
+            currentUserId={user?.id}
+            onReply={onReply}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))}
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Card from "@/shared/ui/card";
 import ProjectHeader from "@/features/projects/ui/project-header";
 import ProjectGallery from "@/features/projects/ui/project-gallery";
@@ -10,6 +10,7 @@ import { useProject } from "../use-project";
 import Loading from "@/shared/ui/loading";
 import { useAuth } from "@/features/auth/auth.context";
 import { useEffect, useState } from "react";
+import { deleteProject, turnIdeaIntoProject } from "../projects.api";
 import {
   createComment,
   deleteComment,
@@ -25,6 +26,7 @@ import {
 
 function ProjectPage() {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const {
     project,
     loading,
@@ -45,6 +47,7 @@ function ProjectPage() {
   const [requestSubmitting, setRequestSubmitting] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const [statusChanging, setStatusChanging] = useState(false);
 
   const ownProject = project?.members.some(
     (member) => member.role === "OWNER" && member.user.id === user?.id
@@ -157,6 +160,32 @@ function ProjectPage() {
     await navigator.clipboard.writeText(window.location.href);
   };
 
+  const handleDeleteProject = async () => {
+    if (!id || !project) return;
+
+    const confirmed = window.confirm("Delete this project?");
+    if (!confirmed) return;
+
+    await deleteProject(id);
+    navigate("/search");
+  };
+
+  const handleTurnIntoProject = async () => {
+    if (!id || !project) return;
+
+    setStatusChanging(true);
+
+    try {
+      const updatedProject = await turnIdeaIntoProject(id);
+
+      if (updatedProject) {
+        window.location.reload();
+      }
+    } finally {
+      setStatusChanging(false);
+    }
+  };
+
   const handleParticipationRequest = async () => {
     setRequestSubmitting(true);
     setRequestError("");
@@ -178,7 +207,7 @@ function ProjectPage() {
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
           <ProjectGallery mediaLinks={project.mediaLinks} />
-          <ProjectAbout description={project.description} />
+          {project.description && <ProjectAbout description={project.description} />}
 
           <Card>
             <ProjectDiscussion
@@ -207,11 +236,14 @@ function ProjectPage() {
             isUpvoted={isUpvoted}
             upvotes={upvotes}
             isFavourite={isFavourite}
+            statusChanging={statusChanging}
             onRequestMessageChange={setRequestMessage}
             onParticipationRequest={handleParticipationRequest}
             onUpvote={toggleUpvote}
             onShare={handleShare}
             onFavourite={toggleFavourite}
+            onDelete={handleDeleteProject}
+            onStatusChange={handleTurnIntoProject}
           />
           <ProjectTeam members={project.members} />
         </aside>

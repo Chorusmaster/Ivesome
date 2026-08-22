@@ -7,6 +7,7 @@ import {
   listFavouriteProjects,
   createProject,
   updateProject,
+  turnIdeaIntoProject,
   deleteProject,
   addMember,
   removeMember,
@@ -125,6 +126,21 @@ export async function updateProjectHandler(req: Request, res: Response) {
 
   const updatedProject = await updateProject(req.params.id, userId, data);
   res.json(updatedProject);
+}
+
+export async function turnIdeaIntoProjectHandler(req: Request, res: Response) {
+  if (!req.params.id || typeof req.params.id !== "string") {
+    throw new ApiError(422, "Invalid project id");
+  }
+
+  const userId = req.user?.id;
+  if (!userId) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
+
+  const project = await turnIdeaIntoProject(req.params.id, userId);
+  res.json(project);
 }
 
 export async function deleteProjectHandler(req: Request, res: Response) {
