@@ -2,9 +2,9 @@ import { Link, Outlet } from "react-router-dom";
 
 import Logo from "@/assets/logo.svg?react";
 
-function FormLayout() {
+function AuthLayout() {
   return (
-    <main className="flex-1 grid grid-cols-1 lg:grid-cols-5">
+    <div className="min-h-screen grid grid-cols-1 lg:grid-cols-5">
       <div className="relative overflow-hidden bg-primary lg:col-span-2 flex flex-col justify-center px-8 py-10 lg:px-12 xl:px-16">
         <div
           aria-hidden="true"
@@ -39,8 +39,8 @@ function FormLayout() {
       <div className="bg-background lg:col-span-3 flex items-center justify-center px-6 py-10 lg:py-16">
         <Outlet />
       </div>
-    </main>
+    </div>
   );
 }
 
-export default FormLayout;
+export default AuthLayout;

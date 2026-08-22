@@ -1,6 +1,6 @@
 import { prisma } from "../../config/database.js";
 
-const conversationInclude = {
+export const conversationInclude = {
   members: {
     include: {
       user: {

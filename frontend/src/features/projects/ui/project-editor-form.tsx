@@ -65,7 +65,6 @@ function ProjectEditorForm({
         title,
         shortDescription,
         description,
-        stage: "IDEA",
         tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
         logo,
         media,

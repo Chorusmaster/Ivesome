@@ -25,28 +25,22 @@ function Navbar() {
         </Link>
         <div className="flex px-8 gap-8 items-center">
           <Link
-            to="/"
-            className={`${location.pathname == "/" ? "text-primary" : "text-muted"} font-button`}
-          >
-            Home
-          </Link>
-          <Link
             to="/search"
             className={`${location.pathname == "/search" ? "text-primary" : "text-muted"} font-button`}
           >
             Search
           </Link>
           <Link
-            to="/dashboard"
-            className={`${location.pathname == "/dashboard" ? "text-primary" : "text-muted"} font-button`}
-          >
-            Dashboard
-          </Link>
-          <Link
             to="/favourites"
             className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
           >
             Favourites
+          </Link>
+          <Link
+            to="/conversations"
+            className="text-muted font-button"
+          >
+            Conversations
           </Link>
         </div>
       </div>

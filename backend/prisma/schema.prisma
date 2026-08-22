@@ -156,7 +156,7 @@ model Workspace {
   id        String @id @default(uuid())
   projectId String @unique
 
-  conversations Conversation[]
+  conversation  Conversation?
   tasks         Task[]
   project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
@@ -207,8 +207,8 @@ model Comment {
 }
 
 model Conversation {
-  id          String  @id @default(uuid())
-  workspaceId String?
+  id          String    @id @default(uuid())
+  workspaceId String?   @unique
 
   workspace Workspace?           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   members   ConversationMember[]

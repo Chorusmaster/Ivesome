@@ -3,7 +3,7 @@ import { Prisma } from "../../generated/prisma/client.js";
 import type { Project } from "../../generated/prisma/client.js";
 import type { CreateProjectData, ProjectRole, UpdateProjectData } from "./project.types.js";
 
-export async function getProjectById(id: string): Promise<Project | null> {
+export async function getProjectById(id: string) {
   return prisma.project.findUnique({
     where: { id },
     include: {
@@ -28,6 +28,11 @@ export async function getProjectById(id: string): Promise<Project | null> {
           },
         },
       },
+      workspace: {
+        select: {
+          id: true
+        }
+      }
     },
   });
 }
@@ -83,6 +88,7 @@ export async function createProject(
   return tx.project.create({
     data: {
       ...data,
+      stage: "IDEA",
       members: {
         create: {
           userId: ownerId,
@@ -121,18 +127,6 @@ export async function updateProject(
   data: UpdateProjectData,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<Project> {
-  const workspaceData =
-    data.stage === "TEAM_BUILDING"
-      ? {
-          workspace: {
-            upsert: {
-              create: {},
-              update: {},
-            },
-          },
-        }
-      : {};
-
   return tx.project.update({
     where: { id: projectId },
     data: {
@@ -148,7 +142,6 @@ export async function updateProject(
       ...(data.mediaLinks !== undefined && {
         mediaLinks: data.mediaLinks as Prisma.InputJsonValue,
       }),
-      ...workspaceData,
     },
     include: {
       _count: {
@@ -184,9 +177,10 @@ export async function turnIdeaIntoProject(
     data: {
       stage: "TEAM_BUILDING",
       workspace: {
-        upsert: {
-          create: {},
-          update: {},
+        create: {
+          conversation: {
+            create: {},
+          },
         },
       },
     },

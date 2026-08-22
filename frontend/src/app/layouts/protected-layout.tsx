@@ -1,8 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/features/auth/auth.context";
 import Loading from "@/shared/ui/loading";
-import Navbar from "@/shared/ui/navbar";
-import Footer from "@/shared/ui/footer";
 
 function ProtectedLayout() {
   const { user, isLoading } = useAuth();
@@ -20,13 +18,7 @@ function ProtectedLayout() {
   }
 
   return (
-    <>
-      <Navbar />
-        <main className="min-h-0 flex-1 bg-background">
-          <Outlet />
-        </main>
-      <Footer />
-    </>
+    <Outlet />
   );
 }
 

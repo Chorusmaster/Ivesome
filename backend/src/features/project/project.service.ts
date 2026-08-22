@@ -90,6 +90,13 @@ export async function updateProject(
     ["OWNER"],
   );
 
+  if (data.stage) {
+    const project = await getProjectById(projectId);
+    if (!project?.workspace?.id) {
+      throw new ApiError(409, "Turn idea into project first to change stage")
+    }
+  }
+
   return await updateProjectDb(projectId, data);
 }
 

@@ -35,7 +35,7 @@ function ProjectActions({ ownProject, project, requestSent, requestMessage, requ
 
         <TurnIntoProjectDialog onSubmit={onStatusChange} submitting={statusChanging} /> :
 
-        <Link to="/" className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center">
+        <Link to={`/workspace/${project?.workspace?.id}`} className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center">
           Open workspace
         </Link> 
       }

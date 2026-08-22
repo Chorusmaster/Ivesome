@@ -207,7 +207,7 @@ function ProjectPage() {
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
           <ProjectGallery mediaLinks={project.mediaLinks} />
-          <ProjectAbout description={project.description} />
+          {project.description && <ProjectAbout description={project.description} />}
 
           <Card>
             <ProjectDiscussion

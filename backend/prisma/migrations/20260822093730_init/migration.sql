@@ -258,6 +258,9 @@ CREATE INDEX "ParticipationRequest_userId_idx" ON "ParticipationRequest"("userId
 -- CreateIndex
 CREATE INDEX "Comment_projectId_idx" ON "Comment"("projectId");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Conversation_workspaceId_key" ON "Conversation"("workspaceId");
+
 -- AddForeignKey
 ALTER TABLE "AuthToken" ADD CONSTRAINT "AuthToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

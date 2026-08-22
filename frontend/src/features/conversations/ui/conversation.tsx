@@ -145,7 +145,7 @@ function Conversation({
                 </div>
               )}
             </div>
-            <Avatar size="md" user={message.author} />
+            <Avatar size="md" theme="accent" user={message.author} />
           </div>
         ) : (
           <div key={message.id} className="flex justify-start items-end gap-2">
