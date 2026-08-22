@@ -104,7 +104,7 @@ function Comment({
           )}
 
           <div className="flex gap-3 text-small text-muted">
-            {(!comment.parentCommentId && !isEditing) && (
+            {!comment.parentCommentId && !isEditing && (
               <button
                 type="button"
                 onClick={() => setIsReplying(!isReplying)}
@@ -157,11 +157,13 @@ function Comment({
                   disabled={busy || !reply.trim()}
                   className="button bg-primary text-white disabled:opacity-50 mt-2"
                 >
-                  Publish reply 
+                  Publish reply
                 </button>
                 <button
                   type="button"
-                  onClick={() => {setIsReplying(false)}}
+                  onClick={() => {
+                    setIsReplying(false);
+                  }}
                   className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
                 >
                   Cancel
@@ -172,7 +174,7 @@ function Comment({
         </div>
       </div>
 
-      {(comment.replies && comment.replies.length > 0) && (
+      {comment.replies && comment.replies.length > 0 && (
         <div className="ml-14">
           {comment.replies.map((replyComment) => (
             <Comment

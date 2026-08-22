@@ -47,7 +47,6 @@ export interface CreateProjectPayload {
 }
 
 export interface UpdateProjectPayload {
-  id: string;
   title?: string;
   shortDescription?: string;
   description?: string;

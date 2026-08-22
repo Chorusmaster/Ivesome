@@ -137,6 +137,11 @@ export const updateProject = async (
   return data;
 };
 
+export const turnIdeaIntoProject = async (projectId: string) => {
+  const { data } = await api.post<Project>(`/projects/${projectId}/turn-into-project`);
+  return data;
+};
+
 export const deleteProject = async (projectId: string) => {
   await api.delete(`/projects/${projectId}`);
 };

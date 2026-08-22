@@ -19,7 +19,7 @@ import ProfileEditPage from "@/pages/profile-edit-page";
 import FavouritesPage from "@/features/favourites/pages/favourites-page";
 import ConversationsPage from "@/features/conversations/pages/conversations-page";
 
-import NewIdeaPage from "@/features/projects/pages/project-editor-page";
+import ProjectEditorPage from "@/features/projects/pages/project-editor-page";
 
 export const router = createBrowserRouter([
   {
@@ -68,7 +68,11 @@ export const router = createBrowserRouter([
           },
           {
             path: "ideas/new",
-            element: <NewIdeaPage />,
+            element: <ProjectEditorPage />,
+          },
+          {
+            path: "project/:id/edit",
+            element: <ProjectEditorPage />,
           },
           {
             path: "conversations",

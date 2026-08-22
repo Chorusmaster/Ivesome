@@ -4,6 +4,7 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, Di
 import Textarea from "@/shared/ui/textarea";
 import { Link } from "react-router-dom";
 import type { Project } from "../projects.types";
+import { TurnIntoProjectDialog } from "./turn-into-project-dialog";
 
 type ProjectActionsProps = {
   ownProject: boolean;
@@ -15,26 +16,32 @@ type ProjectActionsProps = {
   isUpvoted: boolean;
   upvotes: number;
   isFavourite: boolean;
+  statusChanging: boolean;
   onRequestMessageChange: (value: string) => void;
   onParticipationRequest: () => void;
   onUpvote: () => void;
   onShare: () => void;
   onFavourite: () => void;
+  onDelete: () => void;
+  onStatusChange: () => void;
 };
 
-function ProjectActions({ ownProject, project, requestSent, requestMessage, requestSubmitting, requestError, isUpvoted, upvotes, isFavourite, onRequestMessageChange, onParticipationRequest, onUpvote, onShare, onFavourite }: ProjectActionsProps) {
+function ProjectActions({ ownProject, project, requestSent, requestMessage, requestSubmitting, requestError, isUpvoted, upvotes, isFavourite, statusChanging, onRequestMessageChange, onParticipationRequest, onUpvote, onShare, onFavourite, onDelete, onStatusChange }: ProjectActionsProps) {
   return (
     ownProject === true ?
     (<Card>
-      {project.stage == "IDEA" ?
-        <button className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center w-full">Turn into project</button> :
+      {
+        project.stage == "IDEA" ?
+
+        <TurnIntoProjectDialog onSubmit={onStatusChange} submitting={statusChanging} /> :
+
         <Link to="/" className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center">
           Open workspace
         </Link> 
       }
       <div className="flex gap-2 mt-2">
-        <Link to="/" className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition flex-1 text-center">Edit</Link>
-        <button className="button border border-border text-muted hover:text-danger hover:border-danger transition flex-1 text-center">Delete</button>
+        <Link to={`/project/${project.id}/edit`} className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition flex-1 text-center">Edit</Link>
+        <button type="button" onClick={onDelete} className="button border border-border text-muted hover:text-danger hover:border-danger transition flex-1 text-center">Delete</button>
       </div>
     </Card>) :
     (<Card>

@@ -19,7 +19,9 @@ import type { ConversationMessage } from "../conversations.types";
 function ConversationsPage() {
   const [conversations, setConversations] = useState<ConversationType[]>([]);
   const [messageContent, setMessageContent] = useState("");
-  const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(null);
+  const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(
+    null,
+  );
   const { conversationId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -63,24 +65,30 @@ function ConversationsPage() {
     );
     setMessageContent("");
     setReplyingTo(null);
-  }
+  };
 
   async function handleEditMessage(messageId: string, content: string) {
     const updatedMessage = await updateMessage(messageId, content);
-    setConversations((current) => current.map((conversation) => ({
-      ...conversation,
-      messages: conversation.messages.map((message) =>
-        message.id === messageId ? updatedMessage : message,
-      ),
-    })));
+    setConversations((current) =>
+      current.map((conversation) => ({
+        ...conversation,
+        messages: conversation.messages.map((message) =>
+          message.id === messageId ? updatedMessage : message,
+        ),
+      })),
+    );
   }
 
   async function handleDeleteMessage(messageId: string) {
     await deleteMessage(messageId);
-    setConversations((current) => current.map((conversation) => ({
-      ...conversation,
-      messages: conversation.messages.filter((message) => message.id !== messageId),
-    })));
+    setConversations((current) =>
+      current.map((conversation) => ({
+        ...conversation,
+        messages: conversation.messages.filter(
+          (message) => message.id !== messageId,
+        ),
+      })),
+    );
   }
 
   function processConversationList(current: ConversationType[]) {
@@ -101,12 +109,14 @@ function ConversationsPage() {
           lastMessage: lastMessage,
           otherMember: otherMember,
           messages: [...conversation.messages],
-        }}
-      )
-      .sort((latest, item) => {
-        return new Date(item?.lastMessage.createdAt ?? 0).getTime()
-          - new Date(latest?.lastMessage.createdAt ?? 0).getTime();
+        };
       })
+      .sort((latest, item) => {
+        return (
+          new Date(item?.lastMessage.createdAt ?? 0).getTime() -
+          new Date(latest?.lastMessage.createdAt ?? 0).getTime()
+        );
+      });
   }
 
   return (
@@ -127,7 +137,8 @@ function ConversationsPage() {
 
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">
-                    {conversation.otherMember?.user?.firstName && conversation.otherMember?.user?.lastName
+                    {conversation.otherMember?.user?.firstName &&
+                    conversation.otherMember?.user?.lastName
                       ? `${conversation.otherMember.user.firstName} ${conversation.otherMember.user.lastName}`
                       : conversation.otherMember?.user?.login
                         ? conversation.otherMember.user.login
@@ -169,8 +180,14 @@ function ConversationsPage() {
           <div className="flex-1 min-w-0">
             {replyingTo && (
               <div className="flex items-center justify-between text-small text-text-secondary mb-1">
-                <span>Replying to {replyingTo.author?.login ?? "Anonymous user"}</span>
-                <button type="button" aria-label="Cancel reply" onClick={() => setReplyingTo(null)}>
+                <span>
+                  Replying to {replyingTo.author?.login ?? "Anonymous user"}
+                </span>
+                <button
+                  type="button"
+                  aria-label="Cancel reply"
+                  onClick={() => setReplyingTo(null)}
+                >
                   <X size={14} />
                 </button>
               </div>

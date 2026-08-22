@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
@@ -6,31 +6,52 @@ import Textarea from "@/shared/ui/textarea";
 import Select from "@/shared/ui/select";
 import MultipleFileUpload from "@/shared/ui/multiple-file-upload";
 import FileUpload from "@/shared/ui/file-upload";
-import { useRef } from "react";
 import type { MultipleFileUploadRef } from "@/shared/ui/multiple-file-upload";
 
 import type { CreateProjectPayload } from "../projects.types";
 
 interface ProjectEditorFormProps {
-  onSubmit: (data: CreateProjectPayload) => void;
+  onSubmit: (data: CreateProjectPayload) => Promise<void> | void;
   onCancel: () => void;
+  initialValues?: {
+    title?: string;
+    shortDescription?: string;
+    description?: string;
+    tags?: string[];
+    visibility?: "PRIVATE" | "PUBLIC";
+  };
 }
 
 function ProjectEditorForm({
   onSubmit,
   onCancel,
+  initialValues,
 }: ProjectEditorFormProps) {
-  const [title, setTitle] = useState("");
-  const [shortDescription, setShortDescription] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
-  const [visibility, setVisibility] = useState<"PRIVATE" | "PUBLIC">("PRIVATE");
+  const [title, setTitle] = useState(initialValues?.title ?? "");
+  const [shortDescription, setShortDescription] = useState(
+    initialValues?.shortDescription ?? "",
+  );
+  const [description, setDescription] = useState(
+    initialValues?.description ?? "",
+  );
+  const [tags, setTags] = useState((initialValues?.tags ?? []).join(", "));
+  const [visibility, setVisibility] = useState<"PRIVATE" | "PUBLIC">(
+    initialValues?.visibility ?? "PRIVATE",
+  );
   const [logo, setLogo] = useState<File | undefined>(undefined);
   const [media, setMedia] = useState<File[]>([]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const uploadRef = useRef<MultipleFileUploadRef>(null);
+
+  useEffect(() => {
+    setTitle(initialValues?.title ?? "");
+    setShortDescription(initialValues?.shortDescription ?? "");
+    setDescription(initialValues?.description ?? "");
+    setTags((initialValues?.tags ?? []).join(", "));
+    setVisibility(initialValues?.visibility ?? "PRIVATE");
+  }, [initialValues]);
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -45,10 +66,10 @@ function ProjectEditorForm({
         shortDescription,
         description,
         stage: "IDEA",
-        tags: tags.split(",").map(tag => tag.trim()),
+        tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
         logo,
         media,
-        visibility
+        visibility,
       });
       uploadRef.current?.reset();
     } finally {
@@ -114,48 +135,34 @@ function ProjectEditorForm({
       <Card>
         <div className="heading mb-8">Avatar</div>
 
-        <FileUpload
-          file={logo}
-          setFile={setLogo}
-        />
+        <FileUpload file={logo} setFile={setLogo} />
       </Card>
 
       <Card>
         <div className="heading mb-8">Media</div>
 
-        <MultipleFileUpload
-          ref={uploadRef}
-          files={media}
-          setFiles={setMedia}
-        />
+        <MultipleFileUpload ref={uploadRef} files={media} setFiles={setMedia} />
       </Card>
 
       <Card className="flex justify-between">
         <button
           type="button"
-          onClick={() => {onCancel(); uploadRef.current?.reset();}}
+          onClick={() => {
+            onCancel();
+            uploadRef.current?.reset();
+          }}
           className="button bg-surface hover:shadow-sm border border-border mr-2"
         >
           Cancel
         </button>
 
-        <div>
-          <button
-            type="button"
-            disabled={isSubmitting}
-            className="button bg-surface hover:shadow-sm border border-border mr-2"
-          >
-            Save as draft
-          </button>
-
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="button bg-primary hover:bg-primary-hover text-white"
-          >
-            {isSubmitting ? "Publishing..." : "Publish"}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="button bg-primary hover:bg-primary-hover text-white"
+        >
+          {isSubmitting ? "Publishing..." : "Publish"}
+        </button>
       </Card>
     </form>
   );

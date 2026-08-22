@@ -6,6 +6,7 @@ import {
   listPublicProjectsHandler,
   createProjectHandler,
   updateProjectHandler,
+  turnIdeaIntoProjectHandler,
   deleteProjectHandler,
   addMemberHandler,
   removeMemberHandler,
@@ -40,6 +41,12 @@ router.post(
     { name: "logo", maxCount: 1 },
   ]),
   createProjectHandler,
+);
+
+router.post(
+  "/:id/turn-into-project",
+  authenticate,
+  turnIdeaIntoProjectHandler,
 );
 
 router.put(

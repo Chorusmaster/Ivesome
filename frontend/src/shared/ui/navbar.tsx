@@ -9,7 +9,7 @@ import Avatar from "@/shared/ui/avatar";
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {user, logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     await logout();
@@ -58,14 +58,18 @@ function Navbar() {
             className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
           ></input>
         </div>
-        <Link to="ideas/new" className="button text-white bg-primary hover:bg-primary-hover">
+        <Link
+          to="ideas/new"
+          className="button text-white bg-primary hover:bg-primary-hover"
+        >
           + New idea
         </Link>
         <Link to="/profile">
-          <Avatar 
-          user={user ?? undefined}
-          theme="accent"
-          imageUrl={filePathToUrl(user?.avatarLink)} />
+          <Avatar
+            user={user ?? undefined}
+            theme="accent"
+            imageUrl={filePathToUrl(user?.avatarLink)}
+          />
         </Link>
         <button
           onClick={handleLogout}

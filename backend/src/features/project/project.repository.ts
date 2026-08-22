@@ -121,6 +121,18 @@ export async function updateProject(
   data: UpdateProjectData,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<Project> {
+  const workspaceData =
+    data.stage === "TEAM_BUILDING"
+      ? {
+          workspace: {
+            upsert: {
+              create: {},
+              update: {},
+            },
+          },
+        }
+      : {};
+
   return tx.project.update({
     where: { id: projectId },
     data: {
@@ -136,6 +148,47 @@ export async function updateProject(
       ...(data.mediaLinks !== undefined && {
         mediaLinks: data.mediaLinks as Prisma.InputJsonValue,
       }),
+      ...workspaceData,
+    },
+    include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
+      members: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              login: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatarLink: true,
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+export async function turnIdeaIntoProject(
+  projectId: string,
+): Promise<Project> {
+  return prisma.project.update({
+    where: { id: projectId },
+    data: {
+      stage: "TEAM_BUILDING",
+      workspace: {
+        upsert: {
+          create: {},
+          update: {},
+        },
+      },
     },
     include: {
       _count: {
