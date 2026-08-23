@@ -1,6 +1,6 @@
-import { filePathToUrl } from "@/shared/lib/utils";
 import type { Workspace } from "../workspace.types";
 import Avatar from "@/shared/ui/avatar";
+import { Link } from "react-router-dom";
 
 interface MembersTabProps {
   workspace: Workspace;
@@ -28,18 +28,20 @@ function MembersTab({ workspace }: MembersTabProps) {
             className="flex items-center justify-between px-5 py-4 border-b border-border last:border-b-0"
           >
             <div className="flex items-center gap-3">
-              <Avatar
-                imageUrl={filePathToUrl(member.user.avatarLink)}
-              />
+              <Link to={`/users/${member.user.id}`}>
+                <Avatar
+                  user={member.user}
+                />
+              </Link>
 
               <div>
-                <div className="font-medium text-text-primary">
+                <Link to={`/users/${member.user.id}`} className="font-medium hover:text-primary text-text-primary">
                   {member.user.firstName || member.user.lastName
                     ? `${member.user.firstName ?? ""} ${
                         member.user.lastName ?? ""
                       }`.trim()
                     : member.user.login}
-                </div>
+                </Link>
 
                 <div className="text-sm text-text-secondary">
                   @{member.user.login}

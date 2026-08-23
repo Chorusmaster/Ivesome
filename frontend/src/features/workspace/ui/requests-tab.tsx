@@ -1,13 +1,28 @@
-import { filePathToUrl } from "@/shared/lib/utils";
-import type { Workspace } from "../workspace.types";
 import Avatar from "@/shared/ui/avatar";
+import { updateParticipationRequest } from "@/features/participation-requests/participation-requests.api";
+import type { ParticipationRequest } from "@/features/participation-requests/participation-requests.types";
+import { Link } from "react-router-dom";
+import type { Dispatch, SetStateAction } from "react";
 
 interface RequestsTabProps {
-  workspace: Workspace;
+  requests: ParticipationRequest[];
+  setRequests: Dispatch<SetStateAction<ParticipationRequest[]>>;
 }
 
-function RequestsTab({ workspace }: RequestsTabProps) {
-  const requests = workspace.project.participationRequests.filter((request) => request.status === "PENDING" && request.type === "APPLICATION");
+function RequestsTab({ requests, setRequests }: RequestsTabProps) {
+  async function acceptRequest(requestId: string) {
+    await updateParticipationRequest(requestId, "ACCEPTED");
+    setRequests(
+      requests.filter((request) => request.id !== requestId)
+    );
+  }
+
+  async function rejectRequest(requestId: string) {
+    await updateParticipationRequest(requestId, "REJECTED");
+    setRequests(
+      requests.filter((request) => request.id !== requestId)
+    );
+  }
 
   return (
     <div className="main-container-narrow">
@@ -22,7 +37,8 @@ function RequestsTab({ workspace }: RequestsTabProps) {
       </div>
 
       <div className="bg-surface border border-border rounded-lg overflow-hidden">
-        {requests.map((request) => (
+        {requests.length > 0 ? 
+        requests.map((request) => (
           request.user &&
           <div
             key={request.user.id}
@@ -30,18 +46,20 @@ function RequestsTab({ workspace }: RequestsTabProps) {
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <Avatar
-                  imageUrl={filePathToUrl(request.user.avatarLink)}
-                />
+                <Link to={`/users/${request.user.id}`}>
+                  <Avatar
+                    user={request.user}
+                  />
+                </Link>
 
                 <div>
-                  <div className="font-medium text-text-primary">
+                  <Link to={`/users/${request.user.id}`} className="font-medium hover:text-primary text-text-primary">
                     {request.user.firstName || request.user.lastName
                       ? `${request.user.firstName ?? ""} ${
                           request.user.lastName ?? ""
                         }`.trim()
                       : request.user.login}
-                  </div>
+                  </Link>
 
                   <div className="text-sm text-text-secondary">
                     @{request.user.login}
@@ -56,6 +74,7 @@ function RequestsTab({ workspace }: RequestsTabProps) {
                     text-primary
                     hover:bg-primary/10
                     transition"
+                  onClick={() => acceptRequest(request.id)}
                 >
                   Accept
                 </button>
@@ -66,6 +85,7 @@ function RequestsTab({ workspace }: RequestsTabProps) {
                     text-danger
                     hover:bg-danger/10
                     transition"
+                  onClick={() => rejectRequest(request.id)}
                 >
                   Reject
                 </button>
@@ -76,7 +96,8 @@ function RequestsTab({ workspace }: RequestsTabProps) {
               {request.message}
             </div>
           </div>
-        ))}
+        )):
+        <div className="p-8 text-center text-text-secondary">No participation requests yet</div>}
       </div>
     </div>
   );

@@ -1,16 +1,5 @@
 import { api } from "@/api/axios";
-
-export type ParticipationRequest = {
-  id: string;
-  projectId: string;
-  userId: string;
-  message?: string;
-  status: "PENDING" | "ACCEPTED" | "REJECTED";
-  type: "APPLICATION" | "INVITATION";
-  createdAt: string;
-  user?: { id: string; login: string; firstName?: string; lastName?: string; avatarLink?: string };
-  project?: { id: string; title: string };
-};
+import type { ParticipationRequest } from "./participation-requests.types";
 
 export async function createParticipationRequest(projectId: string, message: string) {
   const { data } = await api.post<ParticipationRequest>(`/projects/${projectId}/participation-requests`, { message });

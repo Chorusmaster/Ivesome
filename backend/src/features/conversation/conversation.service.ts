@@ -7,21 +7,16 @@ import {
   getDirectConversation,
   deleteConversation
 } from "./conversation.repository.js";
+import { assertConversationMember } from "./conversation.authorization.js";
 
 export function listConversations(userId: string) {
   return getConversationsByUserId(userId);
 }
 
 export async function getConversation(conversationId: string, userId: string) {
+  await assertConversationMember(conversationId, userId);
+  
   const conversation = await getConversationById(conversationId);
-
-  if (!conversation) {
-    throw new ApiError(404, "Conversation not found");
-  }
-
-  if (!conversation.members.some((member) => member.userId === userId)) {
-    throw new ApiError(403, "You are not a member of this conversation");
-  }
 
   return conversation;
 }

@@ -4,6 +4,7 @@ import Input from "@/shared/ui/input";
 import type { ConversationMessage } from "../conversations.types";
 import { useAuth } from "@/features/auth/auth.context";
 import { useState } from "react";
+import { createMessage, deleteMessage, updateMessage } from "../conversations.api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,22 +12,25 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu";
-import { Check, MessageSquareReply, SquarePen, X } from "lucide-react";
+import { Check, MessageSquareReply, Send, SquarePen, X } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type ConversationProps = {
+  conversationId: string;
   messages: ConversationMessage[];
-  onEdit: (messageId: string, content: string) => Promise<void>;
-  onDelete: (messageId: string) => Promise<void>;
-  onReply: (message: ConversationMessage) => void;
+  onMessagesChange: (messages: ConversationMessage[]) => void;
 };
 
 function Conversation({
+  conversationId,
   messages,
-  onEdit,
-  onDelete,
-  onReply,
+  onMessagesChange,
 }: ConversationProps) {
   const { user } = useAuth();
+  const [messageContent, setMessageContent] = useState("");
+  const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(
+    null,
+  );
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editingContent, setEditingContent] = useState("");
   const [savingMessageId, setSavingMessageId] = useState<string | null>(null);
@@ -57,16 +61,39 @@ function Conversation({
 
     setSavingMessageId(messageId);
     try {
-      await onEdit(messageId, content);
+      const updatedMessage = await updateMessage(messageId, content);
+      onMessagesChange(
+        messages.map((message) =>
+          message.id === messageId ? updatedMessage : message,
+        ),
+      );
       setEditingMessageId(null);
     } finally {
       setSavingMessageId(null);
     }
   }
 
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const content = messageContent.trim();
+    if (!content) return;
+
+    const message = await createMessage(conversationId, content, replyingTo?.id);
+    onMessagesChange([...messages, message]);
+    setMessageContent("");
+    setReplyingTo(null);
+  }
+
+  async function handleDeleteMessage(messageId: string) {
+    await deleteMessage(messageId);
+    onMessagesChange(messages.filter((message) => message.id !== messageId));
+  }
+
   return (
-    <div className="flex-1 overflow-y-auto p-8 space-y-4">
-      {messages.map((message) =>
+    <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 overflow-y-auto p-8 space-y-4">
+        {messages.map((message) =>
         message.author?.id == user?.id ? (
           <div key={message.id} className="flex justify-end items-end gap-2">
             <div className="max-w-[70%]">
@@ -135,7 +162,7 @@ function Conversation({
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="hover:bg-background! focus:bg-background!"
-                          onClick={() => onDelete(message.id)}
+                          onClick={() => handleDeleteMessage(message.id)}
                         >
                           Delete
                         </DropdownMenuItem>
@@ -145,11 +172,15 @@ function Conversation({
                 </div>
               )}
             </div>
-            <Avatar size="md" theme="accent" user={message.author} />
+            <Link to={`/users/${message?.author?.id}`}>
+              <Avatar size="md" theme="accent" user={message.author} />
+            </Link>
           </div>
         ) : (
           <div key={message.id} className="flex justify-start items-end gap-2">
-            <Avatar size="md" user={message.author} />
+            <Link to={`/users/${message?.author?.id}`}>
+              <Avatar size="md" user={message.author} />
+            </Link>
             <div className="max-w-[70%]">
               <div className="bg-surface border border-border rounded-2xl rounded-bl-sm px-4 py-2 wrap-break-word">
                 {renderTargetMessage(message)}
@@ -166,7 +197,7 @@ function Conversation({
                   <button
                     type="button"
                     aria-label="Reply to message"
-                    onClick={() => onReply(message)}
+                    onClick={() => setReplyingTo(message)}
                   >
                     <MessageSquareReply
                       size={13}
@@ -178,7 +209,43 @@ function Conversation({
             </div>
           </div>
         ),
-      )}
+        )}
+      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="shrink-0 bg-surface border-t border-border py-4 px-8 flex items-end gap-4"
+      >
+        <div className="flex-1 min-w-0">
+          {replyingTo && (
+            <div className="flex items-center justify-between text-small text-text-secondary mb-1">
+              <span>
+                Replying to {replyingTo.author?.login ?? "Anonymous user"}
+              </span>
+              <button
+                type="button"
+                aria-label="Cancel reply"
+                onClick={() => setReplyingTo(null)}
+              >
+                <X size={14} />
+              </button>
+            </div>
+          )}
+          <Input
+            autoComplete="off"
+            className="bg-background"
+            placeholder="Type your message here"
+            value={messageContent}
+            onChange={(event) => setMessageContent(event.target.value)}
+          />
+        </div>
+        <button
+          type="submit"
+          disabled={!messageContent.trim()}
+          className="py-3 px-4 mb-0.5 font-button rounded-button bg-primary hover:bg-primary-hover disabled:bg-primary-hover text-white shrink-0"
+        >
+          <Send size={18} />
+        </button>
+      </form>
     </div>
   );
 }

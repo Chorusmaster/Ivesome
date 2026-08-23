@@ -1,6 +1,6 @@
 import type { ProjectStage, ProjectMember } from "../projects/projects.types";
 import type { Conversation } from "../conversations/conversations.types";
-import type { ParticipationRequest } from "../projects/participation-requests.api";
+import type { ParticipationRequest } from "@/features/participation-requests/participation-requests.types";
 
 export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
 
@@ -11,32 +11,32 @@ export const STATUS_LABELS: Record<TaskStatus, string> = {
 };
 
 export type WorkspaceTask = {
-	id: string;
-	workspaceId: string;
-	title: string;
-	description?: string | null;
-	status: TaskStatus;
-	deadline?: string | null;
+  id: string;
+  workspaceId: string;
+  title: string;
+  description?: string | null;
+  status: TaskStatus;
+  deadline?: string | null;
 };
 
 export type TaskPayload = {
-	title: string;
-	description?: string;
-	status?: WorkspaceTask["status"];
-	deadline?: string;
+  title: string;
+  description?: string;
+  status?: WorkspaceTask["status"];
+  deadline?: string;
 };
 
 export type Workspace = {
-	id: string;
-	projectId: string;
-	project: {
-		id: string;
-		title: string;
-		stage: ProjectStage;
+  id: string;
+  projectId: string;
+  project: {
+    id: string;
+    title: string;
+    stage: ProjectStage;
     logoLink?: string;
-		members: ProjectMember[];
+    members: ProjectMember[];
     participationRequests: ParticipationRequest[];
-	};
-	tasks: WorkspaceTask[];
-	conversation: Conversation | null;
+  };
+  tasks: WorkspaceTask[];
+  conversation: Conversation;
 };

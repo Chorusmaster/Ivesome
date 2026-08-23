@@ -37,6 +37,44 @@ export async function getProjectById(id: string) {
   });
 }
 
+export async function getProjectByWorkspaceId(workspaceId: string) {
+  return prisma.project.findFirst({
+    where: { 
+      workspace: {
+        id: workspaceId,
+      }, 
+    },
+    include: {
+      _count: {
+        select: {
+          favourites: true,
+          upvotes: true,
+          comments: true,
+        },
+      },
+      members: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              login: true,
+              email: true,
+              firstName: true,
+              lastName: true,
+              avatarLink: true,
+            },
+          },
+        },
+      },
+      workspace: {
+        select: {
+          id: true
+        }
+      }
+    },
+  });
+}
+
 export async function getAllProjects({
   where,
   skip,

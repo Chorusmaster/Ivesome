@@ -13,6 +13,7 @@ import ChatTab from "../ui/chat-tab";
 import MembersTab from "../ui/members-tab";
 import SettingsTab from "../ui/settings-tab";
 import RequestsTab from "../ui/requests-tab";
+import type { ParticipationRequest } from "@/features/participation-requests/participation-requests.types";
 
 function WorkspacePage() {
   const { workspaceId } = useParams<{ workspaceId: string }>();
@@ -20,6 +21,7 @@ function WorkspacePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openTab, setOpenTab] = useState<WorkspaceTabNames>("TASKS");
+  const [pendingRequests, setPendingRequests] = useState<ParticipationRequest[]>([])
 
   useEffect(() => {
     if (!workspaceId) return;
@@ -29,7 +31,16 @@ function WorkspacePage() {
       try {
         setLoading(true);
         setError("");
-        setWorkspace(await getWorkspace(id));
+
+        const data = await getWorkspace(id);
+
+        setWorkspace(data);
+
+        setPendingRequests(
+          data.project.participationRequests.filter(
+            (request) => request.status === "PENDING"
+          )
+        );
       } catch {
         setError("Unable to load workspace");
       } finally {
@@ -52,13 +63,16 @@ function WorkspacePage() {
     );
   }
 
+  const { project } = workspace;
+  const requestsCount = pendingRequests.length;
+
   const WORKSPACE_TABS = [
     {
       name: "TASKS",
       label: "Tasks",
       element: <TasksTab workspaceId={workspace.id} tasks={workspace.tasks} />,
     },
-    { name: "CHAT", label: "Chat", element: <ChatTab /> },
+    { name: "CHAT", label: "Chat", element: <ChatTab conversationId={workspace.conversation.id} /> },
     {
       name: "MEMBERS",
       label: "Members",
@@ -67,14 +81,11 @@ function WorkspacePage() {
     {
       name: "REQUESTS",
       label: "Participation requests",
-      element: <RequestsTab workspace={workspace} />,
+      element: <RequestsTab requests={pendingRequests} setRequests={setPendingRequests} />,
     },
     { name: "SETTINGS", label: "Settings", element: <SettingsTab /> },
   ] as const;
   type WorkspaceTabNames = (typeof WORKSPACE_TABS)[number]["name"];
-
-  const { project } = workspace;
-  const requestsCount = project.participationRequests.length;
 
   return (
     <div className="min-h-screen bg-background">

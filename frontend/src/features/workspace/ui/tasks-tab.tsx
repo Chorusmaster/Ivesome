@@ -1,6 +1,6 @@
-import { Pencil, Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { createTask, updateTask } from "../workspace.api";
+import { createTask, updateTask, deleteTask } from "../workspace.api";
 import type { WorkspaceTask, TaskPayload } from "../workspace.types";
 import type { TaskStatus } from "../workspace.types";
 import { STATUS_LABELS } from "../workspace.types";
@@ -103,15 +103,20 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
     }
   }
 
-  const STATUS_ORDER: Record<TaskStatus, number> = {
-    TODO: 0,
-    IN_PROGRESS: 1,
-    DONE: 2,
-  };
+  async function handleTaskDelete(taskId: string) {
+    await deleteTask(taskId);
+    setTasks((currentTasks) => 
+      currentTasks.filter((task) => 
+        task.id !== taskId
+      )
+    )
+  }
 
-  const sortedTasks = [...tasks].sort(
-    (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status],
-  );
+  const sortedTasks = tasks.toSorted((a, b) => {
+    if (!a.deadline) return 1
+    if (!b.deadline) return -1
+    return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+  })
 
   return (
     <div className="main-container-narrow">
@@ -142,10 +147,15 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
               className="flex items-center justify-between px-5 py-4 border-b border-border last:border-b-0 hover:bg-background transition"
             >
               <div className="min-w-0">
-                <div
-                  className={`${task.status == "DONE" && "line-through decoration-1"} text-text-primary font-medium`}
-                >
-                  {task.title}
+                <div>
+                  <span className={`${task.status == "DONE" && "line-through decoration-1"} text-text-primary font-medium`}>{task.title}</span>
+                  {
+                    task.deadline &&
+                    <span className="text-small text-muted">
+                    <span className="px-2">·</span>
+                    {new Date(task.deadline).toLocaleDateString() }
+                    </span>
+                  }
                 </div>
 
                 {task.description && (
@@ -172,7 +182,7 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
                   `}
                 >
                   {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                    <option key={value} value={value} className="bg-surface">
+                    <option key={value} value={value} className="bg-surface text-text-primary">
                       {label}
                     </option>
                   ))}
@@ -182,9 +192,18 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
                   title={`Edit ${task.title}`}
                   aria-label={`Edit ${task.title}`}
                   onClick={() => openEditDialog(task)}
-                  className="p-1.5 text-text-secondary hover:text-primary transition"
+                  className="text-text-secondary hover:text-primary transition"
                 >
                   <Pencil size={16} />
+                </button>
+                <button
+                  type="button"
+                  title={`Delete ${task.title}`}
+                  aria-label={`Delete ${task.title}`}
+                  onClick={() => handleTaskDelete(task.id)}
+                  className="text-text-secondary hover:text-primary transition"
+                >
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
