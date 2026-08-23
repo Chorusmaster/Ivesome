@@ -80,7 +80,7 @@ function TaskForm({dialogOpen, editingTask, saving, formError, formState, setDia
               <Input
                 label="Deadline"
                 id="task-deadline"
-                type="datetime-local"
+                type="date"
                 value={formState.deadline}
                 onChange={(event) => setFormState({ ...formState, deadline: event.target.value })}
               />

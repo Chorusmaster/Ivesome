@@ -21,8 +21,7 @@ import {
 import {
   createParticipationRequest,
   getMyParticipationRequests,
-} from "../participation-requests.api";
-
+} from "../../participation-requests/participation-requests.api";
 
 function ProjectPage() {
   const { id } = useParams<{ id: string }>();
@@ -49,9 +48,9 @@ function ProjectPage() {
   const [requestError, setRequestError] = useState("");
   const [statusChanging, setStatusChanging] = useState(false);
 
-  const ownProject = project?.members.some(
-    (member) => member.role === "OWNER" && member.user.id === user?.id
-  );
+  const projectRole = project?.members.find(
+    (member) => member.user.id === user?.id,
+  )?.role ?? null;
 
   useEffect(() => {
     if (!id) return;
@@ -72,7 +71,7 @@ function ProjectPage() {
     async function loadParticipationRequests() {
       const requests = await getMyParticipationRequests();
       const isSentRequest = requests.some(
-        (request) => request.projectId === projectId,
+        (request) => request.projectId === projectId && request.status === "PENDING",
       );
       setRequestSent(isSentRequest);
     }
@@ -207,7 +206,9 @@ function ProjectPage() {
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
           <ProjectGallery mediaLinks={project.mediaLinks} />
-          {project.description && <ProjectAbout description={project.description} />}
+          {project.description && (
+            <ProjectAbout description={project.description} />
+          )}
 
           <Card>
             <ProjectDiscussion
@@ -227,7 +228,7 @@ function ProjectPage() {
         </div>
         <aside className="flex flex-col gap-4">
           <ProjectActions
-            ownProject={ownProject ?? false}
+            projectRole={projectRole}
             project={project}
             requestSent={requestSent}
             requestMessage={requestMessage}

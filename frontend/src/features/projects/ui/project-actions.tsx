@@ -7,7 +7,7 @@ import type { Project } from "../projects.types";
 import { TurnIntoProjectDialog } from "./turn-into-project-dialog";
 
 type ProjectActionsProps = {
-  ownProject: boolean;
+  projectRole: string | null;
   project: Project;
   requestSent: boolean;
   requestMessage: string;
@@ -26,9 +26,9 @@ type ProjectActionsProps = {
   onStatusChange: () => void;
 };
 
-function ProjectActions({ ownProject, project, requestSent, requestMessage, requestSubmitting, requestError, isUpvoted, upvotes, isFavourite, statusChanging, onRequestMessageChange, onParticipationRequest, onUpvote, onShare, onFavourite, onDelete, onStatusChange }: ProjectActionsProps) {
+function ProjectActions({ projectRole, project, requestSent, requestMessage, requestSubmitting, requestError, isUpvoted, upvotes, isFavourite, statusChanging, onRequestMessageChange, onParticipationRequest, onUpvote, onShare, onFavourite, onDelete, onStatusChange }: ProjectActionsProps) {
   return (
-    ownProject === true ?
+    projectRole ?
     (<Card>
       {
         project.stage == "IDEA" ?
@@ -39,10 +39,12 @@ function ProjectActions({ ownProject, project, requestSent, requestMessage, requ
           Open workspace
         </Link> 
       }
+      {projectRole == "OWNER" &&
       <div className="flex gap-2 mt-2">
         <Link to={`/project/${project.id}/edit`} className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition flex-1 text-center">Edit</Link>
         <button type="button" onClick={onDelete} className="button border border-border text-muted hover:text-danger hover:border-danger transition flex-1 text-center">Delete</button>
       </div>
+      }
     </Card>) :
     (<Card>
       <div className="flex flex-col gap-4 justify-center">
