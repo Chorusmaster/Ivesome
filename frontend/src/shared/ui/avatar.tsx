@@ -1,4 +1,5 @@
 import { filePathToUrl } from "../lib/utils";
+import { useState } from "react";
 
 const sizes = {
   xs: "size-6 text-xs",
@@ -28,6 +29,7 @@ type AvatarProps = {
 };
 
 function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
+  const [imageError, setImageError] = useState(false);
   const name = (user && user.login) ? 
     ((user.firstName && user.lastName) ? [user.firstName, user.lastName] : [user.login]) :
     ["Anonymous", "User"]
@@ -38,11 +40,12 @@ function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
     .toUpperCase();
 
   return (
-    <div className={`${sizes[size]} rounded-full ${user?.avatarLink ? "bg-surface" : themes[theme]} flex items-center justify-center font-medium select-none`}>
-      {user?.avatarLink ? (
+    <div className={`${sizes[size]} rounded-full ${(user?.avatarLink && !imageError) ? "bg-surface" : themes[theme]} flex items-center justify-center font-medium select-none`}>
+      {(user?.avatarLink && !imageError) ? (
         <img
           src={filePathToUrl(user.avatarLink)}
           alt={name.join(" ")}
+          onError={() => setImageError(true)}
           className="size-full rounded-full object-cover"
         />
       ) : 

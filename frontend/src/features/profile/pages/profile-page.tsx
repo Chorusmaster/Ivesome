@@ -12,6 +12,7 @@ import ProfileHeader from "@/features/profile/ui/profile-header";
 import ProfileProjects from "@/features/profile/ui/profile-projects";
 import ProfileSidebar from "@/features/profile/ui/profile-sidebar";
 import ProfileAbout from "../ui/profile-about";
+import type { ProfileStats } from "../profile.types";
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>();
@@ -24,10 +25,19 @@ function ProfilePage() {
   const [profileUser, setProfileUser] = useState<User>();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
+  const [profileStats, setProfileStats] = useState<ProfileStats | undefined>();
 
   async function startConversation(userId: string) {
     const conversation = await createConversation(userId);
     navigate(`/conversations/${conversation.id}`);
+  }
+
+  async function getProfileStats(projects: Project[]): Promise<ProfileStats> {
+    return {
+      ideas: projects.filter((item) => item.stage === "IDEA" && item.visibility === "PUBLIC").length,
+      projects: projects.filter((item) => item.stage !== "IDEA" && item.visibility === "PUBLIC").length,
+      upvotes: projects.reduce((total, project) => total + project._count.upvotes, 0)
+    }
   }
 
   useEffect(() => {
@@ -43,6 +53,7 @@ function ProfilePage() {
 
           const projects = await getUserProjects(targetUser.id);
           setProjects(projects);
+          setProfileStats(await getProfileStats(projects));
         } finally {
           setLoading(false);
         }
@@ -71,7 +82,7 @@ function ProfilePage() {
           <ProfileProjects projects={projects} />
         </div>
 
-        <ProfileSidebar user={profileUser} projectCount={projects.length} />
+        <ProfileSidebar user={profileUser} profileStats={profileStats} />
       </div>
     </div>
   );

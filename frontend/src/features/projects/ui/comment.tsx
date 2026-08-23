@@ -3,6 +3,7 @@ import { formatDistanceToNowStrict } from "date-fns";
 import { enUS } from "date-fns/locale";
 import Avatar from "@/shared/ui/avatar";
 import type { ProjectComment } from "../comments.api";
+import { Link } from "react-router-dom";
 
 type CommentProps = {
   comment: ProjectComment;
@@ -56,10 +57,14 @@ function Comment({
   return (
     <div className="border-t border-border mt-6 pt-6">
       <div className="flex gap-4">
-        <Avatar user={comment.user ?? undefined} theme="primary_light" />
+        <Link to={`/users/${comment?.user?.id}`}>
+          <Avatar user={comment.user ?? undefined} theme="primary_light" />
+        </Link>
         <div className="min-w-0 flex-1 flex flex-col gap-1 text-text-secondary">
           <div className="text-small">
-            <span className="text-text-primary font-medium">{authorName}</span>
+            <Link className="hover:text-primary text-text-primary font-medium" to={`/users/${comment?.user?.id}`}>
+              {authorName}
+            </Link>
             {" · "}
             {formatDistanceToNowStrict(new Date(comment.createdAt), {
               locale: enUS,

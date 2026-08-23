@@ -1,16 +1,17 @@
 import { BriefcaseBusiness, Globe, Lightbulb, Triangle } from "lucide-react";
 import Card from "@/shared/ui/card";
 import type { User } from "@/features/auth/auth.types";
+import type { ProfileStats } from "../profile.types";
 
-function ProfileSidebar({ user, projectCount }: { user: User; projectCount: number }) {
+function ProfileSidebar({ user, profileStats }: { user: User; profileStats: ProfileStats | undefined }) {
   return (
     <aside className="flex flex-col gap-4">
       <Card>
         <h2 className="subheading">Activity</h2>
         <div className="flex flex-col gap-3">
-          <Activity icon={<Lightbulb size={18} />} label="Ideas" value={0} />
-          <Activity icon={<BriefcaseBusiness size={18} />} label="Projects" value={projectCount} />
-          <Activity icon={<Triangle size={18} />} label="Upvotes received" value={0} />
+          <Activity icon={<Lightbulb size={18} />} label="Ideas" value={profileStats?.ideas ?? "-"} />
+          <Activity icon={<BriefcaseBusiness size={18} />} label="Projects" value={profileStats?.projects ?? "-"} />
+          <Activity icon={<Triangle size={18} />} label="Upvotes received" value={profileStats?.upvotes ?? "-"} />
         </div>
       </Card>
       {user.links && user.links.length > 0 && <Card>
@@ -29,7 +30,7 @@ function ProfileSidebar({ user, projectCount }: { user: User; projectCount: numb
   );
 }
 
-function Activity({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
+function Activity({ icon, label, value }: { icon: React.ReactNode; label: string; value: number | string }) {
   return <div className="flex items-center justify-between"><span className="flex items-center gap-2 text-text-secondary"><span className="text-primary">{icon}</span>{label}</span><span className="font-heading text-text-primary">{value}</span></div>;
 }
 
