@@ -5,11 +5,26 @@ import { filePathToUrl } from "../lib/utils";
 import Logo from "@/assets/logo.svg?react";
 import { Search } from "lucide-react";
 import Avatar from "@/shared/ui/avatar";
+import { useState } from "react";
 
 function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e: React.SubmitEvent) => {
+    e.preventDefault();
+
+    if (!query.trim()) {
+      navigate("/search");
+      return;
+    };
+
+    const params = new URLSearchParams({ q: query.trim() });
+
+    navigate(`/search?${params.toString()}`);
+  };
 
   const handleLogout = async () => {
     await logout();
@@ -45,13 +60,13 @@ function Navbar() {
         </div>
       </div>
       <div className="flex gap-4">
-        <div className="bg-background rounded-input border border-border w-72 flex items-center">
+        <form onSubmit={handleSubmit} className="bg-background rounded-input border border-border w-72 flex items-center">
           <Search size={18} className="ml-4 mr-3 text-muted"></Search>
-          <input
+          <input onChange={(e) => setQuery(e.target.value)}
             placeholder="Search ideas..."
             className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
           ></input>
-        </div>
+        </form>
         <Link
           to="ideas/new"
           className="button text-white bg-primary hover:bg-primary-hover"
