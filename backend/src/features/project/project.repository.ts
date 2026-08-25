@@ -1,7 +1,13 @@
 import { prisma } from "../../config/database.js";
 import { Prisma } from "../../generated/prisma/client.js";
 import type { Project } from "../../generated/prisma/client.js";
-import type { CreateProjectData, ProjectRole, UpdateProjectData } from "./project.types.js";
+import type {
+  CreateProjectData,
+  ProjectRole,
+  ProjectSort,
+  ProjectStage,
+  UpdateProjectData,
+} from "./project.types.js";
 
 export async function getProjectById(id: string) {
   return prisma.project.findUnique({
@@ -115,6 +121,105 @@ export async function getAllProjects({
         },
       },
     },
+  });
+}
+
+export async function listProjects({
+  skip,
+  take,
+}: {
+  skip?: number;
+  take?: number;
+}): Promise<Project[]> {
+  return getAllProjects({
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take }),
+  });
+}
+
+export async function listUserProjects({
+  userId,
+  skip,
+  take,
+}: {
+  userId: string;
+  skip?: number;
+  take?: number;
+}): Promise<Project[]> {
+  return getAllProjects({
+    where: {
+      members: {
+        some: { userId },
+      },
+    },
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take }),
+  });
+}
+
+export async function listPublicProjects({
+  skip,
+  take,
+  query,
+  sort,
+  stages = [],
+  tags = [],
+}: {
+  skip?: number;
+  take?: number;
+  query?: string;
+  sort?: ProjectSort;
+  stages?: ProjectStage[];
+  tags?: string[];
+}): Promise<Project[]> {
+  const orderBy: Prisma.ProjectOrderByWithRelationInput =
+    sort === "popular"
+      ? { upvotes: { _count: "desc" } }
+      : { createdAt: "desc" };
+
+  return getAllProjects({
+    where: {
+      visibility: "PUBLIC",
+
+      ...(query && {
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { shortDescription: { contains: query, mode: "insensitive" } },
+          { description: { contains: query, mode: "insensitive" } },
+        ],
+      }),
+      
+      ...(stages.length > 0 && {
+        stage: { in: stages },
+      }),
+
+      ...(tags.length > 0 && {
+        tags: { hasSome: tags },
+      }),
+    },
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take }),
+    orderBy,
+  });
+}
+
+export async function listFavouriteProjects({
+  userId,
+  skip,
+  take,
+}: {
+  userId: string;
+  skip?: number;
+  take?: number;
+}): Promise<Project[]> {
+  return getAllProjects({
+    where: {
+      favourites: {
+        some: { userId },
+      },
+    },
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take }),
   });
 }
 

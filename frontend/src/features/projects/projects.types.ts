@@ -67,3 +67,5 @@ export const PROJECT_STAGES: ProjectStage[] = ["IDEA", "TEAM_BUILDING", "DEVELOP
 export const PROJECT_VISIBILITIES: ProjectVisibility[] = ["PRIVATE", "PUBLIC"];
 export const PROJECT_STATUSES: ProjectStatus[] = ["ACTIVE", "BLOCKED", "ARCHIVED"];
 export const PROJECT_ROLES: ProjectRole[] = ["OWNER", "MEMBER"];
+
+export type ProjectSort = "newest" | "popular";

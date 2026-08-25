@@ -1,7 +1,10 @@
-import type { CreateProjectData, UpdateProjectData } from "./project.types.js";
+import type { CreateProjectData, ProjectSort, ProjectStage, UpdateProjectData } from "./project.types.js";
 import {
   getProjectById,
-  getAllProjects,
+  listProjects as listProjectsDb,
+  listUserProjects as listUserProjectsDb,
+  listPublicProjects as listPublicProjectsDb,
+  listFavouriteProjects as listFavouriteProjectsDb,
   createProject as createProjectDb,
   updateProject as updateProjectDb,
   turnIdeaIntoProject as turnIdeaIntoProjectDb,
@@ -15,7 +18,6 @@ import {
   assertProjectPermission 
 } from "./project.authorization.js";
 import { ApiError } from "../../types/error.types.js";
-import { prisma } from "../../config/database.js";
 
 export async function getProject(projectId: string, userId: string) {
   await assertCanViewProject(projectId, userId);
@@ -23,9 +25,9 @@ export async function getProject(projectId: string, userId: string) {
 }
 
 export async function listProjects(skip?: number, take?: number) {
-  return await getAllProjects({
+  return await listProjectsDb({
     ...(skip !== undefined && { skip }),
-    ...(take !== undefined && { take })
+    ...(take !== undefined && { take }),
   });
 }
 
@@ -34,26 +36,28 @@ export async function listUserProjects(
   skip?: number,
   take?: number,
 ) {
-  return await getAllProjects({
-    where: {
-      members: {
-        some: {
-          userId: userId,
-        },
-      },
-    },
+  return await listUserProjectsDb({
+    userId,
     ...(skip !== undefined && { skip }),
-    ...(take !== undefined && { take })
+    ...(take !== undefined && { take }),
   });
 }
 
-export async function listPublicProjects(skip?: number, take?: number) {
-  return await getAllProjects({
-    where: {
-      visibility: "PUBLIC"
-    },
+export async function listPublicProjects(
+  skip?: number, 
+  take?: number,
+  query?: string, 
+  sort?: ProjectSort, 
+  stages?: ProjectStage[],
+  tags?: string[] 
+) {
+  return await listPublicProjectsDb({
     ...(skip !== undefined && { skip }),
-    ...(take !== undefined && { take })
+    ...(take !== undefined && { take }),
+    ...(query !== undefined && { query }),
+    ...(sort !== undefined && { sort }),
+    ...(stages !== undefined && { stages }),
+    ...(tags !== undefined && { tags }),
   });
 }
 
@@ -62,16 +66,10 @@ export async function listFavouriteProjects(
   skip?: number, 
   take?: number
 ) {
-  return await getAllProjects({
-    where: {
-      favourites: {
-        some: {
-          userId,
-        },
-      },
-    },
+  return await listFavouriteProjectsDb({
+    userId,
     ...(skip !== undefined && { skip }),
-    ...(take !== undefined && { take })
+    ...(take !== undefined && { take }),
   });
 }
 
@@ -103,12 +101,7 @@ export async function updateProject(
 export async function turnIdeaIntoProject(projectId: string, userId: string) {
   await assertProjectPermission(projectId, userId, ["OWNER"]);
 
-  const existingProject = await prisma.project.findUnique({
-    where: { id: projectId },
-    include: {
-      workspace: true,
-    },
-  });
+  const existingProject = await getProjectById(projectId);
 
   if (!existingProject) {
     throw new ApiError(404, "Project not found");

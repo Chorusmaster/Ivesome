@@ -4,15 +4,24 @@ import type {
   CreateProjectPayload,
   UpdateProjectPayload,
   AddMemberPayload,
+  ProjectSort
 } from "./projects.types";
+import type { ProjectFilters } from "../search/ui/filters-card";
+import qs from "qs";
 
-export const getProjects = async (skip?: number, take?: number) => {
+export const getProjects = async (query?: string, sort?: ProjectSort, filters?: ProjectFilters, skip?: number, take?: number) => {
   const { data } = await api.get<Project[]>("/projects", {
     params: {
       ...(skip !== undefined && { skip }),
       ...(take !== undefined && { take }),
+      ...(sort !== undefined && { sort }),
+      ...(query !== undefined && { query }),
+      ...((filters?.stages && filters?.stages.length > 0) && { stages: filters.stages }),
+      ...((filters?.tags && filters?.tags.length > 0) && { tags: filters.tags }),
     },
-  });
+    paramsSerializer: (params) =>
+      qs.stringify(params, { arrayFormat: "repeat" }),
+    });
   return data;
 };
 

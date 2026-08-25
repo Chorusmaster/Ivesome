@@ -12,7 +12,12 @@ import {
   addMember,
   removeMember,
 } from "./project.service.js";
-import type { CreateProjectData, UpdateProjectData } from "./project.types.js";
+import type { 
+  CreateProjectData, 
+  UpdateProjectData,
+  ProjectSort,
+  ProjectStage
+} from "./project.types.js";
 import { ApiError } from "../../types/error.types.js";
 import { getParam } from "../../utils/validation.js";
 
@@ -68,9 +73,26 @@ export async function listUserProjectsHandler(req: Request, res: Response) {
 }
 
 export async function listPublicProjectsHandler(req: Request, res: Response) {
+  const query = req.query.query as string | undefined;
+
+  const sort = req.query.sort as ProjectSort | undefined;
+
+  const stages = (Array.isArray(req.query.stages)
+  ? req.query.stages
+  : req.query.stages
+    ? [req.query.stages]
+    : []) as ProjectStage[];
+
+  const tags = (Array.isArray(req.query.tags)
+  ? req.query.tags
+  : req.query.tags
+    ? [req.query.tags]
+    : []) as string[];
+
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
-  const projects = await listPublicProjects(skip, take);
+
+  const projects = await listPublicProjects(skip, take, query, sort, stages, tags);
   res.json(projects);
 }
 
