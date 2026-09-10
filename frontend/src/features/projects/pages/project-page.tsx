@@ -246,6 +246,12 @@ function ProjectPage() {
             onDelete={handleDeleteProject}
             onStatusChange={handleTurnIntoProject}
           />
+          {((project.skills && project.skills.length > 0)) && <Card>
+            <h2 className="subheading">Required skills</h2>
+            <div className="flex flex-wrap gap-2">
+              {project.skills?.map((skill) => <span key={`skill-${skill}`} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">{skill}</span>)}
+            </div>
+          </Card>}
           <ProjectTeam members={project.members} />
         </aside>
       </div>

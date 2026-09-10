@@ -84,6 +84,7 @@ export async function updateUser(
       ...(data.bio !== undefined && { bio: data.bio, }),
       ...(data.about !== undefined && { about: data.about, }),
       ...(data.skills !== undefined && { skills: data.skills, }),
+      ...(data.interests !== undefined && { interests: data.interests, }),
       ...(data.links !== undefined && { 
           links: data.links as unknown as Prisma.InputJsonValue, 
         }),

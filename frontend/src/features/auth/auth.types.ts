@@ -12,6 +12,7 @@ export type User = {
   about?: string,
   location?: string,
   skills?: string[],
+  interests?: string[],
   links?: ProfileLink[],
   avatarLink?: string,
   createdAt: string,

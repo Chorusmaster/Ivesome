@@ -8,20 +8,18 @@ import { useSearchParams } from "react-router-dom";
 
 function SearchPage() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [sort, setSort] = useState<ProjectSort>("newest");
+  const [sort, setSort] = useState<ProjectSort>("relevant");
   const [filters, setFilters] = useState<ProjectFilters>({});
 
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") ?? undefined;
 
   useEffect(() => {
-    console.log(query)
     const loadProjects = async () => {
       const projects = await getProjects(query, sort, filters);
       setProjects(projects);
     };
 
-    console.log(filters);
     loadProjects();
   }, [sort, filters, query]);
 
@@ -40,6 +38,7 @@ function SearchPage() {
         <div className="flex items-center">
           <span>Sorted: </span>
           <select onChange={(e) => setSort(e.target.value as ProjectSort)} className="px-1 text-primary focus:outline-none">
+            <option value={"relevant"} className="text-text-primary hover:bg-background">Relevant first</option>
             <option value={"newest"} className="text-text-primary hover:bg-background">Newest first</option>
             <option value={"popular"} className="text-text-primary hover:bg-background">Popular first</option>
           </select>

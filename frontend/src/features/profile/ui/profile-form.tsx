@@ -21,17 +21,38 @@ function ProfileForm() {
   const [bio, setBio] = useState("");
   const [about, setAbout] = useState("");
   const [skills, setSkills] = useState("");
+  const [interests, setInterests] = useState("");
   const [links, setLinks] = useState<ProfileLinkInput[]>([]);
   const [generalError, setGeneralError] = useState("");
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
-      const skillsFormatted = skills.split(",").map(skill => skill.trim());
-      await updateProfile({firstName, lastName, avatar, login, location, bio, about, skills: skillsFormatted, links});
+      const skillsFormatted = skills
+        .split(",")
+        .map((skill) => skill.trim())
+        .filter(Boolean);
+        
+      const interestsFormatted = interests
+        .split(",")
+        .map((interest) => interest.trim())
+        .filter(Boolean);
+
+      await updateProfile({
+        firstName,
+        lastName,
+        avatar,
+        login,
+        location,
+        bio,
+        about,
+        skills: skillsFormatted,
+        interests: interestsFormatted,
+        links,
+      });
 
       navigate("/profile");
-    } catch(error) {
+    } catch (error) {
       if (axios.isAxiosError(error)) {
         const errorsData = error.response?.data;
         if (errorsData?.errors) {
@@ -82,7 +103,12 @@ function ProfileForm() {
     setBio(user?.bio ?? "");
     setAbout(user?.about ?? "");
     setSkills(user?.skills?.join(", ") ?? "");
-    setLinks((user?.links ?? []).map((link) => {return {id: crypto.randomUUID(), link: link.link}}));
+    setInterests(user?.interests?.join(", ") ?? "");
+    setLinks(
+      (user?.links ?? []).map((link) => {
+        return { id: crypto.randomUUID(), link: link.link };
+      }),
+    );
   }, [user]);
 
   return (
@@ -144,14 +170,26 @@ function ProfileForm() {
 
       <Card>
         <div className="heading mb-8">Skills and links</div>
-        <Input
-          label="Skills & interests"
-          id="skills"
-          value={skills}
-          onChange={(e) => setSkills(e.target.value)}
-          placeholder="product design, saas, b2b"
-          className="mb-4"
-        />
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Skills"
+            id="skills"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
+            placeholder="backend, Node.js, Express.js"
+            className="mb-4"
+          />
+
+          <Input
+            label="Interests"
+            id="interests"
+            value={interests}
+            onChange={(e) => setInterests(e.target.value)}
+            placeholder="productivity, saas, b2b"
+          />
+        </div>
+
         <div>
           <div className="font-medium text-text-primary">Websites</div>
           <div className="flex gap-4 items-start">

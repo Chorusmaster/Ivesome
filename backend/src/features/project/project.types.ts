@@ -6,18 +6,20 @@ export interface CreateProjectData {
   visibility: ProjectVisibility;
   status?: ProjectStatus;
   tags?: string[];
+  skills?: string[];
   logoLink?: string;
   mediaLinks?: string[];
 }
 
 export interface UpdateProjectData {
   title?: string;
-  shortDescription: string;
+  shortDescription?: string;
   description?: string;
   stage?: Exclude<ProjectStage, "IDEA">;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
   tags?: string[];
+  skills?: string[];
   logoLink?: string;
   mediaLinks?: string[];
 }
@@ -39,4 +41,4 @@ export type ProjectStatus = (typeof PROJECT_STATUS_VALUES)[number];
 export const PROJECT_ROLE_VALUES = ["OWNER", "MEMBER"] as const;
 export type ProjectRole = (typeof PROJECT_ROLE_VALUES)[number];
 
-export type ProjectSort = "newest" | "popular";
+export type ProjectSort = "newest" | "popular" | "relevant";

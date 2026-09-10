@@ -4,7 +4,7 @@ import {
   listProjects as listProjectsDb,
   listUserProjects as listUserProjectsDb,
   listPublicProjects as listPublicProjectsDb,
-  listFavouriteProjects as listFavouriteProjectsDb,
+  getFavouriteProjects as listFavouriteProjectsDb,
   createProject as createProjectDb,
   updateProject as updateProjectDb,
   turnIdeaIntoProject as turnIdeaIntoProjectDb,
@@ -49,7 +49,8 @@ export async function listPublicProjects(
   query?: string, 
   sort?: ProjectSort, 
   stages?: ProjectStage[],
-  tags?: string[] 
+  tags?: string[],
+  userId?: string
 ) {
   return await listPublicProjectsDb({
     ...(skip !== undefined && { skip }),
@@ -58,6 +59,7 @@ export async function listPublicProjects(
     ...(sort !== undefined && { sort }),
     ...(stages !== undefined && { stages }),
     ...(tags !== undefined && { tags }),
+    ...(userId !== undefined && { userId }),
   });
 }
 
@@ -74,7 +76,20 @@ export async function listFavouriteProjects(
 }
 
 export async function createProject(data: CreateProjectData, ownerId: string) {
-  return await createProjectDb(data, ownerId);
+  const processedData = {
+    title: data.title,
+    shortDescription: data.shortDescription,
+    ...(data.description !== undefined && {description: data.description}),
+    stage: data.stage,
+    visibility: data.visibility,
+    ...(data.status !== undefined && {status: data.status}),
+    ...(data.tags !== undefined && {tags: [...new Set(data.tags)]}),
+    ...(data.skills !== undefined && {skills: [...new Set(data.skills)]}),
+    ...(data.logoLink !== undefined && {logoLink: data.logoLink}),
+    ...(data.mediaLinks !== undefined && {mediaLinks: data.mediaLinks}),
+  }
+
+  return await createProjectDb(processedData, ownerId);
 }
 
 export async function updateProject(
@@ -95,7 +110,20 @@ export async function updateProject(
     }
   }
 
-  return await updateProjectDb(projectId, data);
+  const processedData = {
+    ...data.title !== undefined && { title: data.title },
+    ...data.shortDescription !== undefined && { shortDescription: data.shortDescription },
+    ...data.description !== undefined && { description: data.description },
+    ...data.stage !== undefined && { stage: data.stage },
+    ...data.visibility !== undefined && { visibility: data.visibility },
+    ...data.status !== undefined && { status: data.status },
+    ...data.tags !== undefined && { tags: [...new Set(data.tags)] },
+    ...data.skills !== undefined && { skills: [...new Set(data.skills)] },
+    ...data.logoLink !== undefined && { logoLink: data.logoLink },
+    ...data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks },
+  };
+
+  return await updateProjectDb(projectId, processedData);
 }
 
 export async function turnIdeaIntoProject(projectId: string, userId: string) {
