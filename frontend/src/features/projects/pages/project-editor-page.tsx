@@ -83,6 +83,7 @@ function ProjectEditorPage() {
                 shortDescription: project.shortDescription,
                 description: project.description ?? "",
                 tags: project.tags,
+                skills: project.skills,
                 visibility: project.visibility,
               }
             : undefined

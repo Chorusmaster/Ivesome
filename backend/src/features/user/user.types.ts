@@ -19,6 +19,7 @@ export interface RawUpdateUserData {
   bio?: string | undefined;
   about?: string | undefined;
   skills?: string | undefined;
+  interests?: string | undefined;
   links?: string | undefined;
 }
 
@@ -34,6 +35,7 @@ export type UpdateUserData = {
   bio?: string | undefined;
   about?: string | undefined;
   skills?: string[] | undefined;
+  interests?: string[] | undefined;
   links?: ProfileLink[] | undefined;
   avatarLink?: string | undefined;
 };

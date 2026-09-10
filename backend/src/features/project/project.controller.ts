@@ -74,7 +74,7 @@ export async function listUserProjectsHandler(req: Request, res: Response) {
 
 export async function listPublicProjectsHandler(req: Request, res: Response) {
   const query = req.query.query as string | undefined;
-
+  const userId = req.user?.id;
   const sort = req.query.sort as ProjectSort | undefined;
 
   const stages = (Array.isArray(req.query.stages)
@@ -92,7 +92,7 @@ export async function listPublicProjectsHandler(req: Request, res: Response) {
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
 
-  const projects = await listPublicProjects(skip, take, query, sort, stages, tags);
+  const projects = await listPublicProjects(skip, take, query, sort, stages, tags, userId);
   res.json(projects);
 }
 
@@ -114,6 +114,7 @@ export async function createProjectHandler(req: Request, res: Response) {
   const data: CreateProjectData = {
     ...req.body,
     tags: parseArrayField(req.body.tags),
+    skills: parseArrayField(req.body.skills),
     mediaLinks,
     ...(logoLink !== undefined && { logoLink }),
     status: req.body.status ?? "ACTIVE",
@@ -141,6 +142,9 @@ export async function updateProjectHandler(req: Request, res: Response) {
     ...req.body,
     ...(req.body.tags !== undefined && {
       tags: parseArrayField(req.body.tags),
+    }),
+    ...(req.body.skills !== undefined && {
+      skills: parseArrayField(req.body.skills),
     }),
     ...(mediaLinks.length > 0 && { mediaLinks }),
     ...(logoLink !== undefined && { logoLink }),

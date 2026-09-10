@@ -1,6 +1,8 @@
 import { prisma } from "../../config/database.js";
 import { Prisma } from "../../generated/prisma/client.js";
 import type { Project } from "../../generated/prisma/client.js";
+import { getRecommendations } from "../../utils/recomendations.js";
+import { getUserById } from "../user/user.repository.js";
 import type {
   CreateProjectData,
   ProjectRole,
@@ -164,6 +166,7 @@ export async function listPublicProjects({
   sort,
   stages = [],
   tags = [],
+  userId = undefined
 }: {
   skip?: number;
   take?: number;
@@ -171,13 +174,17 @@ export async function listPublicProjects({
   sort?: ProjectSort;
   stages?: ProjectStage[];
   tags?: string[];
+  userId?: string;
 }): Promise<Project[]> {
   const orderBy: Prisma.ProjectOrderByWithRelationInput =
     sort === "popular"
       ? { upvotes: { _count: "desc" } }
-      : { createdAt: "desc" };
+      : 
+        sort === "newest"
+        ? { createdAt: "desc" }
+        : {};
 
-  return getAllProjects({
+  const result = await getAllProjects({
     where: {
       visibility: "PUBLIC",
 
@@ -201,9 +208,20 @@ export async function listPublicProjects({
     ...(take !== undefined && { take }),
     orderBy,
   });
+
+  if (sort === "relevant") {
+    if (userId) {
+      const user = await getUserById(userId)
+      if (user) {
+        return await getRecommendations(user, result);
+      }
+    }
+  }
+
+  return result;
 }
 
-export async function listFavouriteProjects({
+export async function getFavouriteProjects({
   userId,
   skip,
   take,
@@ -215,6 +233,26 @@ export async function listFavouriteProjects({
   return getAllProjects({
     where: {
       favourites: {
+        some: { userId },
+      },
+    },
+    ...(skip !== undefined && { skip }),
+    ...(take !== undefined && { take }),
+  });
+}
+
+export async function getUpvotedProjects({
+  userId,
+  skip,
+  take,
+}: {
+  userId: string;
+  skip?: number;
+  take?: number;
+}): Promise<Project[]> {
+  return getAllProjects({
+    where: {
+      upvotes: {
         some: { userId },
       },
     },
@@ -281,6 +319,10 @@ export async function updateProject(
       ...(data.stage !== undefined && { stage: data.stage }),
       ...(data.visibility !== undefined && { visibility: data.visibility }),
       ...(data.status !== undefined && { status: data.status }),
+      ...(data.tags !== undefined && { tags: data.tags }),
+      ...(data.skills !== undefined && { skills: data.skills }),
+      ...(data.tags !== undefined && { tags: data.tags }),
+      ...(data.skills !== undefined && { skills: data.skills }),
       ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
       ...(data.mediaLinks !== undefined && {
         mediaLinks: data.mediaLinks as Prisma.InputJsonValue,

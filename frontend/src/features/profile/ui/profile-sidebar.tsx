@@ -20,10 +20,11 @@ function ProfileSidebar({ user, profileStats }: { user: User; profileStats: Prof
           {user.links.map((link) => <a key={link.link} href={link.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-text-secondary hover:text-primary transition"><Globe size={18} />{link.link}</a>)}
         </div>
       </Card>}
-      {user.skills && user.skills.length > 0 && user.skills[0].length > 0 && <Card>
+      {((user.skills && user.skills.length > 0) || (user.interests && user.interests.length > 0)) && <Card>
         <h2 className="subheading">Skills & interests</h2>
         <div className="flex flex-wrap gap-2">
-          {user.skills.map((skill) => <span key={skill} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">{skill}</span>)}
+          {user.skills?.map((skill) => <span key={`skill-${skill}`} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">{skill}</span>)}
+          {user.interests?.map((interest) => <span key={`interest-${interest}`} className="rounded-full bg-accent-light text-text-accent px-2 py-0.5 text-small">{interest}</span>)}
         </div>
       </Card>}
     </aside>

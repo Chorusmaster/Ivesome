@@ -17,7 +17,11 @@ import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
 
 const router = Router();
 
-router.get("/", listPublicProjectsHandler);
+router.get(
+  "/", 
+  optionalAuth, 
+  listPublicProjectsHandler
+);
 
 router.get("/user/:userId", listUserProjectsHandler);
 

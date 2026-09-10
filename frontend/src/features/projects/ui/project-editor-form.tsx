@@ -18,6 +18,7 @@ interface ProjectEditorFormProps {
     shortDescription?: string;
     description?: string;
     tags?: string[];
+    skills?: string[];
     visibility?: "PRIVATE" | "PUBLIC";
   };
 }
@@ -35,6 +36,7 @@ function ProjectEditorForm({
     initialValues?.description ?? "",
   );
   const [tags, setTags] = useState((initialValues?.tags ?? []).join(", "));
+  const [skills, setSkills] = useState((initialValues?.skills ?? []).join(", "));
   const [visibility, setVisibility] = useState<"PRIVATE" | "PUBLIC">(
     initialValues?.visibility ?? "PRIVATE",
   );
@@ -50,6 +52,7 @@ function ProjectEditorForm({
     setShortDescription(initialValues?.shortDescription ?? "");
     setDescription(initialValues?.description ?? "");
     setTags((initialValues?.tags ?? []).join(", "));
+    setSkills((initialValues?.skills ?? []).join(", "));
     setVisibility(initialValues?.visibility ?? "PRIVATE");
   }, [initialValues]);
 
@@ -66,6 +69,7 @@ function ProjectEditorForm({
         shortDescription,
         description,
         tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
+        skills: skills.split(",").map((skill) => skill.trim()).filter(Boolean),
         logo,
         media,
         visibility,
@@ -108,6 +112,19 @@ function ProjectEditorForm({
           className="min-h-36 mb-4"
         />
 
+        <Select
+          className="mb-4"
+          label="Visibility"
+          value={visibility}
+          onChange={(e) =>
+            setVisibility(e.target.value as "PRIVATE" | "PUBLIC")
+          }
+          options={[
+            { value: "PRIVATE", label: "Private" },
+            { value: "PUBLIC", label: "Public" },
+          ]}
+        />
+
         <div className="grid grid-cols-2 gap-4">
           <Input
             label="Tags"
@@ -117,16 +134,12 @@ function ProjectEditorForm({
             onChange={(e) => setTags(e.target.value)}
           />
 
-          <Select
-            label="Visibility"
-            value={visibility}
-            onChange={(e) =>
-              setVisibility(e.target.value as "PRIVATE" | "PUBLIC")
-            }
-            options={[
-              { value: "PRIVATE", label: "Private" },
-              { value: "PUBLIC", label: "Public" },
-            ]}
+          <Input
+            label="Skills"
+            id="skills"
+            placeholder="backend, Node.js, Express.js"
+            value={skills}
+            onChange={(e) => setSkills(e.target.value)}
           />
         </div>
       </Card>

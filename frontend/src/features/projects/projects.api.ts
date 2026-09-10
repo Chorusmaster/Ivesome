@@ -83,6 +83,10 @@ export const createProject = async (payload: CreateProjectPayload) => {
     formData.append("tags", JSON.stringify(payload.tags));
   }
 
+  if (payload.skills) {
+    formData.append("skills", JSON.stringify(payload.skills));
+  }
+
   if (payload.media) {
     payload.media.forEach((file) => {
       formData.append("media", file);
@@ -125,6 +129,10 @@ export const updateProject = async (
 
   if (payload.tags !== undefined) {
     formData.append("tags", JSON.stringify(payload.tags));
+  }
+
+  if (payload.skills !== undefined) {
+    formData.append("skills", JSON.stringify(payload.skills));
   }
 
   if (payload.media) {

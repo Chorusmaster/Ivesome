@@ -9,6 +9,7 @@ export type Profile = {
   bio?: string;
   about?: string;
   skills: string[];
+  interests: string[];
   links: ProfileLinkInput[];
   stats: ProfileStats;
 };
@@ -21,6 +22,7 @@ export interface UpdateProfileData {
   bio?: string;
   about?: string;
   skills: string[];
+  interests: string[];
   links: ProfileLinkInput[];
   avatar?: File;
 }
