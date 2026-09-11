@@ -53,13 +53,16 @@ function ConversationsPage() {
   function processConversationList(current: ConversationType[]) {
     return current
       .map((conversation) => {
-        const lastMessage = conversation.messages.reduce((latest, item) => {
-          if (!latest) return item;
+        const lastMessage = conversation.messages.reduce(
+          (latest, item) => {
+            if (!latest) return item;
 
-          return new Date(item.createdAt) > new Date(latest.createdAt)
-            ? item
-            : latest;
-        }, null as ConversationMessage | null);
+            return new Date(item.createdAt) > new Date(latest.createdAt)
+              ? item
+              : latest;
+          },
+          null as ConversationMessage | null,
+        );
         const otherMember = conversation.members.find(
           (member) => member.userId !== user?.id,
         );
@@ -129,13 +132,11 @@ function ConversationsPage() {
                 updateConversationMessages(selectedConversation.id, messages)
               }
             />
-          ) : conversations.length == 0 ?
-          (
+          ) : conversations.length == 0 ? (
             <div className="flex-1 flex items-center justify-center text-text-secondary">
               No conversations yet
             </div>
-          ) :
-          (
+          ) : (
             <div className="flex-1 flex items-center justify-center text-text-secondary">
               Select a conversation
             </div>
