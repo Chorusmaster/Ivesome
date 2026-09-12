@@ -444,6 +444,15 @@ export async function getProjectMemberRole(
   return member?.role ?? null;
 }
 
+export async function getProjectOwnerId(projectId: string) {
+  const owner = await prisma.projectMember.findFirst({
+    where: { projectId, role: "OWNER" },
+    select: { userId: true },
+  });
+
+  return owner?.userId ?? null;
+}
+
 export async function deleteAllProjects() {
   return prisma.project.deleteMany();
 }

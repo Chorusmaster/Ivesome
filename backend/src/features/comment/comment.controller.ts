@@ -2,6 +2,7 @@ import type { Request, Response } from "express";
 import {
   createComment,
   deleteComment,
+  getComment,
   listComments,
   updateComment,
 } from "./comment.service.js";
@@ -10,6 +11,12 @@ import { getParam } from "../../utils/validation.js";
 export async function listCommentsHandler(req: Request, res: Response) {
   const projectId = getParam(req.params.projectId, "project id");
   const result = await listComments(projectId, req.user?.id);
+  res.json(result);
+}
+
+export async function getCommentHandler(req: Request, res: Response) {
+  const commentId = getParam(req.params.commentId, "comment id");
+  const result = await getComment(commentId, req.user?.id);
   res.json(result);
 }
 

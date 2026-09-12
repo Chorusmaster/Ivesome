@@ -3,7 +3,6 @@ import Navbar from "@/shared/ui/navbar";
 import { Outlet } from "react-router-dom";
 
 function App() {
-
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -12,7 +11,7 @@ function App() {
       </main>
       <Footer />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

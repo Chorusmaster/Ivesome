@@ -4,6 +4,7 @@ import { validate } from "../../middlewares/validate.middleware.js";
 import {
   createCommentHandler,
   deleteCommentHandler,
+  getCommentHandler,
   listCommentsHandler,
   updateCommentHandler,
 } from "./comment.controller.js";
@@ -12,9 +13,11 @@ import { createCommentSchema, updateCommentSchema } from "./comment.schema.js";
 const router = Router();
 
 router.get(
-  "/projects/:projectId/comments", 
-  listCommentsHandler
+  "/projects/:projectId/comments",
+  listCommentsHandler,
 );
+
+router.get("/comments/:commentId", getCommentHandler);
 
 router.post(
   "/projects/:projectId/comments",

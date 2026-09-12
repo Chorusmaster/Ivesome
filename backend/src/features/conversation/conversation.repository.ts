@@ -81,6 +81,15 @@ export async function getConversationById(id: string) {
   });
 }
 
+export async function getConversationMemberIds(id: string) {
+  const members = await prisma.conversationMember.findMany({
+    where: { conversationId: id },
+    select: { userId: true },
+  });
+
+  return members.map((member) => member.userId);
+}
+
 export async function createConversation(
   memberIds: string[],
   workspaceId?: string,

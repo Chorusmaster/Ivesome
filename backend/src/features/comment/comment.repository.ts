@@ -30,6 +30,22 @@ export async function getCommentById(id: string) {
       projectId: true,
       authorId: true,
       parentCommentId: true,
+      content: true,
+      createdAt: true,
+      editedAt: true,
+    },
+  });
+}
+
+export async function getCommentDetailsById(id: string) {
+  return prisma.comment.findUnique({
+    where: { id },
+    include: {
+      user: { select: authorSelect },
+      replies: {
+        orderBy: { createdAt: "asc" },
+        include: { user: { select: authorSelect } },
+      },
     },
   });
 }
