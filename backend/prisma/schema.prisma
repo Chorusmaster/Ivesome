@@ -68,6 +68,15 @@ enum AuthTokenType {
   PASSWORD_RESET
 }
 
+enum ReferenceType {
+  PROJECT
+  PARTICIPATION_REQUEST
+  COMMENT
+  CONVERSATION
+  REPORT
+  NONE
+}
+
 model AuthToken {
   id        String        @id @default(uuid())
   userId    String
@@ -110,10 +119,10 @@ model User {
   passwordHash String
   role         UserRole   @default(USER)
   status       UserStatus @default(UNVERIFIED)
-  location String?
-  bio      String?
-  about    String?
-  skills   String[]       @default([])
+  location     String?
+  bio          String?
+  about        String?
+  skills       String[]   @default([])
   interests    String[]   @default([])
   links        Json       @default("[]")
   createdAt    DateTime   @default(now())
@@ -158,9 +167,9 @@ model Workspace {
   id        String @id @default(uuid())
   projectId String @unique
 
-  conversation  Conversation?
-  tasks         Task[]
-  project       Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  conversation Conversation?
+  tasks        Task[]
+  project      Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model ProjectMember {
@@ -209,8 +218,8 @@ model Comment {
 }
 
 model Conversation {
-  id          String    @id @default(uuid())
-  workspaceId String?   @unique
+  id          String  @id @default(uuid())
+  workspaceId String? @unique
 
   workspace Workspace?           @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   members   ConversationMember[]
@@ -254,12 +263,13 @@ model Task {
 }
 
 model Notification {
-  id          String   @id @default(uuid())
-  userId      String
-  type        String
-  referenceId String?
-  isRead      Boolean  @default(false)
-  createdAt   DateTime @default(now())
+  id            String        @id @default(uuid())
+  userId        String
+  message       String
+  referenceType ReferenceType
+  referenceId   String?
+  isRead        Boolean       @default(false)
+  createdAt     DateTime      @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -285,7 +295,6 @@ model Upvote {
 
   @@id([userId, projectId])
 }
-
 
 model Report {
   id         String  @id @default(uuid())

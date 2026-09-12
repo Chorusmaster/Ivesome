@@ -2,6 +2,8 @@ import Avatar from "@/shared/ui/avatar";
 import type { User } from "@/features/auth/auth.types";
 import Comment from "./comment";
 import type { ProjectComment } from "../comments.api";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 type ProjectDiscussionProps = {
   user?: User | null;
@@ -33,6 +35,24 @@ function ProjectDiscussion({
   const commentCount =
     comments.length +
     comments.reduce((count, comment) => count + comment.replies.length, 0);
+
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.scrollToComment) { 
+      if (commentsLoading) return;
+
+      const targetId = window.location.hash.slice(1);
+      if (!targetId) return;
+
+      const element = document.getElementById(targetId);
+
+      element?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [comments, commentsLoading, location.state]);
 
   return (
     <section>

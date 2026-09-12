@@ -55,7 +55,7 @@ function Comment({
   }
 
   return (
-    <div className="border-t border-border mt-6 pt-6">
+    <div id={comment.id} className="border-t border-border mt-6 pt-6">
       <div className="flex gap-4">
         <Link to={`/users/${comment?.user?.id}`}>
           <Avatar user={comment.user ?? undefined} theme="primary_light" />

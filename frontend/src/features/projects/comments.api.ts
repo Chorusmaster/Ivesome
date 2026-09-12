@@ -27,6 +27,11 @@ export async function getComments(projectId: string) {
   return data;
 }
 
+export async function getComment(id: string) {
+  const { data } = await api.get<ProjectComment>(`/comments/${id}`);
+  return data;
+}
+
 export async function createComment(
   projectId: string,
   content: string,

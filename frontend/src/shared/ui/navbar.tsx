@@ -7,7 +7,7 @@ import { Search, LogOut } from "lucide-react";
 import Avatar from "@/shared/ui/avatar";
 import { useState } from "react";
 import { Popover } from "./popover.tsx";
-import NotificationPopover from "./notification-popover.tsx";
+import NotificationPopover from "../../features/notifications/ui/notification-popover.tsx";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ function Navbar() {
 
   return (
     <header className="h-16">
-      <nav className="fixed h-16 px-16 w-screen flex justify-between items-center bg-surface shadow-sm select-none border-b border-border">
+      <nav className="z-50 fixed h-16 px-16 w-screen flex justify-between items-center bg-surface shadow-sm select-none border-b border-border">
         <div className="flex gap-2 py-2 items-center">
           <Link className="flex items-center gap-2" to="/">
             <Logo className="size-8"></Logo>
@@ -59,7 +59,7 @@ function Navbar() {
             </Link>
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
           <form
             onSubmit={handleSubmit}
             className="bg-background rounded-input border border-border w-72 flex items-center"
@@ -68,7 +68,7 @@ function Navbar() {
             <input
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search ideas..."
-              className="h-full w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
+              className="h-10 w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
             ></input>
           </form>
 
@@ -85,7 +85,7 @@ function Navbar() {
             <Popover.Trigger
               type="button"
               aria-label="Open account menu"
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="mt-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               <Avatar
                 user={user ?? undefined}

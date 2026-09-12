@@ -9,6 +9,9 @@ import {
 } from "./message.repository.js";
 import { assertConversationMember } from "../conversation/conversation.authorization.js";
 import { assertMessageAuthor } from "./message.authorization.js";
+import { getConversationMemberIds } from "../conversation/conversation.repository.js";
+import { createNotification } from "../notification/notification.service.js";
+import { getUser } from "../user/user.service.js";
 
 export async function listMessages(conversationId: string, userId: string) {
   await assertConversationMember(conversationId, userId);
@@ -41,12 +44,29 @@ export async function createMessage(
     }
   }
 
-  return createMessageDb({
+  const createdMessage = await createMessageDb({
     conversationId,
     authorId,
     content,
     ...(parentMessageId !== undefined && { parentMessageId }),
   });
+
+  const user = await getUser(authorId);
+  const authorName = user?.firstName && user?.lastName
+    ? `${user.firstName} ${user.lastName}`
+    : user?.login
+      ? `User ${user.login}`
+      : "Someone";
+  const recipientIds = (await getConversationMemberIds(conversationId))
+    .filter((memberId) => memberId !== authorId);
+
+  await Promise.all(recipientIds.map((recipientId) => createNotification(recipientId, {
+    message: `${authorName} sent you a message`,
+    referenceType: "CONVERSATION",
+    referenceId: conversationId,
+  })));
+
+  return createdMessage;
 }
 
 export async function updateMessage(

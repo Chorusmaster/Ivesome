@@ -3,7 +3,7 @@ import {
   assertProjectPermission,
   assertNotProjectMember,
 } from "../project/project.authorization.js";
-import { getProjectMemberRole } from "../project/project.repository.js";
+import { getProjectMemberRole, getProjectOwnerId } from "../project/project.repository.js";
 import {
   createParticipationRequest as createParticipationRequestDb,
   deleteParticipationRequest as deleteParticipationRequestDb,
@@ -13,6 +13,8 @@ import {
   listUserParticipationRequests,
   updateParticipationRequest as updateParticipationRequestDb,
 } from "./participation-request.repository.js";
+import { createNotification } from "../notification/notification.service.js";
+import { getUser } from "../user/user.service.js";
 
 export async function createParticipationRequest(
   projectId: string,
@@ -27,7 +29,26 @@ export async function createParticipationRequest(
     throw new ApiError(409, "A participation request is already pending");
   }
 
-  return await createParticipationRequestDb(projectId, userId, message);
+  const request = await createParticipationRequestDb(projectId, userId, message);
+
+  const ownerId = await getProjectOwnerId(projectId);
+  if (ownerId) {
+    const user = await getUser(userId);
+
+    const userName = user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user?.login
+        ? `User ${user.login}`
+        : "Someone";
+
+    await createNotification(ownerId, {
+      message: `${userName} send you a participation request`,
+      referenceType: "PARTICIPATION_REQUEST",
+      referenceId: request.id,
+    });
+  }
+
+  return request;
 }
 
 export async function listProjectRequests(projectId: string, userId: string) {
@@ -52,7 +73,21 @@ export async function updateParticipationRequest(
     throw new ApiError(409, "Participation request has already been processed");
   }
 
-  return updateParticipationRequestDb(requestId, status);
+  const updatedRequest = await updateParticipationRequestDb(requestId, status);
+  const owner = await getUser(userId);
+  const ownerName = owner?.firstName && owner?.lastName
+    ? `${owner.firstName} ${owner.lastName}`
+    : owner?.login
+      ? `User ${owner.login}`
+      : "The project owner";
+
+  await createNotification(request.userId, {
+    message: `${ownerName} ${status === "ACCEPTED" ? "accepted" : "rejected"} your participation request`,
+    referenceType: "PARTICIPATION_REQUEST",
+    referenceId: requestId,
+  });
+
+  return updatedRequest;
 }
 
 export async function cancelParticipationRequest(
