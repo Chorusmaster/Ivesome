@@ -48,15 +48,34 @@ function Navbar() {
             >
               Search
             </Link>
-            <Link
-              to="/favourites"
-              className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
-            >
-              Favourites
-            </Link>
-            <Link to="/conversations" className="text-muted font-button">
-              Conversations
-            </Link>
+            {
+              (user && user.role === "USER") && (
+                <>
+                  <Link
+                    to="/favourites"
+                    className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
+                  >
+                    Favourites
+                  </Link>
+                  <Link to="/conversations" className="text-muted font-button">
+                    Conversations
+                  </Link>
+                </>
+              )
+            }
+
+            {
+              (user && user.role === "ADMIN") && (
+                <>
+                  <Link
+                    to="/admin/dashboard"
+                    className={`${location.pathname == "/admin/dashboard" ? "text-primary" : "text-muted"} font-button`}
+                  >
+                    Dashboard
+                  </Link>
+                </>
+              )
+            }
           </div>
         </div>
         <div className="flex gap-4 items-center">

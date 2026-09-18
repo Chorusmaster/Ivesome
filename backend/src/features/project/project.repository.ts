@@ -187,6 +187,7 @@ export async function listPublicProjects({
   const result = await getAllProjects({
     where: {
       visibility: "PUBLIC",
+      status: "ACTIVE",
 
       ...(query && {
         OR: [

@@ -1,4 +1,13 @@
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/shared/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/shared/ui/dialog";
 import { Rocket, AlertTriangle } from "lucide-react";
 
 type ProjectActionsProps = {
@@ -6,14 +15,17 @@ type ProjectActionsProps = {
   onSubmit: () => void;
 };
 
-export function TurnIntoProjectDialog({submitting, onSubmit}: ProjectActionsProps) {
+export function TurnIntoProjectDialog({
+  submitting,
+  onSubmit,
+}: ProjectActionsProps) {
   return (
     <Dialog>
-      <DialogTrigger className="button text-white bg-primary disabled:bg-primary-hover hover:bg-primary-hover flex gap-2 justify-center items-center w-full">
+      <DialogTrigger className="button bg-primary text-white hover:bg-primary-hover transition flex w-full items-center justify-center gap-2">
         Turn into project
       </DialogTrigger>
 
-      <DialogContent className="bg-surface border border-border ring-border sm:max-w-md">
+      <DialogContent className="bg-surface border border-border ring-border sm:max-w-md gap-2">
         <DialogHeader className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
@@ -24,9 +36,10 @@ export function TurnIntoProjectDialog({submitting, onSubmit}: ProjectActionsProp
               <DialogTitle className="text-lg">
                 Turn idea into project
               </DialogTitle>
+
               <DialogDescription className="mt-1">
                 This will create a project workspace and move it to the{" "}
-                <span className="font-medium text-text text-primary">
+                <span className="font-medium text-primary">
                   Team Building
                 </span>{" "}
                 stage.
@@ -45,6 +58,7 @@ export function TurnIntoProjectDialog({submitting, onSubmit}: ProjectActionsProp
                 <p className="font-medium text-danger">
                   This action is irreversible
                 </p>
+
                 <p className="text-sm text-text-secondary">
                   Once converted, this idea will become a project and cannot be
                   reverted back.
@@ -54,7 +68,7 @@ export function TurnIntoProjectDialog({submitting, onSubmit}: ProjectActionsProp
           </div>
         </DialogHeader>
 
-        <DialogFooter className="flex-row bg-surface border-none justify-end gap-3">
+        <DialogFooter className="flex-row justify-end gap-3 bg-surface border-none">
           <DialogClose
             render={
               <button

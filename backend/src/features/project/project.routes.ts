@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../../middlewares/auth.middleware.js";
+import { requireAdmin } from "../../middlewares/admin.middleware.js";
 import {
   getProjectHandler,
   listUserProjectsHandler,
@@ -11,6 +12,7 @@ import {
   addMemberHandler,
   removeMemberHandler,
   listFavouriteProjectsHandler,
+  updateProjectStatusHandler,
 } from "./project.controller.js";
 import { upload } from "../storage/storage.service.js";
 import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
@@ -29,6 +31,13 @@ router.get(
   "/favourite",
   authenticate,
   listFavouriteProjectsHandler,
+);
+
+router.patch(
+  "/:projectId/status",
+  authenticate,
+  requireAdmin,
+  updateProjectStatusHandler,
 );
 
 router.get(

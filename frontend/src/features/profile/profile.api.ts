@@ -51,3 +51,11 @@ export const getUser = async (id: string) => {
   const { data } = await api.get(`/user/${id}`);
   return data;
 };
+
+export const updateUserStatus = async (
+  userId: string,
+  status: "ACTIVE" | "BLOCKED",
+) => {
+  const { data } = await api.patch(`/users/${userId}/status`, { status });
+  return data;
+};

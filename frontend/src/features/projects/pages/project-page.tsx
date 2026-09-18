@@ -22,6 +22,7 @@ import {
   createParticipationRequest,
   getMyParticipationRequests,
 } from "../../participation-requests/participation-requests.api";
+import { createReport } from "@/features/reports/reports.api";
 
 function ProjectPage() {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +47,11 @@ function ProjectPage() {
   const [requestSubmitting, setRequestSubmitting] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
   const [requestError, setRequestError] = useState("");
+  const [reportReason, setReportReason] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportError, setReportError] = useState("");
   const [statusChanging, setStatusChanging] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
 
   const projectRole = project?.members.find(
     (member) => member.user.id === user?.id,
@@ -199,6 +204,29 @@ function ProjectPage() {
     }
   };
 
+  const handleReportSubmit = async () => {
+    if (!id || !reportReason.trim()) return;
+
+    setReportSubmitting(true);
+    setReportError("");
+
+    try {
+      await createReport({
+        targetType: "PROJECT",
+        targetId: id,
+        reason: reportReason.trim(),
+      });
+
+      setReportReason("");
+      setReportOpen(false);
+    } catch (error) {
+      console.error(error);
+      setReportError("Unable to submit report. Please try again.");
+    } finally {
+      setReportSubmitting(false);
+    }
+  };
+
   return (
     <div>
       <ProjectHeader project={project} />
@@ -234,17 +262,24 @@ function ProjectPage() {
             requestMessage={requestMessage}
             requestSubmitting={requestSubmitting}
             requestError={requestError}
+            reportReason={reportReason}
+            reportSubmitting={reportSubmitting}
+            reportError={reportError}
             isUpvoted={isUpvoted}
             upvotes={upvotes}
             isFavourite={isFavourite}
             statusChanging={statusChanging}
+            reportOpen={reportOpen}
             onRequestMessageChange={setRequestMessage}
             onParticipationRequest={handleParticipationRequest}
+            onReportReasonChange={setReportReason}
+            onReportSubmit={handleReportSubmit}
             onUpvote={toggleUpvote}
             onShare={handleShare}
             onFavourite={toggleFavourite}
             onDelete={handleDeleteProject}
             onStatusChange={handleTurnIntoProject}
+            setReportOpen={setReportOpen}
           />
           {((project.skills && project.skills.length > 0)) && <Card>
             <h2 className="subheading">Required skills</h2>

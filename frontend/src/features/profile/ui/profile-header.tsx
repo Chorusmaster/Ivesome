@@ -1,18 +1,46 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNowStrict } from "date-fns";
 import { enUS } from "date-fns/locale";
-import { Calendar, Mail, MapPin, MessageSquare, Pencil } from "lucide-react";
+import {
+  Calendar,
+  Flag,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Pencil,
+} from "lucide-react";
 import Avatar from "@/shared/ui/avatar";
 import { filePathToUrl } from "@/shared/lib/utils";
 import type { User } from "@/features/auth/auth.types";
+import { ReportDialog } from "@/shared/ui/report-dialog";
 
 type ProfileHeaderProps = {
   user: User;
   isOwnProfile: boolean;
+  canReport: boolean;
   onMessage: () => void;
+  reportOpen: boolean;
+  reportReason: string;
+  reportSubmitting: boolean;
+  reportError: string;
+  onReportReasonChange: (value: string) => void;
+  onReportSubmit: () => void;
+  onReportOpenChange: (open: boolean) => void;
 };
 
-function ProfileHeader({ user, isOwnProfile, onMessage }: ProfileHeaderProps) {
+function ProfileHeader({
+  user,
+  isOwnProfile,
+  canReport,
+  onMessage,
+  reportOpen,
+  reportReason,
+  reportSubmitting,
+  reportError,
+  onReportReasonChange,
+  onReportSubmit,
+  onReportOpenChange,
+}: ProfileHeaderProps) {
   return (
     <div className="px-16 py-12 bg-surface border-b border-border">
       <div className="flex justify-between items-start gap-8">
@@ -68,13 +96,36 @@ function ProfileHeader({ user, isOwnProfile, onMessage }: ProfileHeaderProps) {
             Edit profile
           </Link>
         ) : (
-          <button
-            onClick={onMessage}
-            className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0"
-          >
-            <MessageSquare size={16} />
-            Send message
-          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={onMessage}
+              className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2"
+            >
+              <MessageSquare size={16} />
+              Send message
+            </button>
+            {canReport && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onReportOpenChange(true)}
+                  className="button border border-border text-muted hover:text-danger hover:border-danger transition h-10"
+                  aria-label="Report user"
+                >
+                  <Flag size={16} />
+                </button>
+                <ReportDialog
+                  open={reportOpen}
+                  onOpenChange={onReportOpenChange}
+                  value={reportReason}
+                  onChange={onReportReasonChange}
+                  submitting={reportSubmitting}
+                  error={reportError}
+                  onSubmit={onReportSubmit}
+                />
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>

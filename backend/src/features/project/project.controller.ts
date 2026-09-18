@@ -11,6 +11,7 @@ import {
   deleteProject,
   addMember,
   removeMember,
+  updateProjectStatus,
 } from "./project.service.js";
 import type { 
   CreateProjectData, 
@@ -184,6 +185,20 @@ export async function deleteProjectHandler(req: Request, res: Response) {
 
   await deleteProject(req.params.id, userId);
   res.status(204).send();
+}
+
+export async function updateProjectStatusHandler(req: Request, res: Response) {
+  if (!req.params.projectId || typeof req.params.projectId !== "string") {
+    throw new ApiError(422, "Invalid project id");
+  }
+
+  const status = req.body.status;
+  if (status !== "ACTIVE" && status !== "BLOCKED" && status !== "ARCHIVED") {
+    throw new ApiError(422, "Invalid project status");
+  }
+
+  const project = await updateProjectStatus(req.params.projectId, status);
+  res.json(project);
 }
 
 export async function addMemberHandler(req: Request, res: Response) {

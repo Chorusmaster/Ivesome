@@ -13,19 +13,21 @@ import ProfileProjects from "@/features/profile/ui/profile-projects";
 import ProfileSidebar from "@/features/profile/ui/profile-sidebar";
 import ProfileAbout from "../ui/profile-about";
 import type { ProfileStats } from "../profile.types";
+import { createReport } from "@/features/reports/reports.api";
 
 function ProfilePage() {
   const { userId } = useParams<{ userId: string }>();
-  const {
-    user: currentUser,
-    refreshUser,
-  } = useAuth();
+  const { user: currentUser, refreshUser } = useAuth();
   const navigate = useNavigate();
 
   const [profileUser, setProfileUser] = useState<User>();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileStats, setProfileStats] = useState<ProfileStats | undefined>();
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportError, setReportError] = useState("");
 
   async function startConversation(userId: string) {
     const conversation = await createConversation(userId);
@@ -34,35 +36,64 @@ function ProfilePage() {
 
   async function getProfileStats(projects: Project[]): Promise<ProfileStats> {
     return {
-      ideas: projects.filter((item) => item.stage === "IDEA" && item.visibility === "PUBLIC").length,
-      projects: projects.filter((item) => item.stage !== "IDEA" && item.visibility === "PUBLIC").length,
-      upvotes: projects.reduce((total, project) => total + project._count.upvotes, 0)
+      ideas: projects.filter(
+        (item) => item.stage === "IDEA" && item.visibility === "PUBLIC",
+      ).length,
+      projects: projects.filter(
+        (item) => item.stage !== "IDEA" && item.visibility === "PUBLIC",
+      ).length,
+      upvotes: projects.reduce(
+        (total, project) => total + project._count.upvotes,
+        0,
+      ),
+    };
+  }
+
+  async function handleReportSubmit() {
+    if (!profileUser || !reportReason.trim()) return;
+
+    setReportSubmitting(true);
+    setReportError("");
+
+    try {
+      await createReport({
+        targetType: "USER",
+        targetId: profileUser.id,
+        reason: reportReason.trim(),
+      });
+      setReportReason("");
+      setReportOpen(false);
+    } catch {
+      setReportError("Unable to submit report. Please try again.");
+    } finally {
+      setReportSubmitting(false);
     }
   }
 
   useEffect(() => {
     const loadData = async () => {
       try {
-          setLoading(true);
+        setLoading(true);
 
-          const targetUser = userId
-            ? await getUser(userId)
-            : currentUser ?? await refreshUser();
+        const targetUser = userId
+          ? await getUser(userId)
+          : (currentUser ?? (await refreshUser()));
 
-          setProfileUser(targetUser);
+        setProfileUser(targetUser);
 
-          const projects = await getUserProjects(targetUser.id);
-          setProjects(projects);
-          setProfileStats(await getProfileStats(projects));
-        } finally {
-          setLoading(false);
-        }
-      };
+        const projects = await getUserProjects(targetUser.id);
+        setProjects(projects);
+        setProfileStats(await getProfileStats(projects));
+      } finally {
+        setLoading(false);
+      }
+    };
 
     loadData();
   }, [userId]);
 
-  const isOwnProfile = currentUser && profileUser && currentUser.id === profileUser.id;
+  const isOwnProfile =
+    currentUser && profileUser && currentUser.id === profileUser.id;
 
   if (loading) {
     return <p>Loading...</p>;
@@ -74,7 +105,19 @@ function ProfilePage() {
 
   return (
     <div>
-      <ProfileHeader user={profileUser} isOwnProfile={!!isOwnProfile} onMessage={() => startConversation(profileUser.id)} />
+      <ProfileHeader
+        user={profileUser}
+        isOwnProfile={!!isOwnProfile}
+        canReport={!!currentUser && !isOwnProfile}
+        onMessage={() => startConversation(profileUser.id)}
+        reportOpen={reportOpen}
+        reportReason={reportReason}
+        reportSubmitting={reportSubmitting}
+        reportError={reportError}
+        onReportReasonChange={setReportReason}
+        onReportSubmit={handleReportSubmit}
+        onReportOpenChange={setReportOpen}
+      />
 
       <div className="main-container grid grid-cols-4 gap-4">
         <div className="col-span-3 flex flex-col gap-4">
