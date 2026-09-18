@@ -4,6 +4,8 @@ import { enUS } from "date-fns/locale";
 import Avatar from "@/shared/ui/avatar";
 import type { ProjectComment } from "../comments.api";
 import { Link } from "react-router-dom";
+import { createReport } from "@/features/reports/reports.api";
+import { ReportDialog } from "@/shared/ui/report-dialog";
 
 type CommentProps = {
   comment: ProjectComment;
@@ -25,6 +27,10 @@ function Comment({
   const [content, setContent] = useState(comment.content);
   const [reply, setReply] = useState("");
   const [busy, setBusy] = useState(false);
+  const [reportOpen, setReportOpen] = useState(false);
+  const [reportReason, setReportReason] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportError, setReportError] = useState("");
   const authorName = comment.user
     ? comment.user.firstName && comment.user.lastName
       ? `${comment.user.firstName} ${comment.user.lastName}`
@@ -54,6 +60,27 @@ function Comment({
     }
   }
 
+  async function submitReport() {
+    if (!reportReason.trim()) return;
+
+    setReportSubmitting(true);
+    setReportError("");
+
+    try {
+      await createReport({
+        targetType: "COMMENT",
+        targetId: comment.id,
+        reason: reportReason.trim(),
+      });
+      setReportReason("");
+      setReportOpen(false);
+    } catch {
+      setReportError("Unable to submit report. Please try again.");
+    } finally {
+      setReportSubmitting(false);
+    }
+  }
+
   return (
     <div id={comment.id} className="border-t border-border mt-6 pt-6">
       <div className="flex gap-4">
@@ -62,7 +89,10 @@ function Comment({
         </Link>
         <div className="min-w-0 flex-1 flex flex-col gap-1 text-text-secondary">
           <div className="text-small">
-            <Link className="hover:text-primary text-text-primary font-medium" to={`/users/${comment?.user?.id}`}>
+            <Link
+              className="hover:text-primary text-text-primary font-medium"
+              to={`/users/${comment?.user?.id}`}
+            >
               {authorName}
             </Link>
             {" · "}
@@ -144,7 +174,29 @@ function Comment({
                 </button>
               </>
             )}
+            {currentUserId &&
+              currentUserId !== comment.authorId &&
+              !isEditing && (
+                <button
+                  type="button"
+                  onClick={() => setReportOpen(true)}
+                  className="flex items-center gap-1 hover:text-danger"
+                  aria-label="Report comment"
+                >
+                  Report
+                </button>
+              )}
           </div>
+
+          <ReportDialog
+            open={reportOpen}
+            onOpenChange={setReportOpen}
+            value={reportReason}
+            onChange={setReportReason}
+            submitting={reportSubmitting}
+            error={reportError}
+            onSubmit={submitReport}
+          />
 
           {isReplying && (
             <div className="flex flex-col gap-2 mt-2">

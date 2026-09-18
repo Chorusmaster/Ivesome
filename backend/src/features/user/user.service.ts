@@ -1,5 +1,6 @@
-import type { RawUpdateUserData } from "./user.types.js";
+import type { RawUpdateUserData, UserStatus } from "./user.types.js";
 import { getUserById, updateUser } from "./user.repository.js";
+import { ApiError } from "../../types/error.types.js";
 
 export async function getUser(userId: string) {
   return await getUserById(userId);
@@ -25,4 +26,14 @@ export async function updateProfile(
     links: data.links ? JSON.parse(data.links) : undefined,
     avatarLink: avatarLink,
   });
+}
+
+export async function updateUserStatus(userId: string, status: UserStatus) {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  return await updateUser(userId, { status });
 }

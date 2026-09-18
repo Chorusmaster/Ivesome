@@ -1,4 +1,10 @@
-import type { CreateProjectData, ProjectSort, ProjectStage, UpdateProjectData } from "./project.types.js";
+import type {
+  CreateProjectData,
+  ProjectSort,
+  ProjectStage,
+  ProjectStatus,
+  UpdateProjectData,
+} from "./project.types.js";
 import {
   getProjectById,
   listProjects as listProjectsDb,
@@ -157,6 +163,19 @@ export async function deleteProject(
   );
 
   return await deleteProjectDb(projectId);
+}
+
+export async function updateProjectStatus(
+  projectId: string,
+  status: ProjectStatus,
+) {
+  const existingProject = await getProjectById(projectId);
+
+  if (!existingProject) {
+    throw new ApiError(404, "Project not found");
+  }
+
+  return await updateProjectDb(projectId, { status });
 }
 
 export async function addMember(

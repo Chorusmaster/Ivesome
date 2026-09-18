@@ -107,8 +107,16 @@ export async function updateComment(
   return updateCommentDb(commentId, content);
 }
 
-export async function deleteComment(commentId: string, authorId: string) {
+export async function deleteComment(
+  commentId: string,
+  authorId: string,
+  isAdmin = false,
+) {
   const comment = await getCommentById(commentId);
-  assertCommentAuthor(comment, authorId);
+
+  if (!isAdmin) {
+    assertCommentAuthor(comment, authorId);
+  }
+
   await deleteCommentDb(commentId);
 }

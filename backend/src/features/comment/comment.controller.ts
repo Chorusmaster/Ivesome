@@ -39,6 +39,6 @@ export async function updateCommentHandler(req: Request, res: Response) {
 
 export async function deleteCommentHandler(req: Request, res: Response) {
   const commentId = getParam(req.params.commentId, "comment id");
-  await deleteComment(commentId, req.user.id);
+  await deleteComment(commentId, req.user.id, req.user.role === "ADMIN");
   res.status(204).send();
 }

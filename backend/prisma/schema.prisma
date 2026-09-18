@@ -68,13 +68,24 @@ enum AuthTokenType {
   PASSWORD_RESET
 }
 
-enum ReferenceType {
+enum NotificationReferenceType {
   PROJECT
   PARTICIPATION_REQUEST
   COMMENT
   CONVERSATION
   REPORT
   NONE
+}
+
+enum ReportTargetType {
+  PROJECT
+  USER
+  COMMENT
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
 }
 
 model AuthToken {
@@ -266,7 +277,7 @@ model Notification {
   id            String        @id @default(uuid())
   userId        String
   message       String
-  referenceType ReferenceType
+  referenceType NotificationReferenceType
   referenceId   String?
   isRead        Boolean       @default(false)
   createdAt     DateTime      @default(now())
@@ -299,10 +310,10 @@ model Upvote {
 model Report {
   id         String  @id @default(uuid())
   reporterId String?
-  targetType String
+  targetType ReportTargetType
   targetId   String
   reason     String
-  status     String
+  status     ReportStatus
 
   reporter User? @relation(fields: [reporterId], references: [id], onDelete: SetNull)
 }

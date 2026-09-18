@@ -4,7 +4,8 @@ import type {
   CreateProjectPayload,
   UpdateProjectPayload,
   AddMemberPayload,
-  ProjectSort
+  ProjectSort,
+  ProjectStatus,
 } from "./projects.types";
 import type { ProjectFilters } from "../search/ui/filters-card";
 import qs from "qs";
@@ -156,6 +157,17 @@ export const turnIdeaIntoProject = async (projectId: string) => {
 
 export const deleteProject = async (projectId: string) => {
   await api.delete(`/projects/${projectId}`);
+};
+
+export const updateProjectStatus = async (
+  projectId: string,
+  status: ProjectStatus,
+) => {
+  const { data } = await api.patch<Project>(`/projects/${projectId}/status`, {
+    status,
+  });
+
+  return data;
 };
 
 export const addProjectMember = async (
