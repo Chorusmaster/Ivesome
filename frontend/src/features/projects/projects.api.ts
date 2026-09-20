@@ -27,7 +27,7 @@ export const getProjects = async (query?: string, sort?: ProjectSort, filters?: 
 };
 
 export const getPublicProjects = async (skip?: number, take?: number) => {
-  const { data } = await api.get<Project[]>("/projects/public", {
+  const { data } = await api.get<Project[]>("/projects", {
     params: {
       ...(skip !== undefined && { skip }),
       ...(take !== undefined && { take }),

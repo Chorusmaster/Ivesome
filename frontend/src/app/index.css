@@ -95,3 +95,17 @@ body {
 .subheading {
   @apply text-subheading font-semibold mb-4;
 }
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: marquee var(--marquee-duration) linear infinite;
+}

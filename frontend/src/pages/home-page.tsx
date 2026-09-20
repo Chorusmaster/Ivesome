@@ -1,33 +1,42 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Lightbulb } from "lucide-react";
+import {
+  ArrowRight,
+  Lightbulb,
+  Users,
+  Rocket,
+  Handshake,
+  MessagesSquare,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 
-import { getPublicProjects } from "@/features/projects/projects.api";
+import { getProjects } from "@/features/projects/projects.api";
 import type { Project } from "@/features/projects/projects.types";
 import DiscoveryCard from "@/features/search/ui/discovery-card";
+import Card from "@/shared/ui/card";
+import Marquee from "@/shared/ui/marquee";
 
 function HomePage() {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     let isCurrent = true;
 
     async function loadProjects() {
       try {
-        const publicProjects = await getPublicProjects(0, 3);
+        const publicProjects = await getProjects(
+          undefined,
+          undefined,
+          undefined,
+          0,
+          10,
+        );
 
         if (isCurrent) {
           setProjects(publicProjects);
         }
-      } catch {
+      } catch (e) {
         if (isCurrent) {
-          setHasError(true);
-        }
-      } finally {
-        if (isCurrent) {
-          setLoading(false);
+          console.error(e);
         }
       }
     }
@@ -41,9 +50,8 @@ function HomePage() {
 
   return (
     <div className="overflow-hidden">
-      <section className="relative border-b border-border bg-primary-light">
-
-        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 py-20 sm:px-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-16 lg:py-28">
+      <section className="relative main-container-narrow overflow-hidden border-b border-border bg-primary-light py-24!">
+        <div className="relative grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="max-w-3xl">
             <p className="mb-5 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
               The ideas network
@@ -53,7 +61,7 @@ function HomePage() {
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-text-secondary sm:text-xl">
               Ivesome is where ambitious people share early ideas, find the
-              right collaborators, and turn a spark into something real.
+              right collaborators, and turn an imagination spark into startup.
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
@@ -71,21 +79,105 @@ function HomePage() {
             </div>
           </div>
 
-          <div className="relative mx-auto w-full max-w-md lg:justify-self-end">
-            
+          <div className="relative mx-auto w-full max-w-148 lg:justify-self-end">
+            {projects.length > 0 && (
+              <div className="relative overflow-hidden">
+                <Marquee duration={40} pauseOnHover>
+                  <div className="flex gap-4 mr-4">
+                    {projects.map((project) => (
+                      <DiscoveryCard key={project.id} project={project} />
+                    ))}
+                  </div>
+                </Marquee>
+                <div className="pointer-events-none absolute inset-y-0 left-0 w-4 bg-linear-to-r from-primary-light to-transparent" />
+                <div className="pointer-events-none absolute inset-y-0 right-0 w-4 bg-linear-to-l from-primary-light to-transparent" />
+              </div>
+            )}
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-10 lg:px-16 lg:py-20">
-        <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <section className="main-container-narrow py-24!">
+        <div className="flex flex-col gap-4">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-accent-hover">
               How does it work
             </p>
             <h2 className="font-heading text-3xl text-text-primary sm:text-4xl">
-              Main milestones of an idea
+              Startup milestones
             </h2>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <Card className="group flex min-h-52 flex-col justify-between transition hover:-translate-y-1 hover:border-primary">
+              <div>
+                <Lightbulb
+                  size={40}
+                  strokeWidth={1.5}
+                  className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
+                />
+                <h3 className="text-heading">Discover</h3>
+                <p className="mt-2 text-text-secondary">
+                  Creating and publishing an idea
+                </p>
+              </div>
+            </Card>
+
+            <Card className="group flex min-h-52 flex-col justify-between transition hover:-translate-y-1 hover:border-primary">
+              <div>
+                <MessagesSquare
+                  size={40}
+                  strokeWidth={1.5}
+                  className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
+                />
+                <h3 className="text-heading">Discuss</h3>
+                <p className="mt-2 text-text-secondary">
+                  Discussing the idea and gathering feedback
+                </p>
+              </div>
+            </Card>
+
+            <Card className="group flex min-h-52 flex-col justify-between transition hover:-translate-y-1 hover:border-primary">
+              <div>
+                <Users
+                  size={40}
+                  strokeWidth={1.5}
+                  className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
+                />
+                <h3 className="text-heading">Collaborate</h3>
+                <p className="mt-2 text-text-secondary">
+                  Recruiting participants and forming a team
+                </p>
+              </div>
+            </Card>
+
+            <Card className="group flex min-h-52 flex-col justify-between transition hover:-translate-y-1 hover:border-primary">
+              <div>
+                <Handshake
+                  size={40}
+                  strokeWidth={1.5}
+                  className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
+                />
+                <h3 className="text-heading">Develop</h3>
+                <p className="mt-2 text-text-secondary">
+                  Collaborating on the development of an idea
+                </p>
+              </div>
+            </Card>
+
+            <Card className="group flex min-h-52 flex-col justify-between transition hover:-translate-y-1 hover:border-primary sm:col-span-2 lg:col-span-1">
+              <div>
+                <Rocket
+                  size={40}
+                  strokeWidth={1.5}
+                  className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
+                />
+                <h3 className="text-heading">Launch</h3>
+                <p className="mt-2 text-text-secondary">
+                  Presentation of the final product
+                </p>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
