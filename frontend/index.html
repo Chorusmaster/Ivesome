@@ -1,5 +1,12 @@
 <!doctype html>
 <html lang="en">
+  <script>
+    const theme = localStorage.getItem("theme");
+
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    }
+  </script>
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

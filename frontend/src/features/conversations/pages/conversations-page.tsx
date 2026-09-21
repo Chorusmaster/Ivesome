@@ -100,7 +100,7 @@ function ConversationsPage() {
                   <Avatar user={conversation.otherMember?.user} />
 
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-medium">
+                    <p className="truncate font-medium text-text-primary">
                       {conversation.otherMember?.user?.firstName &&
                       conversation.otherMember?.user?.lastName
                         ? `${conversation.otherMember.user.firstName} ${conversation.otherMember.user.lastName}`

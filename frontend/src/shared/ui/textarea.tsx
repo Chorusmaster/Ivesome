@@ -5,12 +5,7 @@ type TextareaProps = ComponentProps<"textarea"> & {
   label?: string;
 };
 
-function Textarea({
-  id,
-  label,
-  className,
-  ...props
-}: TextareaProps) {
+function Textarea({ id, label, className, ...props }: TextareaProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
 
@@ -24,7 +19,10 @@ function Textarea({
 
       <textarea
         id={inputId}
-        className={"w-full border border-border p-2.5 mt-1 rounded-input placeholder:text-muted focus:outline-1 focus:outline-primary " + className}
+        className={
+          "w-full border border-border p-2.5 mt-1 rounded-input text-text-primary placeholder:text-muted focus:outline-1 focus:outline-primary " +
+          className
+        }
         {...props}
       />
     </div>

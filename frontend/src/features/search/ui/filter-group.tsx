@@ -23,7 +23,7 @@ function FilterGroup<T extends string>({ title, options, value, onChange }: Filt
 
   return (
     <div>
-      <div className="font-medium text-body mb-2">{title}</div>
+      <div className="font-medium text-text-primary text-body mb-2">{title}</div>
 
       <div>
         {options.map((option) => (

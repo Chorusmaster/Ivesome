@@ -55,33 +55,36 @@ function FiltersCard({ onChange }: FiltersCardProps) {
       stages: [],
       tags: [],
     });
-  }
+  };
 
   return (
     <Card>
       <div className="flex justify-between items-center mb-4">
-        <h2 className="font-semibold text-subheading flex items-center gap-2">
+        <h2 className="font-semibold text-subheading text-text-primary flex items-center gap-2">
           <SlidersHorizontal size={20} className="text-primary" />
           Filters
         </h2>
 
-        <button onClick={handleReset} className="text-sm text-primary hover:text-primary-hover hover:underline">
+        <button
+          onClick={handleReset}
+          className="text-sm text-primary hover:text-primary-hover hover:underline"
+        >
           Reset
         </button>
       </div>
 
-      <FilterGroup 
-        title="Stage" 
-        options={stageOptions} 
+      <FilterGroup
+        title="Stage"
+        options={stageOptions}
         value={selectedStages}
         onChange={handleStageChange}
       />
 
       <hr className="border-border my-4" />
 
-      <FilterGroup 
-        title="Tags" 
-        options={tagsOptions} 
+      <FilterGroup
+        title="Tags"
+        options={tagsOptions}
         value={selectedTags}
         onChange={handleTagsChange}
       />

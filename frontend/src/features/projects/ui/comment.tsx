@@ -133,7 +133,7 @@ function Comment({
               </div>
             </div>
           ) : (
-            <div className="whitespace-pre-line wrap-break-word">
+            <div className="whitespace-pre-line wrap-break-word text-text-primary">
               {comment.content}
             </div>
           )}

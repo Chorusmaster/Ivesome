@@ -19,6 +19,7 @@ import FavouritesPage from "@/features/favourites/pages/favourites-page";
 import ConversationsPage from "@/features/conversations/pages/conversations-page";
 import WorkspacePage from "@/features/workspace/pages/workspace-page";
 import AdminDashboardPage from "@/features/admin/pages/admin-dashboard-page";
+import UserSettingsPage from "@/features/settings/pages/user-settings-page";
 
 import ProjectEditorPage from "@/features/projects/pages/project-editor-page";
 import AdminLayout from "../layouts/admin-layout";
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
               {
                 path: "project/:id/edit",
                 element: <ProjectEditorPage />,
+              },
+              {
+                path: "settings",
+                element: <UserSettingsPage />,
               },
             ],
           },

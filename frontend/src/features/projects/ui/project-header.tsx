@@ -10,23 +10,40 @@ function ProjectHeader({ project }: { project: Project }) {
   return (
     <div className="px-16 py-12 bg-surface border-b border-border">
       <div className="text-text-secondary">
-        <Link to="/search" className="hover:text-text-primary">Feed</Link> / {project.title}
+        <Link to="/search" className="hover:text-text-primary">
+          Feed
+        </Link>{" "}
+        / {project.title}
       </div>
       <div className="flex justify-between items-start gap-8 mt-4">
         <div>
           <div className="flex gap-4 mb-1 items-center">
-            <div className={`rounded-full ${project.stage === "IDEA" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}>
+            <div
+              className={`rounded-full ${project.stage === "IDEA" ? "bg-accent-light text-text-accent" : "bg-primary-light text-primary"} px-2 py-0.5`}
+            >
               {toSentenceCase(project.stage)}
             </div>
             <div className="text-muted text-small">
-              Published {formatDistanceToNowStrict(project.createdAt, { locale: enUS, addSuffix: true })}
+              Published{" "}
+              {formatDistanceToNowStrict(project.createdAt, {
+                locale: enUS,
+                addSuffix: true,
+              })}
             </div>
           </div>
-          <h1 className="text-display font-heading mb-4 font-sans">{project.title}</h1>
-          <div className="text-text-secondary text-body mb-4">{project.shortDescription}</div>
+          <h1 className="text-display font-heading mb-4 font-sans text-text-primary">
+            {project.title}
+          </h1>
+          <div className="text-text-secondary text-body mb-4">
+            {project.shortDescription}
+          </div>
           <Tags list={project.tags} />
         </div>
-        <ItemLogo imageUrl={filePathToUrl(project.logoLink) ?? undefined} type={project.stage} size="lg" />
+        <ItemLogo
+          imageUrl={filePathToUrl(project.logoLink) ?? undefined}
+          type={project.stage}
+          size="lg"
+        />
       </div>
     </div>
   );

@@ -26,7 +26,7 @@ function DiscoveryCard({
             <div className="w-[90%]">
               <Link to={`/project/${project.id}`}>
                 <h2
-                  className={`font-heading text-heading cursor-pointer mb-3 ${project.stage == "IDEA" ? "hover:text-text-accent" : "hover:text-primary"} transition`}
+                  className={`font-heading text-heading text-text-primary cursor-pointer mb-3 ${project.stage == "IDEA" ? "hover:text-text-accent" : "hover:text-primary"} transition`}
                 >
                   {project.title}
                 </h2>

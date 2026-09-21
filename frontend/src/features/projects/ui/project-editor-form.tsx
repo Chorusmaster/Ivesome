@@ -36,7 +36,9 @@ function ProjectEditorForm({
     initialValues?.description ?? "",
   );
   const [tags, setTags] = useState((initialValues?.tags ?? []).join(", "));
-  const [skills, setSkills] = useState((initialValues?.skills ?? []).join(", "));
+  const [skills, setSkills] = useState(
+    (initialValues?.skills ?? []).join(", "),
+  );
   const [visibility, setVisibility] = useState<"PRIVATE" | "PUBLIC">(
     initialValues?.visibility ?? "PRIVATE",
   );
@@ -68,8 +70,14 @@ function ProjectEditorForm({
         title,
         shortDescription,
         description,
-        tags: tags.split(",").map((tag) => tag.trim()).filter(Boolean),
-        skills: skills.split(",").map((skill) => skill.trim()).filter(Boolean),
+        tags: tags
+          .split(",")
+          .map((tag) => tag.trim())
+          .filter(Boolean),
+        skills: skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean),
         logo,
         media,
         visibility,
@@ -83,7 +91,7 @@ function ProjectEditorForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <Card>
-        <div className="heading mb-8">Basic information</div>
+        <div className="heading mb-8 text-text-primary">Basic information</div>
 
         <Input
           label="Title"
@@ -145,13 +153,13 @@ function ProjectEditorForm({
       </Card>
 
       <Card>
-        <div className="heading mb-8">Avatar</div>
+        <div className="heading mb-8 text-text-primary">Avatar</div>
 
         <FileUpload file={logo} setFile={setLogo} />
       </Card>
 
       <Card>
-        <div className="heading mb-8">Media</div>
+        <div className="heading mb-8 text-text-primary">Media</div>
 
         <MultipleFileUpload ref={uploadRef} files={media} setFiles={setMedia} />
       </Card>

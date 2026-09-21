@@ -6,13 +6,7 @@ type InputProps = ComponentProps<"input"> & {
   error?: string;
 };
 
-function Input({
-  id,
-  label,
-  className,
-  error,
-  ...props
-}: InputProps) {
+function Input({ id, label, className, error, ...props }: InputProps) {
   const generatedId = useId();
   const inputId = id ?? generatedId;
 
@@ -26,7 +20,10 @@ function Input({
 
       <input
         id={inputId}
-        className={"w-full border border-border p-2.5 mt-1 rounded-input placeholder:text-muted focus:outline-1 focus:outline-primary " + className}
+        className={
+          "w-full border border-border p-2.5 mt-1 rounded-input text-text-primary placeholder:text-muted focus:outline-1 focus:outline-primary " +
+          className
+        }
         {...props}
       />
       <div className="text-danger">{error}</div>

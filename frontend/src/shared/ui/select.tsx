@@ -35,7 +35,7 @@ function Select({
         {...props}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value}>{option.label}</option>
+          <option className="text-black" key={option.value} value={option.value}>{option.label}</option>
         ))}
       </select>
     </div>

@@ -12,9 +12,7 @@ function MembersTab({ workspace }: MembersTabProps) {
   return (
     <div className="main-container-narrow">
       <div className="mb-6">
-        <h2 className="font-heading text-heading">
-          Members
-        </h2>
+        <h2 className="font-heading text-heading text-text-primary">Members</h2>
 
         <p className="text-sm text-text-secondary mt-1">
           People working on this project
@@ -29,13 +27,14 @@ function MembersTab({ workspace }: MembersTabProps) {
           >
             <div className="flex items-center gap-3">
               <Link to={`/users/${member.user.id}`}>
-                <Avatar
-                  user={member.user}
-                />
+                <Avatar user={member.user} />
               </Link>
 
               <div>
-                <Link to={`/users/${member.user.id}`} className="font-medium hover:text-primary text-text-primary">
+                <Link
+                  to={`/users/${member.user.id}`}
+                  className="font-medium hover:text-primary text-text-primary"
+                >
                   {member.user.firstName || member.user.lastName
                     ? `${member.user.firstName ?? ""} ${
                         member.user.lastName ?? ""

@@ -43,7 +43,7 @@ const actionLabels: Record<
 
 export function ReportResolutionDialog({
   report,
-  onResolve
+  onResolve,
 }: ReportResolutionDialogProps) {
   const [submitting, setSubmitting] = useState(false);
   const action = actionLabels[report.targetType];
@@ -108,7 +108,7 @@ export function ReportResolutionDialog({
           </div>
 
           <div className="rounded-lg border border-border bg-background p-4">
-            <p className="mb-1 text-sm font-medium text-text">
+            <p className="mb-1 text-sm font-medium text-text-primary">
               Moderation action
             </p>
 
