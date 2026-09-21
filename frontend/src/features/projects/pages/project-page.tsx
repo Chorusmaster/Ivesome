@@ -53,9 +53,9 @@ function ProjectPage() {
   const [statusChanging, setStatusChanging] = useState(false);
   const [reportOpen, setReportOpen] = useState(false);
 
-  const projectRole = project?.members.find(
-    (member) => member.user.id === user?.id,
-  )?.role ?? null;
+  const projectRole =
+    project?.members.find((member) => member.user.id === user?.id)?.role ??
+    null;
 
   useEffect(() => {
     if (!id) return;
@@ -76,7 +76,8 @@ function ProjectPage() {
     async function loadParticipationRequests() {
       const requests = await getMyParticipationRequests();
       const isSentRequest = requests.some(
-        (request) => request.projectId === projectId && request.status === "PENDING",
+        (request) =>
+          request.projectId === projectId && request.status === "PENDING",
       );
       setRequestSent(isSentRequest);
     }
@@ -152,7 +153,7 @@ function ProjectPage() {
   }
 
   if (!id || !project) {
-    return <div>Project not found</div>;
+    return <div className="text-text-primary">Project not found</div>;
   }
 
   if (error) {
@@ -281,12 +282,21 @@ function ProjectPage() {
             onStatusChange={handleTurnIntoProject}
             setReportOpen={setReportOpen}
           />
-          {((project.skills && project.skills.length > 0)) && <Card>
-            <h2 className="subheading">Required skills</h2>
-            <div className="flex flex-wrap gap-2">
-              {project.skills?.map((skill) => <span key={`skill-${skill}`} className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small">{skill}</span>)}
-            </div>
-          </Card>}
+          {project.skills && project.skills.length > 0 && (
+            <Card>
+              <h2 className="subheading text-text-primary">Required skills</h2>
+              <div className="flex flex-wrap gap-2">
+                {project.skills?.map((skill) => (
+                  <span
+                    key={`skill-${skill}`}
+                    className="rounded-full bg-primary-light text-primary px-2 py-0.5 text-small"
+                  >
+                    {skill}
+                  </span>
+                ))}
+              </div>
+            </Card>
+          )}
           <ProjectTeam members={project.members} />
         </aside>
       </div>

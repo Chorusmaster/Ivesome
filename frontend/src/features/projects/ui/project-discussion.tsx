@@ -39,7 +39,7 @@ function ProjectDiscussion({
   const location = useLocation();
 
   useEffect(() => {
-    if (location.state?.scrollToComment) { 
+    if (location.state?.scrollToComment) {
       if (commentsLoading) return;
 
       const targetId = window.location.hash.slice(1);
@@ -57,7 +57,7 @@ function ProjectDiscussion({
   return (
     <section>
       <div className="flex justify-between items-baseline">
-        <h2 className="heading">Discussion</h2>
+        <h2 className="heading text-text-primary">Discussion</h2>
         <div className="text-text-secondary">{commentCount} comments</div>
       </div>
       {user ? (

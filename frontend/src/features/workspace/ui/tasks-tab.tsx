@@ -92,11 +92,7 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
       const updatedTask = await updateTask(taskId, { status });
 
       setTasks((currentTasks) =>
-        currentTasks.map((task) =>
-          task.id === taskId
-            ? updatedTask
-            : task
-        )
+        currentTasks.map((task) => (task.id === taskId ? updatedTask : task)),
       );
     } catch {
       setTasks(previousTasks);
@@ -105,24 +101,22 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
 
   async function handleTaskDelete(taskId: string) {
     await deleteTask(taskId);
-    setTasks((currentTasks) => 
-      currentTasks.filter((task) => 
-        task.id !== taskId
-      )
-    )
+    setTasks((currentTasks) =>
+      currentTasks.filter((task) => task.id !== taskId),
+    );
   }
 
   const sortedTasks = tasks.toSorted((a, b) => {
-    if (!a.deadline) return 1
-    if (!b.deadline) return -1
+    if (!a.deadline) return 1;
+    if (!b.deadline) return -1;
     return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-  })
+  });
 
   return (
     <div className="main-container-narrow">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="font-heading text-heading">Tasks</h2>
+          <h2 className="font-heading text-heading text-text-primary">Tasks</h2>
 
           <p className="text-sm text-text-secondary mt-1">
             Manage tasks and track project progress.
@@ -148,14 +142,17 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
             >
               <div className="min-w-0">
                 <div>
-                  <span className={`${task.status == "DONE" && "line-through decoration-1"} text-text-primary font-medium`}>{task.title}</span>
-                  {
-                    task.deadline &&
+                  <span
+                    className={`${task.status == "DONE" && "line-through decoration-1"} text-text-primary font-medium`}
+                  >
+                    {task.title}
+                  </span>
+                  {task.deadline && (
                     <span className="text-small text-muted">
-                    <span className="px-2">·</span>
-                    {new Date(task.deadline).toLocaleDateString() }
+                      <span className="px-2">·</span>
+                      {new Date(task.deadline).toLocaleDateString()}
                     </span>
-                  }
+                  )}
                 </div>
 
                 {task.description && (
@@ -174,15 +171,19 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
                   className={`px-2.5 py-1 rounded-full mt-1 pr-1 text-sm border outline-none cursor-pointer
                     ${
                       task.status == "DONE"
-                      ? "bg-muted/10 text-muted border-muted"
-                      : task.status === "IN_PROGRESS"
-                        ? "bg-accent/10 text-accent border-accent"
-                        : "bg-primary/10 text-primary border-primary"
+                        ? "bg-muted/10 text-muted border-muted"
+                        : task.status === "IN_PROGRESS"
+                          ? "bg-accent/10 text-accent border-accent"
+                          : "bg-primary/10 text-primary border-primary"
                     }
                   `}
                 >
                   {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                    <option key={value} value={value} className="bg-surface text-text-primary">
+                    <option
+                      key={value}
+                      value={value}
+                      className="bg-surface text-text-primary"
+                    >
                       {label}
                     </option>
                   ))}

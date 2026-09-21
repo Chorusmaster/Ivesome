@@ -21,7 +21,9 @@ function WorkspacePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openTab, setOpenTab] = useState<WorkspaceTabNames>("TASKS");
-  const [pendingRequests, setPendingRequests] = useState<ParticipationRequest[]>([])
+  const [pendingRequests, setPendingRequests] = useState<
+    ParticipationRequest[]
+  >([]);
 
   useEffect(() => {
     if (!workspaceId) return;
@@ -38,8 +40,8 @@ function WorkspacePage() {
 
         setPendingRequests(
           data.project.participationRequests.filter(
-            (request) => request.status === "PENDING"
-          )
+            (request) => request.status === "PENDING",
+          ),
         );
       } catch {
         setError("Unable to load workspace");
@@ -72,7 +74,11 @@ function WorkspacePage() {
       label: "Tasks",
       element: <TasksTab workspaceId={workspace.id} tasks={workspace.tasks} />,
     },
-    { name: "CHAT", label: "Chat", element: <ChatTab conversationId={workspace.conversation.id} /> },
+    {
+      name: "CHAT",
+      label: "Chat",
+      element: <ChatTab conversationId={workspace.conversation.id} />,
+    },
     {
       name: "MEMBERS",
       label: "Members",
@@ -81,7 +87,12 @@ function WorkspacePage() {
     {
       name: "REQUESTS",
       label: "Participation requests",
-      element: <RequestsTab requests={pendingRequests} setRequests={setPendingRequests} />,
+      element: (
+        <RequestsTab
+          requests={pendingRequests}
+          setRequests={setPendingRequests}
+        />
+      ),
     },
     { name: "SETTINGS", label: "Settings", element: <SettingsTab /> },
   ] as const;
@@ -97,7 +108,9 @@ function WorkspacePage() {
               type={project.stage}
             />
             <div className="flex flex-col justify-center">
-              <div className="text-heading font-heading">{project.title}</div>
+              <div className="text-heading font-heading text-text-primary">
+                {project.title}
+              </div>
               <div className="text-text-secondary">
                 {toSentenceCase(project.stage)} · {project.members.length}{" "}
                 members

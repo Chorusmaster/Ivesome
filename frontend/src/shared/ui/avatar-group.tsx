@@ -24,14 +24,14 @@ function AvatarGroup({
       {visibleUsers.map((user, index) => (
         <div
           key={index}
-          className={`${index > 0 ? "-ml-2" : ""} ${showBorder ? "border-2 border-white rounded-full" : ""}`}
+          className={`${index > 0 ? "-ml-2" : ""} ${showBorder ? "border-2 border-surface rounded-full" : ""}`}
         >
           <Avatar user={user} size={size} theme={theme} />
         </div>
       ))}
       {remainingCount > 0 && (
         <div
-          className={`-ml-2 ${showBorder ? "border-2 border-white rounded-full" : ""}`}
+          className={`-ml-2 ${showBorder ? "border-2 border-background rounded-full" : ""}`}
         >
           <Avatar customText={`+${remainingCount}`} size={size} theme={theme} />
         </div>

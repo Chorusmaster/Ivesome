@@ -20,7 +20,7 @@ function FilterCheckbox({
         onChange={(e) => onChange?.(e.target.checked)}
         className="size-4 accent-primary"
       />
-      <label htmlFor={id}>{label}</label>
+      <label className="text-text-primary" htmlFor={id}>{label}</label>
     </div>
   );
 }

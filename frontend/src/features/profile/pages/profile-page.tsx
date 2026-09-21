@@ -96,11 +96,11 @@ function ProfilePage() {
     currentUser && profileUser && currentUser.id === profileUser.id;
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="text-text-primary">Loading...</p>;
   }
 
   if (!profileUser) {
-    return <p>User not found</p>;
+    return <p className="text-text-primary">User not found</p>;
   }
 
   return (

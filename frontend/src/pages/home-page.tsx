@@ -116,7 +116,7 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading">Discover</h3>
+                <h3 className="text-heading text-text-primary">Discover</h3>
                 <p className="mt-2 text-text-secondary">
                   Creating and publishing an idea
                 </p>
@@ -130,7 +130,7 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading">Discuss</h3>
+                <h3 className="text-heading text-text-primary">Discuss</h3>
                 <p className="mt-2 text-text-secondary">
                   Discussing the idea and gathering feedback
                 </p>
@@ -144,7 +144,7 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading">Collaborate</h3>
+                <h3 className="text-heading text-text-primary">Collaborate</h3>
                 <p className="mt-2 text-text-secondary">
                   Recruiting participants and forming a team
                 </p>
@@ -158,7 +158,7 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading">Develop</h3>
+                <h3 className="text-heading text-text-primary">Develop</h3>
                 <p className="mt-2 text-text-secondary">
                   Collaborating on the development of an idea
                 </p>
@@ -172,7 +172,7 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading">Launch</h3>
+                <h3 className="text-heading text-text-primary">Launch</h3>
                 <p className="mt-2 text-text-secondary">
                   Presentation of the final product
                 </p>

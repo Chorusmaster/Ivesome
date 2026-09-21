@@ -32,7 +32,7 @@ function ProfileForm() {
         .split(",")
         .map((skill) => skill.trim())
         .filter(Boolean);
-        
+
       const interestsFormatted = interests
         .split(",")
         .map((interest) => interest.trim())
@@ -114,7 +114,7 @@ function ProfileForm() {
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
       <Card>
-        <div className="heading mb-8">Basic information</div>
+        <div className="heading mb-8 text-text-primary">Basic information</div>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <Input
             label="First name"
@@ -149,7 +149,7 @@ function ProfileForm() {
       </Card>
 
       <Card>
-        <div className="heading mb-8">About you</div>
+        <div className="heading mb-8 text-text-primary">About you</div>
         <Textarea
           label="Short bio"
           id="bio"
@@ -169,7 +169,7 @@ function ProfileForm() {
       </Card>
 
       <Card>
-        <div className="heading mb-8">Skills and links</div>
+        <div className="heading mb-8 text-text-primary">Skills and links</div>
 
         <div className="grid grid-cols-2 gap-4">
           <Input
@@ -197,7 +197,7 @@ function ProfileForm() {
               type="button"
               onClick={newLink}
               disabled={links.length >= 10}
-              className="mt-2 button shrink-0 border border-border bg-surface px-3 text-sm hover:shadow-sm disabled:shadow-none disabled:text-muted disabled:border-muted"
+              className="mt-2 text-text-primary button shrink-0 border border-border bg-surface px-3 text-sm hover:shadow-sm disabled:shadow-none disabled:text-muted disabled:border-muted"
             >
               New link
             </button>
@@ -236,14 +236,14 @@ function ProfileForm() {
       </Card>
 
       <Card>
-        <div className="heading mb-8">Profile photo</div>
+        <div className="heading mb-8 text-text-primary">Profile photo</div>
         <FileUpload file={avatar} setFile={setAvatar} />
       </Card>
 
       <Card className="flex justify-between">
         <Link
           to="/profile"
-          className="button bg-surface hover:shadow-sm border border-border"
+          className="button bg-surface text-text-primary hover:shadow-sm border border-border"
         >
           Cancel
         </Link>

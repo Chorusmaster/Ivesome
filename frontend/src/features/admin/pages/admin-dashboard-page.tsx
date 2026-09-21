@@ -44,7 +44,7 @@ function AdminDashboardPage() {
   };
 
   const handleViewReport = async (report: Report) => {
-    switch(report.targetType) {
+    switch (report.targetType) {
       case "PROJECT":
         navigate(`/project/${report.targetId}`);
         break;
@@ -58,7 +58,7 @@ function AdminDashboardPage() {
       default:
         console.error("Unknown report target type:", report.targetType);
     }
-  }
+  };
 
   return (
     <div className="main-container-narrow">
@@ -71,7 +71,9 @@ function AdminDashboardPage() {
 
       <Card className="mt-8">
         <div className="flex justify-between items-center gap-4 flex-wrap">
-          <h2 className="text-subheading font-heading">Reports</h2>
+          <h2 className="text-subheading font-heading text-text-primary">
+            Reports
+          </h2>
           <div className="flex gap-2 flex-wrap">
             {(["ALL", "PENDING", "RESOLVED"] as const).map((filter) => (
               <button
@@ -141,7 +143,7 @@ function AdminDashboardPage() {
                     key={report.id}
                     className="border-b border-border align-center"
                   >
-                    <td className="px-4 py-2 text-small">
+                    <td className="px-4 py-2 text-small text-text-primary">
                       {report.reporter
                         ? report.reporter?.firstName &&
                           report.reporter?.lastName
@@ -149,14 +151,16 @@ function AdminDashboardPage() {
                           : (report.reporter.login ?? "Anonymous")
                         : "Unknown"}
                     </td>
-                    <td className="px-4 py-2 text-small">
+                    <td className="px-4 py-2 text-small text-text-primary">
                       {report.targetType}
                     </td>
-                    <td className="px-4 py-2 text-small max-w-xs wrap-break-word">
+                    <td className="px-4 py-2 text-small text-text-primary max-w-xs wrap-break-word">
                       {report.reason}
                     </td>
-                    <td className="px-4 py-2 text-small">{report.status}</td>
-                    <td className="px-4 py-2 text-small w-px whitespace-nowrap">
+                    <td className="px-4 py-2 text-small text-text-primary">
+                      {report.status}
+                    </td>
+                    <td className="px-4 py-2 text-small text-text-primary w-px whitespace-nowrap">
                       <div className="flex gap-2">
                         <button
                           type="button"
@@ -166,7 +170,7 @@ function AdminDashboardPage() {
                           View
                         </button>
                         {report.status !== "RESOLVED" && (
-                          <ReportResolutionDialog 
+                          <ReportResolutionDialog
                             onResolve={handleMarkAsResolved}
                             report={report}
                           />

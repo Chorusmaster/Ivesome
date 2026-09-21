@@ -4,7 +4,11 @@ import Input from "@/shared/ui/input";
 import type { ConversationMessage } from "../conversations.types";
 import { useAuth } from "@/features/auth/auth.context";
 import { useState } from "react";
-import { createMessage, deleteMessage, updateMessage } from "../conversations.api";
+import {
+  createMessage,
+  deleteMessage,
+  updateMessage,
+} from "../conversations.api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,10 +49,10 @@ function Conversation({
 
     return (
       <div className="mb-2 border-l-2 bg-primary-light/20 px-2 text-xs text-text-secondary">
-        <p className="font-medium">
+        <p className="font-medium text-text-primary">
           {message.parent?.author?.login ?? "Original message"}
         </p>
-        <p className="truncate">
+        <p className="truncate text-text-primary">
           {message.parent?.content ?? "Message unavailable"}
         </p>
       </div>
@@ -79,7 +83,11 @@ function Conversation({
     const content = messageContent.trim();
     if (!content) return;
 
-    const message = await createMessage(conversationId, content, replyingTo?.id);
+    const message = await createMessage(
+      conversationId,
+      content,
+      replyingTo?.id,
+    );
     onMessagesChange([...messages, message]);
     setMessageContent("");
     setReplyingTo(null);
@@ -94,121 +102,126 @@ function Conversation({
     <div className="flex-1 flex flex-col min-h-0">
       <div className="flex-1 overflow-y-auto p-8 space-y-4">
         {messages.map((message) =>
-        message.author?.id == user?.id ? (
-          <div key={message.id} className="flex justify-end items-end gap-2">
-            <div className="max-w-[70%]">
-              {editingMessageId === message.id ? (
-                <div className="flex items-center gap-2">
-                  <Input
-                    value={editingContent}
-                    onChange={(event) => setEditingContent(event.target.value)}
-                    className="mt-0 bg-background text-text-primary"
-                    autoFocus
-                    disabled={savingMessageId === message.id}
-                  />
-                </div>
-              ) : (
-                <div className="bg-primary text-white rounded-2xl rounded-br-sm px-4 py-2 wrap-break-word">
-                  {renderTargetMessage(message)}
-                  <p>{message.content}</p>
-                </div>
-              )}
-
-              {editingMessageId === message.id ? (
-                <div className="flex items-center justify-end gap-1 mt-1 text-xs text-muted">
-                  <button
-                    type="button"
-                    aria-label="Save message"
-                    onClick={() => saveEditing(message.id)}
-                  >
-                    <Check
-                      size={16}
-                      className="text-muted/70 hover:text-muted mt-px"
-                    />
-                  </button>
-                  <button
-                    type="button"
-                    aria-label="Cancel editing"
-                    onClick={() => setEditingMessageId(null)}
-                  >
-                    <X
-                      size={16}
-                      className="text-muted/70 hover:text-muted mt-px"
-                    />
-                  </button>
-                </div>
-              ) : (
-                <div className="flex items-center justify-end gap-2 mt-1 text-xs text-muted">
-                  <span>{formatMessageDate(message.createdAt)}</span>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      render={
-                        <button type="button" aria-label="Message actions">
-                          <SquarePen
-                            size={13}
-                            className="text-muted/70 hover:text-muted mt-px"
-                          />
-                        </button>
+          message.author?.id == user?.id ? (
+            <div key={message.id} className="flex justify-end items-end gap-2">
+              <div className="max-w-[70%]">
+                {editingMessageId === message.id ? (
+                  <div className="flex items-center gap-2">
+                    <Input
+                      value={editingContent}
+                      onChange={(event) =>
+                        setEditingContent(event.target.value)
                       }
+                      className="mt-0 bg-background text-text-primary"
+                      autoFocus
+                      disabled={savingMessageId === message.id}
                     />
-                    <DropdownMenuContent className="ring-border bg-surface">
-                      <DropdownMenuGroup>
-                        <DropdownMenuItem
-                          className="hover:bg-background! focus:bg-background!"
-                          onClick={() => startEditing(message)}
-                        >
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="hover:bg-background! focus:bg-background!"
-                          onClick={() => handleDeleteMessage(message.id)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuGroup>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  </div>
+                ) : (
+                  <div className="bg-primary text-white rounded-2xl rounded-br-sm px-4 py-2 wrap-break-word">
+                    {renderTargetMessage(message)}
+                    <p className="text-white">{message.content}</p>
+                  </div>
+                )}
+
+                {editingMessageId === message.id ? (
+                  <div className="flex items-center justify-end gap-1 mt-1 text-xs text-muted">
+                    <button
+                      type="button"
+                      aria-label="Save message"
+                      onClick={() => saveEditing(message.id)}
+                    >
+                      <Check
+                        size={16}
+                        className="text-muted/70 hover:text-muted mt-px"
+                      />
+                    </button>
+                    <button
+                      type="button"
+                      aria-label="Cancel editing"
+                      onClick={() => setEditingMessageId(null)}
+                    >
+                      <X
+                        size={16}
+                        className="text-muted/70 hover:text-muted mt-px"
+                      />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-end gap-2 mt-1 text-xs text-muted">
+                    <span>{formatMessageDate(message.createdAt)}</span>
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={
+                          <button type="button" aria-label="Message actions">
+                            <SquarePen
+                              size={13}
+                              className="text-muted/70 hover:text-muted mt-px"
+                            />
+                          </button>
+                        }
+                      />
+                      <DropdownMenuContent className="ring-border bg-surface">
+                        <DropdownMenuGroup>
+                          <DropdownMenuItem
+                            className="hover:bg-background! focus:bg-background!"
+                            onClick={() => startEditing(message)}
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="hover:bg-background! focus:bg-background!"
+                            onClick={() => handleDeleteMessage(message.id)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuGroup>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
+              </div>
+              <Link to={`/users/${message?.author?.id}`}>
+                <Avatar size="md" theme="accent" user={message.author} />
+              </Link>
+            </div>
+          ) : (
+            <div
+              key={message.id}
+              className="flex justify-start items-end gap-2"
+            >
+              <Link to={`/users/${message?.author?.id}`}>
+                <Avatar size="md" user={message.author} />
+              </Link>
+              <div className="max-w-[70%]">
+                <div className="bg-surface border border-border rounded-2xl rounded-bl-sm px-4 py-2 wrap-break-word">
+                  {renderTargetMessage(message)}
+                  <p className="text-text-primary">{message.content}</p>
                 </div>
-              )}
-            </div>
-            <Link to={`/users/${message?.author?.id}`}>
-              <Avatar size="md" theme="accent" user={message.author} />
-            </Link>
-          </div>
-        ) : (
-          <div key={message.id} className="flex justify-start items-end gap-2">
-            <Link to={`/users/${message?.author?.id}`}>
-              <Avatar size="md" user={message.author} />
-            </Link>
-            <div className="max-w-[70%]">
-              <div className="bg-surface border border-border rounded-2xl rounded-bl-sm px-4 py-2 wrap-break-word">
-                {renderTargetMessage(message)}
-                <p>{message.content}</p>
-              </div>
-              <div
-                className={`flex items-center "justify-start gap-2 mt-1 text-xs text-muted`}
-              >
-                <span>{message.author?.login ?? "Anonymous user"}</span>
-                <span>·</span>
-                <span>{formatMessageDate(message.createdAt)}</span>
-                <span>·</span>
-                <span>
-                  <button
-                    type="button"
-                    aria-label="Reply to message"
-                    onClick={() => setReplyingTo(message)}
-                  >
-                    <MessageSquareReply
-                      size={13}
-                      className="text-muted/70 hover:text-muted mt-px"
-                    />
-                  </button>
-                </span>
+                <div
+                  className={`flex items-center "justify-start gap-2 mt-1 text-xs text-muted`}
+                >
+                  <span>{message.author?.login ?? "Anonymous user"}</span>
+                  <span>·</span>
+                  <span>{formatMessageDate(message.createdAt)}</span>
+                  <span>·</span>
+                  <span>
+                    <button
+                      type="button"
+                      aria-label="Reply to message"
+                      onClick={() => setReplyingTo(message)}
+                    >
+                      <MessageSquareReply
+                        size={13}
+                        className="text-muted/70 hover:text-muted mt-px"
+                      />
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        ),
+          ),
         )}
       </div>
       <form

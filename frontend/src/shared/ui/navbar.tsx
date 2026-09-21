@@ -39,7 +39,7 @@ function Navbar() {
         <div className="flex gap-2 py-2 items-center">
           <Link className="flex items-center gap-2" to="/">
             <Logo className="size-8"></Logo>
-            <div className="text-2xl font-bold">Ivesome</div>
+            <div className="text-2xl font-bold text-text-primary">Ivesome</div>
           </Link>
           <div className="flex px-8 gap-8 items-center">
             <Link
@@ -48,34 +48,30 @@ function Navbar() {
             >
               Search
             </Link>
-            {
-              (user && user.role === "USER") && (
-                <>
-                  <Link
-                    to="/favourites"
-                    className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
-                  >
-                    Favourites
-                  </Link>
-                  <Link to="/conversations" className="text-muted font-button">
-                    Conversations
-                  </Link>
-                </>
-              )
-            }
+            {user && user.role === "USER" && (
+              <>
+                <Link
+                  to="/favourites"
+                  className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
+                >
+                  Favourites
+                </Link>
+                <Link to="/conversations" className="text-muted font-button">
+                  Conversations
+                </Link>
+              </>
+            )}
 
-            {
-              (user && user.role === "ADMIN") && (
-                <>
-                  <Link
-                    to="/admin/dashboard"
-                    className={`${location.pathname == "/admin/dashboard" ? "text-primary" : "text-muted"} font-button`}
-                  >
-                    Dashboard
-                  </Link>
-                </>
-              )
-            }
+            {user && user.role === "ADMIN" && (
+              <>
+                <Link
+                  to="/admin/dashboard"
+                  className={`${location.pathname == "/admin/dashboard" ? "text-primary" : "text-muted"} font-button`}
+                >
+                  Dashboard
+                </Link>
+              </>
+            )}
           </div>
         </div>
         <div className="flex gap-4 items-center">
@@ -121,7 +117,7 @@ function Navbar() {
               </Link>
               <Link
                 className="w-full rounded-button px-2 py-1 text-left text-text-secondary transition-colors hover:bg-background"
-                to="/profile"
+                to="/settings"
               >
                 Settings
               </Link>

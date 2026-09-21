@@ -31,16 +31,16 @@ function SearchPage() {
       <div className="flex justify-between items-end mt-4">
         <div className="flex gap-2">
           <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer select-none">All</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Projects</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Ideas</button>
-          <button className="bg-surface px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">People</button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Projects</button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Ideas</button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">People</button>
         </div>
         <div className="flex items-center">
           <span>Sorted: </span>
           <select onChange={(e) => setSort(e.target.value as ProjectSort)} className="px-1 text-primary focus:outline-none">
-            <option value={"relevant"} className="text-text-primary hover:bg-background">Relevant first</option>
-            <option value={"newest"} className="text-text-primary hover:bg-background">Newest first</option>
-            <option value={"popular"} className="text-text-primary hover:bg-background">Popular first</option>
+            <option value={"relevant"} className="text-black hover:bg-background">Relevant first</option>
+            <option value={"newest"} className="text-black hover:bg-background">Newest first</option>
+            <option value={"popular"} className="text-black hover:bg-background">Popular first</option>
           </select>
         </div>
       </div>

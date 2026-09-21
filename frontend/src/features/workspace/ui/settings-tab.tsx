@@ -1,9 +1,5 @@
 function SettingsTab() {
-  return (
-    <div>
-      Settings tab
-    </div>
-  )
+  return <div className="text-text-primary">Settings tab</div>;
 }
 
 export default SettingsTab;
