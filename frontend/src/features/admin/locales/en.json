@@ -1,0 +1,27 @@
+{
+  "pageTitle": "Admin Dashboard",
+  "pageDescription" : "Community moderation and system monitoring",
+  "reports": {
+    "heading": "Reports",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "resolved": "Resolved"
+    },
+    "table": {
+      "headings": {
+        "reportedBy": "Reported By",
+        "contentType": "Content Type",
+        "reason": "Reason",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "actions": {
+      "view": "View",
+      "resolve": "Resolve"
+    },
+    "loading": "Loading reports...",
+    "noReports": "No reports of this status yet."
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import ProjectEditorForm from "@/features/projects/ui/project-editor-form";
 import Loading from "@/shared/ui/loading";
@@ -7,6 +8,7 @@ import { createProject, getProject, updateProject } from "../projects.api";
 import type { CreateProjectPayload, Project } from "../projects.types";
 
 function ProjectEditorPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
@@ -53,12 +55,14 @@ function ProjectEditorPage() {
   };
 
   if (isEditMode && loading) {
-    return <Loading fullScreen={true} text="Loading project..." />;
+    return <Loading fullScreen={true} text={t("projects.loadingProject")} />;
   }
 
   if (isEditMode && !project) {
     return (
-      <div className="main-container-narrow text-danger">Project not found</div>
+      <div className="main-container-narrow text-danger">
+        {t("projects.notFound")}
+      </div>
     );
   }
 
@@ -66,12 +70,14 @@ function ProjectEditorPage() {
     <div className="main-container-narrow">
       <div className="mb-8">
         <h1 className="font-heading mb-2 text-text-primary text-title">
-          {isEditMode ? "Edit project" : "New idea"}
+          {isEditMode
+            ? t("projects.editor.editTitle")
+            : t("projects.editor.newTitle")}
         </h1>
         <div className="text-text-secondary mb-8">
           {isEditMode
-            ? "Update your project details and keep your idea moving forward."
-            : "Share with the world what's on your mind today"}
+            ? t("projects.editor.editDescription")
+            : t("projects.editor.newDescription")}
         </div>
       </div>
 

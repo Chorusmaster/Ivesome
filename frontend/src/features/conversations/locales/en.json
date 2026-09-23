@@ -1,0 +1,18 @@
+{
+  "noConversations": "No conversations yet",
+  "selectConversation": "Select a conversation",
+  "conversation": {
+    "originalMessage": "Original message",
+    "messageUnavailable": "Message unavailable",
+    "edit": "Edit",
+    "delete": "Delete",
+    "anonymousUser": "Anonymous user",
+    "replyingTo": "Replying to {{name}}",
+    "typeMessage": "Type your message here",
+    "saveMessage": "Save message",
+    "cancelEditing": "Cancel editing",
+    "messageActions": "Message actions",
+    "replyToMessage": "Reply to message",
+    "cancelReply": "Cancel reply"
+  }
+}

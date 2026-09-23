@@ -9,8 +9,9 @@ import {
   DialogTrigger,
 } from "@/shared/ui/dialog";
 import { Rocket, AlertTriangle } from "lucide-react";
+import { Trans, useTranslation } from "react-i18next";
 
-type ProjectActionsProps = {
+type TurnIntoProjectDialogProps = {
   submitting: boolean;
   onSubmit: () => void;
 };
@@ -18,11 +19,13 @@ type ProjectActionsProps = {
 export function TurnIntoProjectDialog({
   submitting,
   onSubmit,
-}: ProjectActionsProps) {
+}: TurnIntoProjectDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <Dialog>
       <DialogTrigger className="button bg-primary text-white hover:bg-primary-hover transition flex w-full items-center justify-center gap-2">
-        Turn into project
+        {t("projects.turnIntoProjectDialog.button")}
       </DialogTrigger>
 
       <DialogContent className="bg-surface border border-border ring-border sm:max-w-md gap-2">
@@ -34,15 +37,16 @@ export function TurnIntoProjectDialog({
 
             <div>
               <DialogTitle className="text-lg">
-                Turn idea into project
+                {t("projects.turnIntoProjectDialog.title")}
               </DialogTitle>
 
               <DialogDescription className="mt-1">
-                This will create a project workspace and move it to the{" "}
-                <span className="font-medium text-primary">
-                  Team Building
-                </span>{" "}
-                stage.
+                <Trans
+                  i18nKey="turnIntoProjectDialog.description"
+                  components={{
+                    1: <span className="font-medium text-primary" />,
+                  }}
+                />
               </DialogDescription>
             </div>
           </div>
@@ -56,12 +60,11 @@ export function TurnIntoProjectDialog({
 
               <div className="space-y-1">
                 <p className="font-medium text-danger">
-                  This action is irreversible
+                  {t("projects.turnIntoProjectDialog.warningTitle")}
                 </p>
 
                 <p className="text-sm text-text-secondary">
-                  Once converted, this idea will become a project and cannot be
-                  reverted back.
+                  {t("projects.turnIntoProjectDialog.warningDescription")}
                 </p>
               </div>
             </div>
@@ -75,7 +78,7 @@ export function TurnIntoProjectDialog({
                 type="button"
                 className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
               >
-                Cancel
+                {t("projects.turnIntoProjectDialog.cancel")}
               </button>
             }
           />
@@ -86,7 +89,9 @@ export function TurnIntoProjectDialog({
             disabled={submitting}
             className="button bg-primary text-white hover:bg-primary-hover disabled:opacity-50 transition"
           >
-            {submitting ? "Converting..." : "Turn into project"}
+            {submitting
+              ? t("projects.turnIntoProjectDialog.converting")
+              : t("projects.turnIntoProjectDialog.submit")}
           </button>
         </DialogFooter>
       </DialogContent>

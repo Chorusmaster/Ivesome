@@ -9,6 +9,7 @@ import {
 } from "@/shared/ui/dialog";
 import { Flag } from "lucide-react";
 import Textarea from "./textarea";
+import { useTranslation } from "react-i18next";
 
 type ReportDialogProps = {
   open: boolean;
@@ -29,6 +30,8 @@ export function ReportDialog({
   error,
   onSubmit,
 }: ReportDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-surface border border-border ring-border sm:max-w-md">
@@ -40,12 +43,11 @@ export function ReportDialog({
 
             <div>
               <DialogTitle className="text-lg">
-                Report inappropriate content
+                {t("shared.reportDialog.title")}
               </DialogTitle>
 
               <DialogDescription className="mt-1">
-                Please describe why you believe this content violates the
-                community guidelines.
+                {t("shared.reportDialog.description")}
               </DialogDescription>
             </div>
           </div>
@@ -54,7 +56,7 @@ export function ReportDialog({
         <Textarea
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="Describe the issue..."
+          placeholder={t("shared.reportDialog.placeholder")}
           className="min-h-24 max-h-48"
           maxLength={2000}
         />
@@ -68,7 +70,7 @@ export function ReportDialog({
                 type="button"
                 className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
               >
-                Cancel
+                {t("shared.reportDialog.cancel")}
               </button>
             }
           />
@@ -79,7 +81,7 @@ export function ReportDialog({
             disabled={submitting || !value.trim()}
             className="button bg-danger text-white hover:bg-danger/90 disabled:opacity-50 transition"
           >
-            {submitting ? "Submitting..." : "Submit report"}
+            {submitting ? t("shared.reportDialog.submitting") : t("shared.reportDialog.submit")}
           </button>
         </DialogFooter>
       </DialogContent>

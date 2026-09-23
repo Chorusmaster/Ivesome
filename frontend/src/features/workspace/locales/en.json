@@ -1,0 +1,48 @@
+{
+  "loading": "Loading workspace...",
+  "errorLoading": "Unable to load workspace",
+  "notFound": "Workspace not found",
+  "membersCount": "members",
+  "backToPublic": "Back to public page",
+  "tabs": {
+    "tasks": "Tasks",
+    "chat": "Chat",
+    "members": "Members",
+    "requests": "Participation requests",
+    "settings": "Settings"
+  },
+  "membersTab": {
+    "title": "Members",
+    "description": "People working on this project"
+  },
+  "requestsTab": {
+    "title": "Participation requests",
+    "description": "People wanting to participate in this project",
+    "accept": "Accept",
+    "reject": "Reject",
+    "noRequests": "No participation requests yet"
+  },
+  "taskForm": {
+    "titleEdit": "Edit task",
+    "titleAdd": "Add task",
+    "descEdit": "Update the task details and save your changes",
+    "descAdd": "Create a task",
+    "labelTitle": "Title",
+    "labelDescription": "Description",
+    "labelStatus": "Status",
+    "labelDeadline": "Deadline",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "saveChanges": "Save changes",
+    "addTask": "Add task"
+  },
+  "tasksTab": {
+    "title": "Tasks",
+    "description": "Manage tasks and track project progress.",
+    "addTask": "Add task",
+    "errorSave": "Unable to save task. Please try again.",
+    "noTasks": "No tasks yet. Add the first task to get started.",
+    "editAction": "Edit {{title}}",
+    "deleteAction": "Delete {{title}}"
+  }
+}

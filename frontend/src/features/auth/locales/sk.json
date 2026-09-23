@@ -1,0 +1,92 @@
+{
+  "common": {
+    "labels": {
+      "email": "E-mail",
+      "login": "Prihlasovacie meno",
+      "password": "Heslo",
+      "confirmPassword": "Potvrďte heslo",
+      "newPassword": "Nové heslo"
+    },
+    "placeholders": {
+      "email": "vy@example.com",
+      "login": "vaša-prezývka",
+      "createPassword": "Vytvorte heslo",
+      "enterPassword": "Zadajte heslo",
+      "confirmPassword": "Potvrďte heslo",
+      "newPassword": "Vytvorte nové heslo",
+      "confirmNewPassword": "Potvrďte nové heslo"
+    },
+    "actions": {
+      "returnToLogin": "Späť na prihlásenie",
+      "logIn": "Prihlásiť sa",
+      "createOne": "Vytvoriť účet",
+      "sending": "Odosielanie...",
+      "updating": "Aktualizácia..."
+    },
+    "errors": {
+      "unexpected": "Nastala neočakávaná chyba. Skúste to znova neskôr."
+    },
+    "fallbackEmail": "váš e-mail"
+  },
+  "register": {
+    "title": "Vytvorte si účet",
+    "subtitle": "Pripojte sa k Ivesome a začnite zdieľať svoje nápady",
+    "submitButton": "Vytvoriť účet",
+    "footerText": "Už máte účet?"
+  },
+  "login": {
+    "title": "Vitajte späť",
+    "subtitle": "Prihláste sa do svojho účtu a pokračujte",
+    "forgotPassword": "Zabudli ste heslo?",
+    "submitButton": "Prihlásiť sa",
+    "footerText": "Nemáte účet?"
+  },
+  "resetPassword": {
+    "title": "Nastavte nové heslo",
+    "subtitle": "Zvoľte si silné heslo pre svoj účet",
+    "submitButton": "Obnoviť heslo",
+    "errors": {
+      "missingToken": "Token na obnovenie hesla chýba alebo je neplatný.",
+      "passwordTooShort": "Heslo musí obsahovať aspoň 8 znakov.",
+      "passwordsDoNotMatch": "Heslá sa nezhodujú.",
+      "unableToReset": "Heslo sa nepodarilo obnoviť."
+    }
+  },
+  "emailVerification": {
+    "verify": {
+      "title": "Overte svoj e-mail",
+      "description": "Odoslali sme overovací odkaz na",
+      "hint": "Kliknite na odkaz v e-maile a overte svoj účet. Platnosť odkazu vyprší o 24 hodín."
+    },
+    "resent": {
+      "title": "Overovací e-mail bol úspešne odoslaný znova",
+      "description": "Overovací odkaz sme znova odoslali na",
+      "hint": "Kliknite na odkaz v e-maile a overte svoj účet. Ak ho nevidíte, skontrolujte priečinok so spamom."
+    },
+    "invalid": {
+      "title": "Neplatný odkaz",
+      "description": "Overovací odkaz je neplatný.",
+      "hint": "Nižšie si môžete vyžiadať nový overovací odkaz. Odošleme ho na váš registrovaný e-mail."
+    },
+    "resendButton": "Odoslať nový overovací odkaz"
+  },
+  "forgotPassword": {
+    "request": {
+      "title": "Zabudli ste heslo?",
+      "description": "Zadajte svoju e-mailovú adresu a pošleme vám odkaz na obnovenie hesla."
+    },
+    "sent": {
+      "title": "Skontrolujte svoj e-mail",
+      "description": "Odkaz na obnovenie hesla sme odoslali na"
+    },
+    "invalid": {
+      "title": "Neplatný odkaz na obnovenie",
+      "description": "Odkaz na obnovenie hesla je neplatný alebo jeho platnosť vypršala."
+    },
+    "submitButton": "Odoslať odkaz na obnovenie",
+    "resendButton": "Odoslať nový odkaz na obnovenie",
+    "errors": {
+      "unableToSend": "E-mail na obnovenie sa nepodarilo odoslať."
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "loading": "Loading...",
+  "notFound": "User not found",
+  "reportError": "Unable to submit report. Please try again.",
+  "about": "About",
+  "header": {
+    "anonymous": "Anonymous",
+    "noBio": "No bio yet",
+    "joined": "Joined {{time}}",
+    "editProfile": "Edit profile",
+    "sendMessage": "Send message",
+    "reportUser": "Report user"
+  },
+  "projects": {
+    "title": "Ideas & projects",
+    "browseFeed": "Browse feed",
+    "empty": "No projects yet"
+  },
+  "sidebar": {
+    "activity": "Activity",
+    "ideas": "Ideas",
+    "projects": "Projects",
+    "upvotes": "Upvotes received",
+    "links": "Links",
+    "skillsAndInterests": "Skills & interests"
+  },
+  "form": {
+    "basicInfo": "Basic information",
+    "firstName": "First name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Doe",
+    "login": "Login",
+    "loginPlaceholder": "Product designer & founder",
+    "location": "Location",
+    "locationPlaceholder": "City, Country",
+    "aboutYou": "About you",
+    "bio": "Short bio",
+    "bioPlaceholder": "One sentence that describes you",
+    "about": "About",
+    "aboutPlaceholder": "Background, interests, what you're building on Ivesome...",
+    "skillsAndLinks": "Skills and links",
+    "skills": "Skills",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "interests": "Interests",
+    "interestsPlaceholder": "productivity, saas, b2b",
+    "websites": "Websites",
+    "newLink": "New link",
+    "deleteLink": "Delete link",
+    "delete": "Delete",
+    "profilePhoto": "Profile photo",
+    "cancel": "Cancel",
+    "saveChanges": "Save changes",
+    "unexpectedError": "An unexpected error occurred. Please try again later."
+  }
+}

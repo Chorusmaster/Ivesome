@@ -1,5 +1,5 @@
 import { formatDistanceToNowStrict } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { getDateLocale } from "@/shared/lib/utils";
 import Card from "@/shared/ui/card";
 import { Triangle, MessageCircle, Clock, Bookmark } from "lucide-react";
 import ItemLogo from "../../../shared/ui/item-logo";
@@ -77,7 +77,7 @@ function DiscoveryCard({
               <div className="flex gap-1 items-center text-text-secondary">
                 <Clock size={16} />
                 {formatDistanceToNowStrict(project.createdAt, {
-                  locale: enUS,
+                  locale: getDateLocale(),
                   addSuffix: true,
                 })}
               </div>

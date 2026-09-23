@@ -5,8 +5,10 @@ import { useState, useEffect } from "react";
 import type { Project, ProjectSort } from "@/features/projects/projects.types";
 import type { ProjectFilters } from "@/features/search/ui/filters-card";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function SearchPage() {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
   const [sort, setSort] = useState<ProjectSort>("relevant");
   const [filters, setFilters] = useState<ProjectFilters>({});
@@ -25,43 +27,66 @@ function SearchPage() {
 
   return (
     <div className="main-container-narrow">
-      <h1 className="font-heading pb-2 text-text-primary text-title">Search ideas</h1>
-      <div className="text-text-secondary">Formed based on your preferences and interactions with the platform</div>
+      <h1 className="font-heading pb-2 text-text-primary text-title">
+        {t("search.title")}
+      </h1>
+      <div className="text-text-secondary">
+        {t("search.subtitle")}
+      </div>
 
       <div className="flex justify-between items-end mt-4">
         <div className="flex gap-2">
-          <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer select-none">All</button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Projects</button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">Ideas</button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">People</button>
+          <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer select-none">
+            {t("search.categories.all")}
+          </button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
+            {t("search.categories.projects")}
+          </button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
+            {t("search.categories.ideas")}
+          </button>
+          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
+            {t("search.categories.people")}
+          </button>
         </div>
         <div className="flex items-center">
-          <span>Sorted: </span>
-          <select onChange={(e) => setSort(e.target.value as ProjectSort)} className="px-1 text-primary focus:outline-none">
-            <option value={"relevant"} className="text-black hover:bg-background">Relevant first</option>
-            <option value={"newest"} className="text-black hover:bg-background">Newest first</option>
-            <option value={"popular"} className="text-black hover:bg-background">Popular first</option>
+          <span>{t("search.sort.label")}&nbsp;</span>
+          <select
+            onChange={(e) => setSort(e.target.value as ProjectSort)}
+            className="px-1 text-primary focus:outline-none"
+            value={sort}
+          >
+            <option value="relevant" className="text-black hover:bg-background">
+              {t("search.sort.options.relevant")}
+            </option>
+            <option value="newest" className="text-black hover:bg-background">
+              {t("search.sort.options.newest")}
+            </option>
+            <option value="popular" className="text-black hover:bg-background">
+              {t("search.sort.options.popular")}
+            </option>
           </select>
         </div>
       </div>
 
       <div className="grid grid-cols-4 gap-4 mt-8">
         <div className="col-span-3 flex flex-col gap-6">
-          {projects.length == 0 ? 
-            <div className="text-muted text-subheading">Nothing has been found :/</div> :
+          {projects.length === 0 ? (
+            <div className="text-muted text-subheading">
+              {t("search.emptyState")}
+            </div>
+          ) : (
             projects.map((project) => (
-              <DiscoveryCard
-                key={project.id}
-                project={project}
-              />
-          ))}
+              <DiscoveryCard key={project.id} project={project} />
+            ))
+          )}
         </div>
         <aside>
           <FiltersCard onChange={(f) => setFilters(f)} />
         </aside>
       </div>
     </div>
-    );
+  );
 }
 
 export default SearchPage;

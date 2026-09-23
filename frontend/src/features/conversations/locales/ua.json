@@ -1,0 +1,18 @@
+{
+  "noConversations": "Поки немає жодних розмов",
+  "selectConversation": "Виберіть розмову",
+  "conversation": {
+    "originalMessage": "Оригінальне повідомлення",
+    "messageUnavailable": "Повідомлення недоступне",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "anonymousUser": "Анонімний користувач",
+    "replyingTo": "Відповідь користувачу {{name}}",
+    "typeMessage": "Напишіть нове повідомлення",
+    "saveMessage": "Зберегти повідомлення",
+    "cancelEditing": "Скасувати редагування",
+    "messageActions": "Дії з повідомленням",
+    "replyToMessage": "Відповісти на повідомлення",
+    "cancelReply": "Скасувати відповідь"
+  }
+}

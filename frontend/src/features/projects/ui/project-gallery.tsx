@@ -7,13 +7,16 @@ import {
   CarouselPrevious,
 } from "@/shared/ui/carousel";
 import { filePathToUrl } from "@/shared/lib/utils";
+import { useTranslation } from "react-i18next";
 
 function ProjectGallery({ mediaLinks }: { mediaLinks: string[] }) {
+  const { t } = useTranslation();
+
   if (mediaLinks.length === 0) return null;
 
   return (
     <Card>
-      <h2 className="heading text-text-primary">Galery</h2>
+      <h2 className="heading text-text-primary">{t("projects.projectGallery.title")}</h2>
       <div className="px-8">
         <Carousel className="w-full">
           <CarouselContent>

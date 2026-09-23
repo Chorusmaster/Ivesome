@@ -1,0 +1,40 @@
+{
+  "title": "Vyhľadávanie nápadov",
+  "subtitle": "Vytvorené na základe vašich preferencií a interakcií s platformou",
+  "categories": {
+    "all": "Všetko",
+    "projects": "Projekty",
+    "ideas": "Nápady",
+    "people": "Ľudia"
+  },
+  "sort": {
+    "label": "Zoradené:",
+    "options": {
+      "relevant": "Najprv relevantné",
+      "newest": "Najprv nové",
+      "popular": "Najprv populárne"
+    }
+  },
+  "emptyState": "Nič sa nenašlo :/",
+  "filters": {
+    "title": "Filtre",
+    "reset": "Obnoviť",
+    "groups": {
+      "stage": {
+        "title": "Etapa",
+        "options": {
+          "teamBuilding": "Tvorba tímu",
+          "development": "Vo vývoji",
+          "launched": "Spustené"
+        }
+      },
+      "tags": {
+        "title": "Značky",
+        "options": {
+          "fintech": "Fintech",
+          "saas": "SaaS"
+        }
+      }
+    }
+  }
+}

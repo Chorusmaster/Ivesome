@@ -8,6 +8,7 @@ import {
   MessagesSquare,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import { getProjects } from "@/features/projects/projects.api";
 import type { Project } from "@/features/projects/projects.types";
@@ -16,6 +17,7 @@ import Card from "@/shared/ui/card";
 import Marquee from "@/shared/ui/marquee";
 
 function HomePage() {
+  const { t } = useTranslation();
   const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
@@ -54,27 +56,26 @@ function HomePage() {
         <div className="relative grid gap-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
           <div className="max-w-3xl">
             <p className="mb-5 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.18em] text-primary">
-              The ideas network
+              {t("app.home.hero.tagline")}
             </p>
             <h1 className="max-w-2xl font-heading text-5xl leading-[1.02] tracking-tight text-text-primary sm:text-6xl lg:text-7xl">
-              Good ideas get better together.
+              {t("app.home.hero.heading")}
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-text-secondary sm:text-xl">
-              Ivesome is where ambitious people share early ideas, find the
-              right collaborators, and turn an imagination spark into startup.
+              {t("app.home.hero.description")}
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
               <Link
                 to="/search"
                 className="button inline-flex items-center gap-2 bg-primary text-white transition hover:bg-primary-hover"
               >
-                Explore ideas <ArrowRight size={17} />
+                {t("app.home.hero.actions.explore")} <ArrowRight size={17} />
               </Link>
               <Link
                 to="/ideas/new"
                 className="button inline-flex items-center gap-2 border border-border bg-surface text-text-primary transition hover:border-primary hover:text-primary"
               >
-                Share an idea <Lightbulb size={17} />
+                {t("app.home.hero.actions.share")} <Lightbulb size={17} />
               </Link>
             </div>
           </div>
@@ -101,10 +102,10 @@ function HomePage() {
         <div className="flex flex-col gap-4">
           <div>
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.16em] text-accent-hover">
-              How does it work
+              {t("app.home.howItWorks.tagline")}
             </p>
             <h2 className="font-heading text-3xl text-text-primary sm:text-4xl">
-              Startup milestones
+              {t("app.home.howItWorks.title")}
             </h2>
           </div>
 
@@ -116,9 +117,11 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading text-text-primary">Discover</h3>
+                <h3 className="text-heading text-text-primary">
+                  {t("app.home.howItWorks.steps.discover.title")}
+                </h3>
                 <p className="mt-2 text-text-secondary">
-                  Creating and publishing an idea
+                  {t("app.home.howItWorks.steps.discover.description")}
                 </p>
               </div>
             </Card>
@@ -130,9 +133,11 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading text-text-primary">Discuss</h3>
+                <h3 className="text-heading text-text-primary">
+                  {t("app.home.howItWorks.steps.discuss.title")}
+                </h3>
                 <p className="mt-2 text-text-secondary">
-                  Discussing the idea and gathering feedback
+                  {t("app.home.howItWorks.steps.discuss.description")}
                 </p>
               </div>
             </Card>
@@ -144,9 +149,11 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading text-text-primary">Collaborate</h3>
+                <h3 className="text-heading text-text-primary">
+                  {t("app.home.howItWorks.steps.collaborate.title")}
+                </h3>
                 <p className="mt-2 text-text-secondary">
-                  Recruiting participants and forming a team
+                  {t("app.home.howItWorks.steps.collaborate.description")}
                 </p>
               </div>
             </Card>
@@ -158,9 +165,11 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading text-text-primary">Develop</h3>
+                <h3 className="text-heading text-text-primary">
+                  {t("app.home.howItWorks.steps.develop.title")}
+                </h3>
                 <p className="mt-2 text-text-secondary">
-                  Collaborating on the development of an idea
+                  {t("app.home.howItWorks.steps.develop.description")}
                 </p>
               </div>
             </Card>
@@ -172,9 +181,11 @@ function HomePage() {
                   strokeWidth={1.5}
                   className="mb-8 text-accent-hover transition group-hover:text-primary-hover"
                 />
-                <h3 className="text-heading text-text-primary">Launch</h3>
+                <h3 className="text-heading text-text-primary">
+                  {t("app.home.howItWorks.steps.launch.title")}
+                </h3>
                 <p className="mt-2 text-text-secondary">
-                  Presentation of the final product
+                  {t("app.home.howItWorks.steps.launch.description")}
                 </p>
               </div>
             </Card>

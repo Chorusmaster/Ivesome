@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth/auth.context";
 import { filePathToUrl } from "../lib/utils.ts";
+import { useTranslation } from "react-i18next";
 
 import Logo from "@/assets/logo.svg?react";
 import { Search, LogOut } from "lucide-react";
@@ -10,12 +11,13 @@ import { Popover } from "./popover.tsx";
 import NotificationPopover from "../../features/notifications/ui/notification-popover.tsx";
 
 function Navbar() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuth();
   const [query, setQuery] = useState("");
 
-  const handleSubmit = (e: React.SubmitEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!query.trim()) {
@@ -39,25 +41,27 @@ function Navbar() {
         <div className="flex gap-2 py-2 items-center">
           <Link className="flex items-center gap-2" to="/">
             <Logo className="size-8"></Logo>
-            <div className="text-2xl font-bold text-text-primary">Ivesome</div>
+            <div className="text-2xl font-bold text-text-primary">
+              Ivesome
+            </div>
           </Link>
           <div className="flex px-8 gap-8 items-center">
             <Link
               to="/search"
-              className={`${location.pathname == "/search" ? "text-primary" : "text-muted"} font-button`}
+              className={`${location.pathname === "/search" ? "text-primary" : "text-muted"} font-button`}
             >
-              Search
+              {t("shared.navbar.nav.search")}
             </Link>
             {user && user.role === "USER" && (
               <>
                 <Link
                   to="/favourites"
-                  className={`${location.pathname == "/favourites" ? "text-primary" : "text-muted"} font-button`}
+                  className={`${location.pathname === "/favourites" ? "text-primary" : "text-muted"} font-button`}
                 >
-                  Favourites
+                  {t("shared.navbar.nav.favourites")}
                 </Link>
                 <Link to="/conversations" className="text-muted font-button">
-                  Conversations
+                  {t("shared.navbar.nav.conversations")}
                 </Link>
               </>
             )}
@@ -66,9 +70,9 @@ function Navbar() {
               <>
                 <Link
                   to="/admin/dashboard"
-                  className={`${location.pathname == "/admin/dashboard" ? "text-primary" : "text-muted"} font-button`}
+                  className={`${location.pathname === "/admin/dashboard" ? "text-primary" : "text-muted"} font-button`}
                 >
-                  Dashboard
+                  {t("shared.navbar.nav.dashboard")}
                 </Link>
               </>
             )}
@@ -79,19 +83,19 @@ function Navbar() {
             onSubmit={handleSubmit}
             className="bg-background rounded-input border border-border w-72 flex items-center"
           >
-            <Search size={18} className="ml-4 mr-3 text-muted"></Search>
+            <Search size={18} className="ml-4 mr-3 text-muted" />
             <input
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search ideas..."
+              placeholder={t("shared.navbar.search.placeholder")}
               className="h-10 w-full pl-1 pr-2 focus:outline-none placeholder:text-muted"
-            ></input>
+            />
           </form>
 
           <Link
             to="ideas/new"
             className="button text-white bg-primary hover:bg-primary-hover"
           >
-            + New idea
+            {t("shared.navbar.actions.newIdea")}
           </Link>
 
           <NotificationPopover />
@@ -99,7 +103,7 @@ function Navbar() {
           <Popover>
             <Popover.Trigger
               type="button"
-              aria-label="Open account menu"
+              aria-label={t("shared.navbar.userMenu.ariaLabel")}
               className="mt-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               <Avatar
@@ -113,13 +117,13 @@ function Navbar() {
                 className="w-full rounded-button px-2 py-1 text-left text-text-secondary transition-colors hover:bg-background"
                 to="/profile"
               >
-                Profile
+                {t("shared.navbar.userMenu.profile")}
               </Link>
               <Link
                 className="w-full rounded-button px-2 py-1 text-left text-text-secondary transition-colors hover:bg-background"
                 to="/settings"
               >
-                Settings
+                {t("shared.navbar.userMenu.settings")}
               </Link>
               <button
                 type="button"
@@ -127,7 +131,7 @@ function Navbar() {
                 className="flex w-full items-center gap-2 rounded-button px-2 py-1 text-left text-text-secondary transition-colors hover:bg-background hover:text-danger-hover"
               >
                 <LogOut size={12} />
-                Log out
+                {t("shared.navbar.userMenu.logout")}
               </button>
             </Popover.Content>
           </Popover>

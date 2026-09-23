@@ -9,6 +9,7 @@ import FileUpload from "@/shared/ui/file-upload";
 import type { MultipleFileUploadRef } from "@/shared/ui/multiple-file-upload";
 
 import type { CreateProjectPayload } from "../projects.types";
+import { useTranslation } from "react-i18next";
 
 interface ProjectEditorFormProps {
   onSubmit: (data: CreateProjectPayload) => Promise<void> | void;
@@ -28,6 +29,7 @@ function ProjectEditorForm({
   onCancel,
   initialValues,
 }: ProjectEditorFormProps) {
+  const { t } = useTranslation();
   const [title, setTitle] = useState(initialValues?.title ?? "");
   const [shortDescription, setShortDescription] = useState(
     initialValues?.shortDescription ?? "",
@@ -71,11 +73,11 @@ function ProjectEditorForm({
         shortDescription,
         description,
         tags: tags
-          .split(",")
+          .split("projects.,")
           .map((tag) => tag.trim())
           .filter(Boolean),
         skills: skills
-          .split(",")
+          .split("projects.,")
           .map((skill) => skill.trim())
           .filter(Boolean),
         logo,
@@ -91,30 +93,32 @@ function ProjectEditorForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <Card>
-        <div className="heading mb-8 text-text-primary">Basic information</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("projects.projectEditor.basicInfo")}
+        </div>
 
         <Input
-          label="Title"
+          label={t("projects.projectEditor.titleLabel")}
           id="title"
-          placeholder="Some super cool idea"
+          placeholder={t("projects.projectEditor.titlePlaceholder")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="mb-4"
         />
 
         <Textarea
-          label="Short description"
+          label={t("projects.projectEditor.shortDescLabel")}
           id="short_description"
-          placeholder="One sentence that explains the essence of your idea"
+          placeholder={t("projects.projectEditor.shortDescPlaceholder")}
           value={shortDescription}
           onChange={(e) => setShortDescription(e.target.value)}
           className="min-h-16 resize-none mb-4"
         />
 
         <Textarea
-          label="Long description"
+          label={t("projects.projectEditor.longDescLabel")}
           id="long_description"
-          placeholder="Problem, solution, audience, how it differs from existing products..."
+          placeholder={t("projects.projectEditor.longDescPlaceholder")}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="min-h-36 mb-4"
@@ -122,30 +126,36 @@ function ProjectEditorForm({
 
         <Select
           className="mb-4"
-          label="Visibility"
+          label={t("projects.projectEditor.visibilityLabel")}
           value={visibility}
           onChange={(e) =>
             setVisibility(e.target.value as "PRIVATE" | "PUBLIC")
           }
           options={[
-            { value: "PRIVATE", label: "Private" },
-            { value: "PUBLIC", label: "Public" },
+            {
+              value: "PRIVATE",
+              label: t("projects.projectEditor.visibilityOptions.private"),
+            },
+            {
+              value: "PUBLIC",
+              label: t("projects.projectEditor.visibilityOptions.public"),
+            },
           ]}
         />
 
         <div className="grid grid-cols-2 gap-4">
           <Input
-            label="Tags"
+            label={t("projects.projectEditor.tagsLabel")}
             id="tags"
-            placeholder="productivity, saas, b2b"
+            placeholder={t("projects.projectEditor.tagsPlaceholder")}
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
 
           <Input
-            label="Skills"
+            label={t("projects.projectEditor.skillsLabel")}
             id="skills"
-            placeholder="backend, Node.js, Express.js"
+            placeholder={t("projects.projectEditor.skillsPlaceholder")}
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
           />
@@ -153,13 +163,17 @@ function ProjectEditorForm({
       </Card>
 
       <Card>
-        <div className="heading mb-8 text-text-primary">Avatar</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("projects.projectEditor.avatarTitle")}
+        </div>
 
         <FileUpload file={logo} setFile={setLogo} />
       </Card>
 
       <Card>
-        <div className="heading mb-8 text-text-primary">Media</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("projects.projectEditor.mediaTitle")}
+        </div>
 
         <MultipleFileUpload ref={uploadRef} files={media} setFiles={setMedia} />
       </Card>
@@ -173,7 +187,7 @@ function ProjectEditorForm({
           }}
           className="button bg-surface hover:shadow-sm border border-border mr-2"
         >
-          Cancel
+          {t("projects.projectEditor.cancel")}
         </button>
 
         <button
@@ -181,7 +195,9 @@ function ProjectEditorForm({
           disabled={isSubmitting}
           className="button bg-primary hover:bg-primary-hover text-white"
         >
-          {isSubmitting ? "Publishing..." : "Publish"}
+          {isSubmitting
+            ? t("projects.projectEditor.publishing")
+            : t("projects.projectEditor.publish")}
         </button>
       </Card>
     </form>

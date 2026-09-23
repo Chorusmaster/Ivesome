@@ -5,12 +5,15 @@ import type { Report, ReportStatus } from "@/features/reports/reports.types";
 import { useNavigate } from "react-router-dom";
 import { getComment } from "@/features/projects/comments.api";
 import { ReportResolutionDialog } from "../ui/report-resolution-dialog";
+import { useTranslation } from "react-i18next";
+import { FilterPills } from "@/shared/ui/filter-pills";
 
 function AdminDashboardPage() {
   const [reports, setReports] = useState<Report[]>([]);
   const [statusFilter, setStatusFilter] = useState<ReportStatus | "ALL">("ALL");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   useEffect(() => {
     async function fetchReports() {
@@ -63,38 +66,27 @@ function AdminDashboardPage() {
   return (
     <div className="main-container-narrow">
       <h1 className="font-heading pb-2 text-text-primary text-title">
-        Admin Dashboard
+        {t("admin.pageTitle")}
       </h1>
       <div className="text-text-secondary">
-        Community moderation and system monitoring
+        {t("admin.pageDescription")}
       </div>
 
       <Card className="mt-8">
         <div className="flex justify-between items-center gap-4 flex-wrap">
           <h2 className="text-subheading font-heading text-text-primary">
-            Reports
+            {t("admin.reports.heading")}
           </h2>
-          <div className="flex gap-2 flex-wrap">
-            {(["ALL", "PENDING", "RESOLVED"] as const).map((filter) => (
-              <button
-                key={filter}
-                type="button"
-                onClick={() => setStatusFilter(filter)}
-                className={`
-                  px-4 py-1 rounded-full cursor-pointer select-none border transition
-                  ${
-                    statusFilter === filter
-                      ? "bg-primary text-white border-primary"
-                      : "bg-surface border-border hover:border-primary text-text-secondary"
-                  }
-                `}
-              >
-                {filter === "ALL"
-                  ? "All"
-                  : filter.charAt(0) + filter.slice(1).toLowerCase()}
-              </button>
-            ))}
-          </div>
+          <FilterPills
+            options={["ALL", "PENDING", "RESOLVED"]}
+            value={statusFilter}
+            onChange={setStatusFilter}
+            labels={{
+              ALL: t("admin.reports.filters.all"),
+              PENDING: t("admin.reports.filters.pending"),
+              RESOLVED: t("admin.reports.filters.resolved"),
+            }}
+          />
         </div>
 
         <div className="mt-8 w-full overflow-hidden rounded-lg border border-border">
@@ -102,19 +94,19 @@ function AdminDashboardPage() {
             <thead className="bg-surface">
               <tr className="border-b border-border">
                 <th className="text-left px-4 py-2 text-small text-text-secondary">
-                  Reported By
+                  {t("admin.reports.table.headings.reportedBy")}
                 </th>
                 <th className="text-left px-4 py-2 text-small text-text-secondary">
-                  Content Type
+                  {t("admin.reports.table.headings.contentType")}
                 </th>
                 <th className="text-left px-4 py-2 text-small text-text-secondary">
-                  Reason
+                  {t("admin.reports.table.headings.reason")}
                 </th>
                 <th className="text-left px-4 py-2 text-small text-text-secondary">
-                  Status
+                  {t("admin.reports.table.headings.status")}
                 </th>
                 <th className="text-left px-4 py-2 text-small text-text-secondary">
-                  Actions
+                  {t("admin.reports.table.headings.actions")}
                 </th>
               </tr>
             </thead>
@@ -125,7 +117,7 @@ function AdminDashboardPage() {
                     colSpan={6}
                     className="px-4 py-6 text-center text-small text-text-secondary"
                   >
-                    Loading reports...
+                    {t("admin.reports.loading")}
                   </td>
                 </tr>
               ) : reports.length === 0 ? (
@@ -134,7 +126,7 @@ function AdminDashboardPage() {
                     colSpan={6}
                     className="px-4 py-6 text-center text-small text-text-secondary"
                   >
-                    No reports of this status yet.
+                    {t("admin.reports.noReports")}
                   </td>
                 </tr>
               ) : (
@@ -167,7 +159,7 @@ function AdminDashboardPage() {
                           className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition"
                           onClick={() => handleViewReport(report)}
                         >
-                          View
+                          {t("admin.reports.actions.view")}
                         </button>
                         {report.status !== "RESOLVED" && (
                           <ReportResolutionDialog

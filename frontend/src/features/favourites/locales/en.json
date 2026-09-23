@@ -1,0 +1,6 @@
+{
+  "title": "Favourite ideas",
+  "description": "Here will be displayed ideas previously marked as favourite",
+  "loading": "Loading...",
+  "empty": "No favourites yet"
+}

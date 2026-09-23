@@ -1,0 +1,56 @@
+{
+  "loading": "Завантаження...",
+  "notFound": "Користувача не знайдено",
+  "reportError": "Не вдалося надіслати скаргу. Спробуйте ще раз.",
+  "about": "Про мене",
+  "header": {
+    "anonymous": "Анонім",
+    "noBio": "Поки немає опису профілю",
+    "joined": "Приєднався {{time}}",
+    "editProfile": "Редагувати профіль",
+    "sendMessage": "Надіслати повідомлення",
+    "reportUser": "Поскаржитися на користувача"
+  },
+  "projects": {
+    "title": "Ідеї та проєкти",
+    "browseFeed": "Переглянути стрічку",
+    "empty": "Поки немає проєктів"
+  },
+  "sidebar": {
+    "activity": "Активність",
+    "ideas": "Ідеї",
+    "projects": "Проєкти",
+    "upvotes": "Отримані голоси",
+    "links": "Посилання",
+    "skillsAndInterests": "Навички та інтереси"
+  },
+  "form": {
+    "basicInfo": "Основна інформація",
+    "firstName": "Ім'я",
+    "firstNamePlaceholder": "Іван",
+    "lastName": "Прізвище",
+    "lastNamePlaceholder": "Петренко",
+    "login": "Логін",
+    "loginPlaceholder": "Продуктовий дизайнер і засновник",
+    "location": "Місцезнаходження",
+    "locationPlaceholder": "Місто, країна",
+    "aboutYou": "Про вас",
+    "bio": "Короткий опис",
+    "bioPlaceholder": "Одне речення, яке описує вас",
+    "about": "Про мене",
+    "aboutPlaceholder": "Досвід, інтереси, над чим ви працюєте в Ivesome...",
+    "skillsAndLinks": "Навички та посилання",
+    "skills": "Навички",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "interests": "Інтереси",
+    "interestsPlaceholder": "продуктивність, saas, b2b",
+    "websites": "Вебсайти",
+    "newLink": "Нове посилання",
+    "deleteLink": "Видалити посилання",
+    "delete": "Видалити",
+    "profilePhoto": "Фото профілю",
+    "cancel": "Скасувати",
+    "saveChanges": "Зберегти зміни",
+    "unexpectedError": "Сталася неочікувана помилка. Спробуйте ще раз пізніше."
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "authLayout": {
+    "heading": "Dobré nápady sú spolu ešte lepšie",
+    "description": "Zdieľajte koncepty, získavajte spätnú väzbu a spojte sa so spolupracovníkmi, ktorí chcú vytvoriť niečo zmysluplné."
+  },
+
+  "home": {
+    "hero": {
+      "tagline": "Sieť nápadov",
+      "heading": "Dobré nápady sú spolu ešte lepšie",
+      "description": "Ivesome je miesto, kde ambiciózni ľudia zdieľajú prvotné nápady, hľadajú správnych spolupracovníkov a premieňajú iskru predstavivosti na startup.",
+      "actions": {
+        "explore": "Preskúmať nápady",
+        "share": "Zdieľať nápad"
+      }
+    },
+
+    "howItWorks": {
+      "tagline": "Ako to funguje",
+      "title": "Míľniky startupu",
+      "steps": {
+        "discover": {
+          "title": "Objavovanie",
+          "description": "Vytvorenie a publikovanie nápadu"
+        },
+        "discuss": {
+          "title": "Diskusia",
+          "description": "Diskusia o nápade a získavanie spätnej väzby"
+        },
+        "collaborate": {
+          "title": "Spolupráca",
+          "description": "Hľadanie účastníkov a vytvorenie tímu"
+        },
+        "develop": {
+          "title": "Vývoj",
+          "description": "Spolupráca na vývoji nápadu"
+        },
+        "launch": {
+          "title": "Spustenie",
+          "description": "Prezentácia finálneho produktu"
+        }
+      }
+    }
+  }
+}

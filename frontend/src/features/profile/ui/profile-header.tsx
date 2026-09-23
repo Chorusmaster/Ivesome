@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { formatDistanceToNowStrict } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { useTranslation } from "react-i18next";
 import {
   Calendar,
   Flag,
@@ -13,6 +13,7 @@ import Avatar from "@/shared/ui/avatar";
 import { filePathToUrl } from "@/shared/lib/utils";
 import type { User } from "@/features/auth/auth.types";
 import { ReportDialog } from "@/shared/ui/report-dialog";
+import { getDateLocale } from "@/shared/lib/utils";
 
 type ProfileHeaderProps = {
   user: User;
@@ -41,6 +42,8 @@ function ProfileHeader({
   onReportSubmit,
   onReportOpenChange,
 }: ProfileHeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="px-16 py-12 bg-surface border-b border-border">
       <div className="flex justify-between items-start gap-8">
@@ -53,13 +56,14 @@ function ProfileHeader({
           />
           <div className="min-w-0">
             <h1 className="text-display font-heading text-text-primary">
-              {user.firstName ?? "Anonymous"} {user.lastName ?? ""}
+              {user.firstName ?? t("profile.header.anonymous")}{" "}
+              {user.lastName ?? ""}
             </h1>
             <p className="text-text-secondary text-body mb-3">
               @{user.login ?? "anonymous"}
             </p>
             <p className="text-text-secondary text-body mb-4 max-w-2xl">
-              {user.bio ?? "No bio yet"}
+              {user.bio ?? t("profile.header.noBio")}
             </p>
             <div className="flex flex-wrap gap-4 text-muted text-small">
               {user.location && (
@@ -71,10 +75,11 @@ function ProfileHeader({
               {user.createdAt && (
                 <span className="flex items-center gap-1.5">
                   <Calendar size={16} />
-                  Joined{" "}
-                  {formatDistanceToNowStrict(user.createdAt, {
-                    locale: enUS,
-                    addSuffix: true,
+                  {t("profile.header.joined", {
+                    time: formatDistanceToNowStrict(user.createdAt, {
+                      locale: getDateLocale(),
+                      addSuffix: true,
+                    }),
                   })}
                 </span>
               )}
@@ -93,7 +98,7 @@ function ProfileHeader({
             className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2 shrink-0"
           >
             <Pencil size={16} />
-            Edit profile
+            {t("profile.header.editProfile")}
           </Link>
         ) : (
           <div className="flex items-center gap-2 shrink-0">
@@ -102,7 +107,7 @@ function ProfileHeader({
               className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2"
             >
               <MessageSquare size={16} />
-              Send message
+              {t("profile.header.sendMessage")}
             </button>
             {canReport && (
               <>
@@ -110,7 +115,7 @@ function ProfileHeader({
                   type="button"
                   onClick={() => onReportOpenChange(true)}
                   className="button border border-border text-muted hover:text-danger hover:border-danger transition h-10"
-                  aria-label="Report user"
+                  aria-label={t("profile.header.reportUser")}
                 >
                   <Flag size={16} />
                 </button>

@@ -4,6 +4,7 @@ import Comment from "./comment";
 import type { ProjectComment } from "../comments.api";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type ProjectDiscussionProps = {
   user?: User | null;
@@ -32,6 +33,8 @@ function ProjectDiscussion({
   onEdit,
   onDelete,
 }: ProjectDiscussionProps) {
+  const { t } = useTranslation();
+
   const commentCount =
     comments.length +
     comments.reduce((count, comment) => count + comment.replies.length, 0);
@@ -57,8 +60,12 @@ function ProjectDiscussion({
   return (
     <section>
       <div className="flex justify-between items-baseline">
-        <h2 className="heading text-text-primary">Discussion</h2>
-        <div className="text-text-secondary">{commentCount} comments</div>
+        <h2 className="heading text-text-primary">
+          {t("projects.projectDiscussion.title")}
+        </h2>
+        <div className="text-text-secondary">
+          {t("projects.projectDiscussion.commentsCount", { count: commentCount })}
+        </div>
       </div>
       {user ? (
         <div className="flex gap-4">
@@ -68,26 +75,32 @@ function ProjectDiscussion({
               value={commentText}
               onChange={(event) => onCommentTextChange(event.target.value)}
               className="bg-background border border-border rounded-card w-full min-h-24 p-2"
-              placeholder="Leave a comment or question for the author..."
+              placeholder={t("projects.projectDiscussion.commentPlaceholder")}
               maxLength={2000}
             />
             <button
               disabled={commentSubmitting || !commentText.trim()}
               className="button bg-primary hover:bg-primary-hover text-white mt-2 disabled:opacity-50"
             >
-              Publish
+              {t("projects.projectDiscussion.publish")}
             </button>
           </form>
         </div>
       ) : (
-        <p className="text-text-secondary">Sign in to join the discussion.</p>
+        <p className="text-text-secondary">
+          {t("projects.projectDiscussion.signInToJoin")}
+        </p>
       )}
       {commentsLoading && (
-        <p className="text-text-secondary mt-6">Loading discussion...</p>
+        <p className="text-text-secondary mt-6">
+          {t("projects.projectDiscussion.loading")}
+        </p>
       )}
       {commentsError && <p className="text-danger mt-6">{commentsError}</p>}
       {!commentsLoading && !commentsError && comments.length === 0 && (
-        <p className="text-text-secondary mt-6">No comments yet.</p>
+        <p className="text-text-secondary mt-6">
+          {t("projects.projectDiscussion.noComments")}
+        </p>
       )}
       {!commentsLoading &&
         comments.map((comment) => (

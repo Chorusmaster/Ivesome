@@ -5,8 +5,8 @@ import Loading from "@/shared/ui/loading";
 import { useEffect, useState } from "react";
 import { getWorkspace } from "../workspace.api";
 import type { Workspace } from "../workspace.types";
-import { toSentenceCase } from "@/shared/lib/utils";
-import { filePathToUrl } from "@/shared/lib/utils";
+import { toSentenceCase, filePathToUrl } from "@/shared/lib/utils";
+import { useTranslation } from "react-i18next";
 
 import TasksTab from "../ui/tasks-tab";
 import ChatTab from "../ui/chat-tab";
@@ -15,7 +15,8 @@ import SettingsTab from "../ui/settings-tab";
 import RequestsTab from "../ui/requests-tab";
 import type { ParticipationRequest } from "@/features/participation-requests/participation-requests.types";
 
-function WorkspacePage() {
+function workspacePage() {
+  const { t } = useTranslation();
   const { workspaceId } = useParams<{ workspaceId: string }>();
   const [workspace, setWorkspace] = useState<Workspace | null>(null);
   const [loading, setLoading] = useState(true);
@@ -35,32 +36,30 @@ function WorkspacePage() {
         setError("");
 
         const data = await getWorkspace(id);
-
         setWorkspace(data);
-
         setPendingRequests(
           data.project.participationRequests.filter(
             (request) => request.status === "PENDING",
           ),
         );
       } catch {
-        setError("Unable to load workspace");
+        setError(t("workspace.errorLoading"));
       } finally {
         setLoading(false);
       }
     }
 
     loadWorkspace();
-  }, [workspaceId]);
+  }, [workspaceId, t]);
 
   if (loading) {
-    return <Loading fullScreen={true} text="Loading workspace..." />;
+    return <Loading fullScreen={true} text={t("workspace.loading")} />;
   }
 
   if (error || !workspace) {
     return (
       <div className="min-h-screen bg-background p-8 text-danger">
-        {error || "Workspace not found"}
+        {error || t("workspace.notFound")}
       </div>
     );
   }
@@ -68,25 +67,25 @@ function WorkspacePage() {
   const { project } = workspace;
   const requestsCount = pendingRequests.length;
 
-  const WORKSPACE_TABS = [
+  const workspaceTabs = [
     {
       name: "TASKS",
-      label: "Tasks",
+      label: t("workspace.tabs.tasks"),
       element: <TasksTab workspaceId={workspace.id} tasks={workspace.tasks} />,
     },
     {
       name: "CHAT",
-      label: "Chat",
+      label: t("workspace.tabs.chat"),
       element: <ChatTab conversationId={workspace.conversation.id} />,
     },
     {
       name: "MEMBERS",
-      label: "Members",
+      label: t("workspace.tabs.members"),
       element: <MembersTab workspace={workspace} />,
     },
     {
       name: "REQUESTS",
-      label: "Participation requests",
+      label: t("workspace.tabs.requests"),
       element: (
         <RequestsTab
           requests={pendingRequests}
@@ -94,9 +93,14 @@ function WorkspacePage() {
         />
       ),
     },
-    { name: "SETTINGS", label: "Settings", element: <SettingsTab /> },
+    {
+      name: "SETTINGS",
+      label: t("workspace.tabs.settings"),
+      element: <SettingsTab />,
+    },
   ] as const;
-  type WorkspaceTabNames = (typeof WORKSPACE_TABS)[number]["name"];
+
+  type WorkspaceTabNames = (typeof workspaceTabs)[number]["name"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -113,7 +117,7 @@ function WorkspacePage() {
               </div>
               <div className="text-text-secondary">
                 {toSentenceCase(project.stage)} · {project.members.length}{" "}
-                members
+                {t("workspace.membersCount")}
               </div>
             </div>
           </div>
@@ -121,11 +125,11 @@ function WorkspacePage() {
             to={`/project/${project.id}`}
             className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2"
           >
-            <ArrowLeft size={16} /> Back to public page
+            <ArrowLeft size={16} /> {t("workspace.backToPublic")}
           </Link>
         </div>
         <div className="pt-2">
-          {WORKSPACE_TABS.map((tabData) => (
+          {workspaceTabs.map((tabData) => (
             <button
               key={tabData.name}
               className={`border-b-2 ${openTab === tabData.name ? "border-primary" : "border-transparent"} text-text-primary px-4 py-2 transition`}
@@ -142,9 +146,9 @@ function WorkspacePage() {
         </div>
       </div>
 
-      {WORKSPACE_TABS.find((tab) => tab.name === openTab)?.element}
+      {workspaceTabs.find((tab) => tab.name === openTab)?.element}
     </div>
   );
 }
 
-export default WorkspacePage;
+export default workspacePage;

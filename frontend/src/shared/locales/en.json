@@ -1,0 +1,47 @@
+{
+  "userFallbacks": {
+    "anonymous": "Anonymous",
+    "unknown": "Unknown"
+  },
+  "navbar": {
+    "nav": {
+      "search": "Search",
+      "favourites": "Favourites",
+      "conversations": "Conversations",
+      "dashboard": "Dashboard"
+    },
+    "search": {
+      "placeholder": "Search ideas..."
+    },
+    "actions": {
+      "newIdea": "+ New idea"
+    },
+    "userMenu": {
+      "ariaLabel": "Open account menu",
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out"
+    }
+  },
+  "footer": {
+    "privacyPolicy": "Privacy policy",
+    "terms": "Terms and conditions"
+  },
+  "fileUpload": {
+    "dropImage": "Drag & Drop your image here",
+    "dropOtherImage": "Drag & Drop another image to replace current"
+  },
+  "multipleFileUpload": {
+    "dropMessage": "Drag & Drop your images here",
+    "clickMessage": "or click to select multiple images"
+  },
+  "reportDialog": {
+    "title": "Report inappropriate content",
+    "description": "Please describe why you believe this content violates the community guidelines.",
+    "placeholder": "Describe the issue...",
+    "cancel": "Cancel",
+    "submitting": "Submitting...",
+    "submit": "Submit report"
+  },
+  "yesterday": "Yesterday"
+}

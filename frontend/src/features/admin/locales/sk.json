@@ -1,0 +1,27 @@
+{
+  "pageTitle": "Administrátorský panel",
+  "pageDescription": "Moderovanie komunity a monitorovanie systému",
+  "reports": {
+    "heading": "Nahlásenia",
+    "filters": {
+      "all": "Všetky",
+      "pending": "Nevyriešené",
+      "resolved": "Vyriešené"
+    },
+    "table": {
+      "headings": {
+        "reportedBy": "Nahlásil",
+        "contentType": "Typ obsahu",
+        "reason": "Dôvod",
+        "status": "Stav",
+        "actions": "Akcie"
+      }
+    },
+    "actions": {
+      "view": "Zobraziť",
+      "resolve": "Vyriešiť"
+    },
+    "loading": "Načítavanie nahlásení...",
+    "noReports": "Pre tento stav zatiaľ nie sú žiadne nahlásenia."
+  }
+}

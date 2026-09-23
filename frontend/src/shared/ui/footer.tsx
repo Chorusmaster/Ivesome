@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+  const { t } = useTranslation();
   const year = new Date().getFullYear();
   const copyright =
     year === 2026 ? "2026" : `2026 - ${year}`;
@@ -11,8 +13,8 @@ function Footer() {
         © {copyright} Ivesome
       </div>
       <div className="flex gap-4">
-        <Link to="/" className="hover:text-text-primary">Privacy Policy</Link>
-        <Link to="/" className="hover:text-text-primary">Terms and conditions</Link>
+        <Link to="/" className="hover:text-text-primary">{t("shared.footer.privacyPolicy")}</Link>
+        <Link to="/" className="hover:text-text-primary">{t("shared.footer.terms")}</Link>
       </div>
     </footer>
   );

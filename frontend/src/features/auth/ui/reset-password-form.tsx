@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
@@ -10,6 +11,7 @@ type ResetPasswordFormProps = {
 };
 
 function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
+  const { t } = useTranslation();
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
 
@@ -27,17 +29,17 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
     setGeneralError("");
 
     if (!token) {
-      setGeneralError("The password reset token is missing or invalid.");
+      setGeneralError(t("auth.resetPassword.errors.missingToken"));
       return;
     }
 
     if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long.");
+      setPasswordError(t("auth.resetPassword.errors.passwordTooShort"));
       return;
     }
 
     if (passwordConfirm !== password) {
-      setPasswordConfirmError("Passwords do not match.");
+      setPasswordConfirmError(t("auth.resetPassword.errors.passwordsDoNotMatch"));
       return;
     }
 
@@ -57,11 +59,11 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
           return;
         }
 
-        setGeneralError(errorResponse?.message ?? "Unable to reset password.");
+        setGeneralError(errorResponse?.message ?? t("auth.resetPassword.errors.unableToReset"));
         return;
       }
 
-      setGeneralError("Something went wrong. Please try again later.");
+      setGeneralError(t("auth.common.errors.unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -71,10 +73,10 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
     <Card className="w-full p-8">
       <div className="mb-8">
         <h2 className="text-heading font-heading text-text-primary">
-          Set a new password
+          {t("auth.resetPassword.title")}
         </h2>
         <p className="mt-2 text-small text-text-secondary">
-          Choose a strong password for your account
+          {t("auth.resetPassword.subtitle")}
         </p>
       </div>
 
@@ -83,8 +85,8 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
           <Input
             id="password"
             type="password"
-            label="New password"
-            placeholder="Create a new password"
+            label={t("auth.common.labels.newPassword")}
+            placeholder={t("auth.common.placeholders.newPassword")}
             autoComplete="new-password"
             onChange={(event) => setPassword(event.target.value)}
             error={passwordError}
@@ -92,8 +94,8 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
           <Input
             id="passwordConfirm"
             type="password"
-            label="Confirm password"
-            placeholder="Confirm your new password"
+            label={t("auth.common.labels.confirmPassword")}
+            placeholder={t("auth.common.placeholders.confirmNewPassword")}
             autoComplete="new-password"
             onChange={(event) => setPasswordConfirm(event.target.value)}
             error={passwordConfirmError}
@@ -112,7 +114,7 @@ function ResetPasswordForm({ onSubmit, token }: ResetPasswordFormProps) {
             disabled={isLoading || !token}
             className="button w-full cursor-pointer bg-primary text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:bg-primary-hover"
           >
-            {isLoading ? "Updating..." : "Reset password"}
+            {isLoading ? t("auth.common.actions.updating") : t("auth.resetPassword.submitButton")}
           </button>
         </div>
       </form>

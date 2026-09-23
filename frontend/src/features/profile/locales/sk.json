@@ -1,0 +1,56 @@
+{
+  "loading": "Načítavanie...",
+  "notFound": "Používateľ sa nenašiel",
+  "reportError": "Nahlásenie sa nepodarilo odoslať. Skúste to znova.",
+  "about": "O mne",
+  "header": {
+    "anonymous": "Anonymný",
+    "noBio": "Zatiaľ žiadny profilový popis",
+    "joined": "Pripojil sa {{time}}",
+    "editProfile": "Upraviť profil",
+    "sendMessage": "Odoslať správu",
+    "reportUser": "Nahlásiť používateľa"
+  },
+  "projects": {
+    "title": "Nápady a projekty",
+    "browseFeed": "Prehliadať feed",
+    "empty": "Zatiaľ žiadne projekty"
+  },
+  "sidebar": {
+    "activity": "Aktivita",
+    "ideas": "Nápady",
+    "projects": "Projekty",
+    "upvotes": "Získané hlasy",
+    "links": "Odkazy",
+    "skillsAndInterests": "Zručnosti a záujmy"
+  },
+  "form": {
+    "basicInfo": "Základné informácie",
+    "firstName": "Meno",
+    "firstNamePlaceholder": "Ján",
+    "lastName": "Priezvisko",
+    "lastNamePlaceholder": "Novák",
+    "login": "Prihlasovacie meno",
+    "loginPlaceholder": "Produktový dizajnér a zakladateľ",
+    "location": "Poloha",
+    "locationPlaceholder": "Mesto, krajina",
+    "aboutYou": "O vás",
+    "bio": "Krátky profilový popis",
+    "bioPlaceholder": "Jedna veta, ktorá vás vystihuje",
+    "about": "O mne",
+    "aboutPlaceholder": "Vaše skúsenosti, záujmy, na čom pracujete v Ivesome...",
+    "skillsAndLinks": "Zručnosti a odkazy",
+    "skills": "Zručnosti",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "interests": "Záujmy",
+    "interestsPlaceholder": "produktivita, saas, b2b",
+    "websites": "Webové stránky",
+    "newLink": "Nový odkaz",
+    "deleteLink": "Odstrániť odkaz",
+    "delete": "Odstrániť",
+    "profilePhoto": "Profilová fotografia",
+    "cancel": "Zrušiť",
+    "saveChanges": "Uložiť zmeny",
+    "unexpectedError": "Nastala neočakávaná chyba. Skúste to znova neskôr."
+  }
+}

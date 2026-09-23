@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@/shared/ui/dialog";
 import { STATUS_LABELS } from "../workspace.types";
+import { useTranslation } from "react-i18next";
 
 export type TaskFormState = {
   title: string;
@@ -21,68 +22,94 @@ export type TaskFormState = {
 };
 
 type TaskFormProps = {
-  dialogOpen: boolean,
-  editingTask: WorkspaceTask | null,
-  saving: boolean,
-  formError: string,
-  formState: TaskFormState,
-  setDialogOpen: (open: boolean) => void,
-  handleTaskSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void,
-  setFormState: (data: TaskFormState) => void
-}
+  dialogOpen: boolean;
+  editingTask: WorkspaceTask | null;
+  saving: boolean;
+  formError: string;
+  formState: TaskFormState;
+  setDialogOpen: (open: boolean) => void;
+  handleTaskSubmit: (e: React.SubmitEvent<HTMLFormElement>) => void;
+  setFormState: (data: TaskFormState) => void;
+};
 
-function TaskForm({dialogOpen, editingTask, saving, formError, formState, setDialogOpen, handleTaskSubmit, setFormState}: TaskFormProps) {
+function TaskForm({
+  dialogOpen,
+  editingTask,
+  saving,
+  formError,
+  formState,
+  setDialogOpen,
+  handleTaskSubmit,
+  setFormState,
+}: TaskFormProps) {
+  const { t } = useTranslation();
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <DialogContent className="bg-surface border border-border ring-border sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{editingTask ? "Edit task" : "Add task"}</DialogTitle>
+          <DialogTitle>
+            {editingTask ? t("workspace.taskForm.titleEdit") : t("workspace.taskForm.titleAdd")}
+          </DialogTitle>
           <DialogDescription>
-            {editingTask
-              ? "Update the task details and save your changes"
-              : "Create a task"}
+            {editingTask ? t("workspace.taskForm.descEdit") : t("workspace.taskForm.descAdd")}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleTaskSubmit} className="space-y-4">
           <div>
             <Input
-              label="Title"
+              label={t("workspace.taskForm.labelTitle")}
               id="task-title"
               required
               maxLength={200}
               value={formState.title}
-              onChange={(event) => setFormState({ ...formState, title: event.target.value })}
+              onChange={(event) =>
+                setFormState({ ...formState, title: event.target.value })
+              }
             />
           </div>
 
           <Textarea
-            label="Description"
+            label={t("workspace.taskForm.labelDescription")}
             maxLength={5000}
             className="min-h-32 max-h-128"
             value={formState.description}
-            onChange={(event) => setFormState({ ...formState, description: event.target.value })}
+            onChange={(event) =>
+              setFormState({ ...formState, description: event.target.value })
+            }
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <Select
                 id="task-status"
-                options={Object.entries(STATUS_LABELS).map(([value, label]) => ({value, label}))}
-                label="Status"
+                options={Object.entries(STATUS_LABELS).map(
+                  ([value, label]) => ({
+                    value,
+                    label,
+                  }),
+                )}
+                label={t("workspace.taskForm.labelStatus")}
                 value={formState.status}
-                onChange={(event) => setFormState({ ...formState, status: event.target.value as TaskStatus })}
+                onChange={(event) =>
+                  setFormState({
+                    ...formState,
+                    status: event.target.value as TaskStatus,
+                  })
+                }
               />
             </div>
 
             <div>
               <Input
-                label="Deadline"
+                label={t("workspace.taskForm.labelDeadline")}
                 id="task-deadline"
                 type="date"
                 value={formState.deadline}
-                onChange={(event) => setFormState({ ...formState, deadline: event.target.value })}
+                onChange={(event) =>
+                  setFormState({ ...formState, deadline: event.target.value })
+                }
               />
             </div>
           </div>
@@ -91,16 +118,25 @@ function TaskForm({dialogOpen, editingTask, saving, formError, formState, setDia
 
           <DialogFooter className="flex-row bg-surface border-none justify-end gap-3 pb-4 px-4">
             <DialogClose
-              render={<button type="button" className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition" />}
+              render={
+                <button
+                  type="button"
+                  className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
+                />
+              }
             >
-              Cancel
+              {t("workspace.taskForm.cancel")}
             </DialogClose>
             <button
               type="submit"
               disabled={saving}
               className="button bg-primary text-white hover:bg-primary-hover disabled:opacity-50 transition"
             >
-              {saving ? "Saving..." : editingTask ? "Save changes" : "Add task"}
+              {saving
+                ? t("workspace.taskForm.saving")
+                : editingTask
+                  ? t("workspace.taskForm.saveChanges")
+                  : t("workspace.taskForm.addTask")}
             </button>
           </DialogFooter>
         </form>
@@ -108,5 +144,5 @@ function TaskForm({dialogOpen, editingTask, saving, formError, formState, setDia
     </Dialog>
   );
 }
-      
+
 export default TaskForm;
