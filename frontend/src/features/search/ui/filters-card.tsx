@@ -4,17 +4,7 @@ import FilterGroup from "./filter-group";
 import type { ProjectStage } from "@/features/projects/projects.types";
 import type { FilterOption } from "./filter-group";
 import { useState } from "react";
-
-const stageOptions: FilterOption<ProjectStage>[] = [
-  { value: "TEAM_BUILDING", label: "Team building" },
-  { value: "DEVELOPMENT", label: "In development" },
-  { value: "LAUNCHED", label: "Launched" },
-];
-
-const tagsOptions: FilterOption<string>[] = [
-  { value: "fintech", label: "Fintech" },
-  { value: "saas", label: "SaaS" },
-];
+import { useTranslation } from "react-i18next";
 
 export type ProjectFilters = {
   stages?: ProjectStage[];
@@ -26,8 +16,20 @@ type FiltersCardProps = {
 };
 
 function FiltersCard({ onChange }: FiltersCardProps) {
+  const { t } = useTranslation();
   const [selectedStages, setSelectedStages] = useState<ProjectStage[]>([]);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  const stageOptions: FilterOption<ProjectStage>[] = [
+    { value: "TEAM_BUILDING", label: t("search.filters.groups.stage.options.teamBuilding") },
+    { value: "DEVELOPMENT", label: t("search.filters.groups.stage.options.development") },
+    { value: "LAUNCHED", label: t("search.filters.groups.stage.options.launched") },
+  ];
+
+  const tagsOptions: FilterOption<string>[] = [
+    { value: "fintech", label: t("search.filters.groups.tags.options.fintech") },
+    { value: "saas", label: t("search.filters.groups.tags.options.saas") },
+  ];
 
   const handleStageChange = (stages: ProjectStage[]) => {
     setSelectedStages(stages);
@@ -62,19 +64,19 @@ function FiltersCard({ onChange }: FiltersCardProps) {
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-semibold text-subheading text-text-primary flex items-center gap-2">
           <SlidersHorizontal size={20} className="text-primary" />
-          Filters
+          {t("search.filters.title")}
         </h2>
 
         <button
           onClick={handleReset}
           className="text-sm text-primary hover:text-primary-hover hover:underline"
         >
-          Reset
+          {t("search.filters.reset")}
         </button>
       </div>
 
       <FilterGroup
-        title="Stage"
+        title={t("search.filters.groups.stage.title")}
         options={stageOptions}
         value={selectedStages}
         onChange={handleStageChange}
@@ -83,7 +85,7 @@ function FiltersCard({ onChange }: FiltersCardProps) {
       <hr className="border-border my-4" />
 
       <FilterGroup
-        title="Tags"
+        title={t("search.filters.groups.tags.title")}
         options={tagsOptions}
         value={selectedTags}
         onChange={handleTagsChange}

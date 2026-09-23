@@ -1,0 +1,119 @@
+{
+  "loadingProject": "Завантаження проєкту...",
+  "loadingData": "Завантаження даних...",
+  "notFound": "Проєкт не знайдено",
+  "loadError": "Помилка під час завантаження даних проєкту",
+  "deleteConfirmation": "Видалити цей проєкт?",
+  "requestError": "Не вдалося надіслати запит на участь",
+  "reportError": "Не вдалося надіслати скаргу. Спробуйте ще раз.",
+  "discussionError": "Не вдалося завантажити обговорення",
+  "editor": {
+    "editTitle": "Редагувати проєкт",
+    "newTitle": "Нова ідея",
+    "editDescription": "Оновіть інформацію про свій проєкт і продовжуйте розвивати свою ідею.",
+    "newDescription": "Поділіться зі світом тим, що сьогодні у вас на думці"
+  },
+  "details": {
+    "requiredSkills": "Необхідні навички"
+  },
+  "comment": {
+    "deletedUser": "Видалений користувач",
+    "edited": "відредаговано",
+    "save": "Зберегти",
+    "cancel": "Скасувати",
+    "reply": "Відповісти",
+    "edit": "Редагувати",
+    "delete": "Видалити",
+    "report": "Поскаржитися",
+    "reportAriaLabel": "Поскаржитися на коментар",
+    "writeReplyPlaceholder": "Напишіть відповідь...",
+    "publishReply": "Опублікувати відповідь",
+    "unableToReport": "Не вдалося надіслати скаргу. Спробуйте ще раз."
+  },
+  "participation": {
+    "button": {
+      "sent": "Запит надіслано",
+      "send": "Надіслати запит на участь"
+    },
+    "dialog": {
+      "title": "Надіслати запит на участь",
+      "description": "Розкажіть власнику проєкту, чому ви хочете приєднатися до його команди.",
+      "close": "Закрити",
+      "sending": "Надсилання...",
+      "submit": "Надіслати запит"
+    }
+  },
+  "projectAbout": {
+    "title": "Про ідею"
+  },
+  "projectActions": {
+    "openWorkspace": "Відкрити робочий простір",
+    "edit": "Редагувати",
+    "delete": "Видалити"
+  },
+  "projectDiscussion": {
+    "title": "Обговорення",
+    "commentsCount": "{{count}} коментарів",
+    "commentsCount_one": "{{count}} коментар",
+    "commentPlaceholder": "Залиште коментар або запитання для автора...",
+    "publish": "Опублікувати",
+    "signInToJoin": "Увійдіть, щоб долучитися до обговорення.",
+    "loading": "Завантаження обговорення...",
+    "noComments": "Поки немає коментарів."
+  },
+  "projectEditor": {
+    "basicInfo": "Основна інформація",
+    "titleLabel": "Назва",
+    "titlePlaceholder": "Якась супер крута ідея",
+    "shortDescLabel": "Короткий опис",
+    "shortDescPlaceholder": "Одне речення, яке пояснює суть вашої ідеї",
+    "longDescLabel": "Детальний опис",
+    "longDescPlaceholder": "Проблема, рішення, цільова аудиторія, відмінності від наявних продуктів...",
+    "visibilityLabel": "Видимість",
+    "visibilityOptions": {
+      "private": "Приватна",
+      "public": "Публічна"
+    },
+    "tagsLabel": "Теги",
+    "tagsPlaceholder": "продуктивність, saas, b2b",
+    "skillsLabel": "Навички",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "avatarTitle": "Аватар",
+    "mediaTitle": "Медіа",
+    "cancel": "Скасувати",
+    "publishing": "Публікація...",
+    "publish": "Опублікувати"
+  },
+  "projectGallery": {
+    "title": "Галерея"
+  },
+  "projectHeader": {
+    "feed": "Стрічка",
+    "published": "Опубліковано {{timeAgo}}"
+  },
+  "projectTeam": {
+    "title": "Команда"
+  },
+  "projectStages": {
+    "idea": "Ідея",
+    "teamBuilding": "Формування команди",
+    "inProgress": "У розробці",
+    "completed": "Завершено"
+  },
+  "projectRoles": {
+    "owner": "Власник",
+    "member": "Учасник",
+    "admin": "Адміністратор",
+    "lead": "Керівник"
+  },
+  "turnIntoProjectDialog": {
+    "button": "Перетворити на проєкт",
+    "title": "Перетворити ідею на проєкт",
+    "description": "Буде створено робочий простір проєкту, а ідею буде переміщено на етап <1>Формування команди</1>.",
+    "warningTitle": "Ця дія незворотна",
+    "warningDescription": "Після перетворення ця ідея стане проєктом, і повернути її назад буде неможливо.",
+    "cancel": "Скасувати",
+    "converting": "Перетворення...",
+    "submit": "Перетворити на проєкт"
+  }
+}

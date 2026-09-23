@@ -1,5 +1,6 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/features/auth/auth.context";
 
 import type { Project } from "@/features/projects/projects.types";
@@ -7,7 +8,6 @@ import { getUserProjects } from "@/features/projects/projects.api";
 import type { User } from "@/features/auth/auth.types";
 import { getUser } from "@/features/profile/profile.api";
 import { createConversation } from "@/features/conversations/conversations.api";
-import { useNavigate } from "react-router-dom";
 import ProfileHeader from "@/features/profile/ui/profile-header";
 import ProfileProjects from "@/features/profile/ui/profile-projects";
 import ProfileSidebar from "@/features/profile/ui/profile-sidebar";
@@ -16,6 +16,7 @@ import type { ProfileStats } from "../profile.types";
 import { createReport } from "@/features/reports/reports.api";
 
 function ProfilePage() {
+  const { t } = useTranslation();
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, refreshUser } = useAuth();
   const navigate = useNavigate();
@@ -64,7 +65,7 @@ function ProfilePage() {
       setReportReason("");
       setReportOpen(false);
     } catch {
-      setReportError("Unable to submit report. Please try again.");
+      setReportError(t("profile.reportError"));
     } finally {
       setReportSubmitting(false);
     }
@@ -96,11 +97,11 @@ function ProfilePage() {
     currentUser && profileUser && currentUser.id === profileUser.id;
 
   if (loading) {
-    return <p className="text-text-primary">Loading...</p>;
+    return <p className="text-text-primary">{t("profile.loading")}</p>;
   }
 
   if (!profileUser) {
-    return <p className="text-text-primary">User not found</p>;
+    return <p className="text-text-primary">{t("profile.notFound")}</p>;
   }
 
   return (

@@ -1,0 +1,43 @@
+{
+  "authLayout": {
+    "heading": "Good ideas get better together",
+    "description": "Share concepts, gather feedback, and connect with collaborators who want to build something meaningful."
+  },
+  "home": {
+    "hero": {
+      "tagline": "The ideas network",
+      "heading": "Good ideas get better together",
+      "description": "Ivesome is where ambitious people share early ideas, find the right collaborators, and turn an imagination spark into startup.",
+      "actions": {
+        "explore": "Explore ideas",
+        "share": "Share an idea"
+      }
+    },
+    "howItWorks": {
+      "tagline": "How does it work",
+      "title": "Startup milestones",
+      "steps": {
+        "discover": {
+          "title": "Discover",
+          "description": "Creating and publishing an idea"
+        },
+        "discuss": {
+          "title": "Discuss",
+          "description": "Discussing the idea and gathering feedback"
+        },
+        "collaborate": {
+          "title": "Collaborate",
+          "description": "Recruiting participants and forming a team"
+        },
+        "develop": {
+          "title": "Develop",
+          "description": "Collaborating on the development of an idea"
+        },
+        "launch": {
+          "title": "Launch",
+          "description": "Presentation of the final product"
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { ImagePlus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type FileUploadProps = {
   file: File | undefined,
@@ -9,6 +10,7 @@ type FileUploadProps = {
 function FileUpload({file, setFile}: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const { t } = useTranslation();
 
   const handleFile = (file: File) => {
     if (!file.type.startsWith("image/")) return;
@@ -52,16 +54,16 @@ function FileUpload({file, setFile}: FileUploadProps) {
               {file.name}
             </p>
             <p className="text-muted text-small">
-              Drag & Drop another image to replace it
+              {t("shared.fileUpload.dropImage")}
             </p>
           </>
         ) : (
           <>
             <p className="text-text-primary font-medium mb-1">
-              Drag & Drop your image here
+              {t("shared.fileUpload.dropOtherImage")}
             </p>
             <p className="text-muted text-small">
-              Supported formats: PNG, JPG, JPEG, WEBP
+              PNG, JPG, JPEG, WEBP
             </p>
           </>
         )}

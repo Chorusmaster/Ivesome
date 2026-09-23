@@ -1,0 +1,47 @@
+{
+  "userFallbacks": {
+    "anonymous": "Anonymný",
+    "unknown": "Neznámy"
+  },
+  "navbar": {
+    "nav": {
+      "search": "Vyhľadávanie",
+      "favourites": "Obľúbené",
+      "conversations": "Konverzácie",
+      "dashboard": "Nástenka"
+    },
+    "search": {
+      "placeholder": "Hľadať nápady..."
+    },
+    "actions": {
+      "newIdea": "+ Nový nápad"
+    },
+    "userMenu": {
+      "ariaLabel": "Otvoriť ponuku účtu",
+      "profile": "Profil",
+      "settings": "Nastavenia",
+      "logout": "Odhlásiť sa"
+    }
+  },
+  "footer": {
+    "privacyPolicy": "Zásady ochrany osobných údajov",
+    "terms": "Obchodné podmienky"
+  },
+  "fileUpload": {
+    "dropImage": "Presuňte obrázok sem",
+    "dropOtherImage": "Presuňte sem iný obrázok, aby ste nahradili aktuálny"
+  },
+  "multipleFileUpload": {
+    "dropMessage": "Presuňte sem svoje obrázky",
+    "clickMessage": "alebo kliknutím vyberte viacero obrázkov"
+  },
+  "reportDialog": {
+    "title": "Nahlásiť nevhodný obsah",
+    "description": "Opíšte, prečo sa domnievate, že tento obsah porušuje pravidlá komunity.",
+    "placeholder": "Opíšte problém...",
+    "cancel": "Zrušiť",
+    "submitting": "Odosielanie...",
+    "submit": "Odoslať nahlásenie"
+  },
+  "yesterday": "Včera"
+}

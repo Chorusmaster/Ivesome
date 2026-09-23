@@ -1,0 +1,40 @@
+{
+  "title": "Пошук ідей",
+  "subtitle": "Сформовано на основі ваших уподобань та взаємодії з платформою",
+  "categories": {
+    "all": "Усе",
+    "projects": "Проєкти",
+    "ideas": "Ідеї",
+    "people": "Люди"
+  },
+  "sort": {
+    "label": "Сортування:",
+    "options": {
+      "relevant": "Спочатку релевантні",
+      "newest": "Спочатку нові",
+      "popular": "Спочатку популярні"
+    }
+  },
+  "emptyState": "Нічого не знайдено :/",
+  "filters": {
+    "title": "Фільтри",
+    "reset": "Скинути",
+    "groups": {
+      "stage": {
+        "title": "Етап",
+        "options": {
+          "teamBuilding": "Формування команди",
+          "development": "У розробці",
+          "launched": "Запущено"
+        }
+      },
+      "tags": {
+        "title": "Теги",
+        "options": {
+          "fintech": "Fintech",
+          "saas": "SaaS"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "title": "Search ideas",
+  "subtitle": "Formed based on your preferences and interactions with the platform",
+  "categories": {
+    "all": "All",
+    "projects": "Projects",
+    "ideas": "Ideas",
+    "people": "People"
+  },
+  "sort": {
+    "label": "Sorted:",
+    "options": {
+      "relevant": "Relevant first",
+      "newest": "Newest first",
+      "popular": "Popular first"
+    }
+  },
+  "emptyState": "Nothing has been found :/",
+  "filters": {
+    "title": "Filters",
+    "reset": "Reset",
+    "groups": {
+      "stage": {
+        "title": "Stage",
+        "options": {
+          "teamBuilding": "Team building",
+          "development": "In development",
+          "launched": "Launched"
+        }
+      },
+      "tags": {
+        "title": "Tags",
+        "options": {
+          "fintech": "Fintech",
+          "saas": "SaaS"
+        }
+      }
+    }
+  }
+}

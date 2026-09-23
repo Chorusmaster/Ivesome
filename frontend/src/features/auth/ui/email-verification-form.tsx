@@ -1,28 +1,11 @@
 import { AlertCircle, CheckCircle, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import Card from "@/shared/ui/card";
 
 type EmailVerificationFormVariant = "verify" | "resent" | "invalid";
-
-const content = {
-  verify: {
-    title: "Verify your email",
-    description: "We've sent the verification link to",
-    hint: "Please click the link in the email to verify your account. The link will expire in 24 hours.",
-  },
-  resent: {
-    title: "Email resent successfully",
-    description: "We've resent the verification link to",
-    hint: "Please click the link in the email to verify your account. If you don't see it, check your spam folder.",
-  },
-  invalid: {
-    title: "Invalid link",
-    description: "The verification link is invalid.",
-    hint: "You can request a new verification link below. We'll send it to your registered email address.",
-  },
-};
 
 type EmailVerificationFormProps = {
   variant?: EmailVerificationFormVariant;
@@ -33,11 +16,18 @@ type EmailVerificationFormProps = {
 
 function EmailVerificationForm({
   variant = "verify",
-  email = "your email",
-  error = content["invalid"].title,
+  email,
+  error,
   onResendEmail,
 }: EmailVerificationFormProps) {
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
+
+  const displayEmail = email || t("auth.common.fallbackEmail");
+  const displayTitle =
+    variant === "invalid"
+      ? error || t("auth.emailVerification.invalid.title")
+      : t(`auth.emailVerification.${variant}.title`);
 
   const handleResendEmail = async () => {
     if (!onResendEmail) return;
@@ -55,18 +45,17 @@ function EmailVerificationForm({
       <Card className="w-full p-8">
         <div className="flex flex-col items-center text-center">
           <div
-            className={`mb-6 flex h-16 w-16 items-center justify-center rounded-full 
-            ${
-              variant == "verify"
+            className={`mb-6 flex h-16 w-16 items-center justify-center rounded-full ${
+              variant === "verify"
                 ? "bg-primary/10"
-                : variant == "resent"
+                : variant === "resent"
                   ? "bg-success/15"
                   : "bg-danger/15"
             }`}
           >
-            {variant == "verify" ? (
+            {variant === "verify" ? (
               <Mail className="size-8 text-primary" />
-            ) : variant == "resent" ? (
+            ) : variant === "resent" ? (
               <CheckCircle className="size-8 text-success" />
             ) : (
               <AlertCircle className="size-8 text-danger" />
@@ -74,18 +63,20 @@ function EmailVerificationForm({
           </div>
 
           <h2 className="text-heading font-heading text-text-primary">
-            {variant == "invalid" ? error : content[variant].title}
+            {displayTitle}
           </h2>
           <p className="mt-3 text-small text-text-secondary">
-            {content[variant].description}
+            {t(`auth.emailVerification.${variant}.description`)}
           </p>
 
-          {(variant == "verify" || variant == "resent") && (
-            <p className="mt-1 font-medium text-text-primary">{email || "your email"}</p>
+          {(variant === "verify" || variant === "resent") && (
+            <p className="mt-1 font-medium text-text-primary">{displayEmail}</p>
           )}
 
           <div className="mt-6 w-full rounded-lg bg-primary-light p-4">
-            <p className="text-xs text-primary">{content[variant].hint}</p>
+            <p className="text-xs text-primary">
+              {t(`auth.emailVerification.${variant}.hint`)}
+            </p>
           </div>
 
           <div className="mt-4 w-full">
@@ -95,7 +86,9 @@ function EmailVerificationForm({
               disabled={isLoading}
               className="button bg-primary hover:bg-primary-hover text-white w-full"
             >
-              {isLoading ? "Sending..." : "Send new verification link"}
+              {isLoading
+                ? t("auth.common.actions.sending")
+                : t("auth.emailVerification.resendButton")}
             </button>
 
             <div className="mt-4 w-full">
@@ -104,7 +97,7 @@ function EmailVerificationForm({
                   type="button"
                   className="w-full text-small text-muted hover:text-text-secondary"
                 >
-                  Return to login
+                  {t("auth.common.actions.returnToLogin")}
                 </button>
               </Link>
             </div>

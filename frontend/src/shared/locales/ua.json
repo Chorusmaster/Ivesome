@@ -1,0 +1,47 @@
+{
+  "userFallbacks": {
+    "anonymous": "Анонім",
+    "unknown": "Невідомий"
+  },
+  "navbar": {
+    "nav": {
+      "search": "Пошук",
+      "favourites": "Обране",
+      "conversations": "Розмови",
+      "dashboard": "Панель керування"
+    },
+    "search": {
+      "placeholder": "Пошук ідей..."
+    },
+    "actions": {
+      "newIdea": "+ Нова ідея"
+    },
+    "userMenu": {
+      "ariaLabel": "Відкрити меню облікового запису",
+      "profile": "Профіль",
+      "settings": "Налаштування",
+      "logout": "Вийти"
+    }
+  },
+  "footer": {
+    "privacyPolicy": "Політика конфіденційності",
+    "terms": "Умови використання"
+  },
+  "fileUpload": {
+    "dropImage": "Перетягніть зображення сюди",
+    "dropOtherImage": "Перетягніть сюди інше зображення, щоб замінити поточне"
+  },
+  "multipleFileUpload": {
+    "dropMessage": "Перетягніть сюди свої зображення",
+    "clickMessage": "або натисніть, щоб вибрати кілька зображень"
+  },
+  "reportDialog": {
+    "title": "Поскаржитися на неприйнятний контент",
+    "description": "Опишіть, чому ви вважаєте, що цей контент порушує правила спільноти.",
+    "placeholder": "Опишіть проблему...",
+    "cancel": "Скасувати",
+    "submitting": "Надсилання...",
+    "submit": "Надіслати скаргу"
+  },
+  "yesterday": "Вчора"
+}

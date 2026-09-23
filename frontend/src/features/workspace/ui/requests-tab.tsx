@@ -3,13 +3,16 @@ import { updateParticipationRequest } from "@/features/participation-requests/pa
 import type { ParticipationRequest } from "@/features/participation-requests/participation-requests.types";
 import { Link } from "react-router-dom";
 import type { Dispatch, SetStateAction } from "react";
+import { useTranslation } from "react-i18next";
 
-interface RequestsTabProps {
+interface requestsTabProps {
   requests: ParticipationRequest[];
   setRequests: Dispatch<SetStateAction<ParticipationRequest[]>>;
 }
 
-function RequestsTab({ requests, setRequests }: RequestsTabProps) {
+function requestsTab({ requests, setRequests }: requestsTabProps) {
+  const { t } = useTranslation();
+
   async function acceptRequest(requestId: string) {
     await updateParticipationRequest(requestId, "ACCEPTED");
     setRequests(requests.filter((request) => request.id !== requestId));
@@ -24,11 +27,11 @@ function RequestsTab({ requests, setRequests }: RequestsTabProps) {
     <div className="main-container-narrow">
       <div className="mb-6">
         <h2 className="font-heading text-heading text-text-primary">
-          Participation requests
+          {t("workspace.requestsTab.title")}
         </h2>
 
         <p className="text-sm text-text-secondary mt-1">
-          People wanting to participate in this project
+          {t("workspace.requestsTab.description")}
         </p>
       </div>
 
@@ -67,25 +70,17 @@ function RequestsTab({ requests, setRequests }: RequestsTabProps) {
 
                     <div className="flex gap-1">
                       <button
-                        className="px-3 py-1.5 text-sm font-medium rounded-md
-                    border border-primary/40
-                    text-primary
-                    hover:bg-primary/10
-                    transition"
+                        className="px-3 py-1.5 text-sm font-medium rounded-md border border-primary/40 text-primary hover:bg-primary/10 transition"
                         onClick={() => acceptRequest(request.id)}
                       >
-                        Accept
+                        {t("workspace.requestsTab.accept")}
                       </button>
 
                       <button
-                        className="px-3 py-1.5 text-sm font-medium rounded-md
-                    border border-danger/40
-                    text-danger
-                    hover:bg-danger/10
-                    transition"
+                        className="px-3 py-1.5 text-sm font-medium rounded-md border border-danger/40 text-danger hover:bg-danger/10 transition"
                         onClick={() => rejectRequest(request.id)}
                       >
-                        Reject
+                        {t("workspace.requestsTab.reject")}
                       </button>
                     </div>
                   </div>
@@ -96,7 +91,7 @@ function RequestsTab({ requests, setRequests }: RequestsTabProps) {
           )
         ) : (
           <div className="p-8 text-center text-text-secondary">
-            No participation requests yet
+            {t("workspace.requestsTab.noRequests")}
           </div>
         )}
       </div>
@@ -104,4 +99,4 @@ function RequestsTab({ requests, setRequests }: RequestsTabProps) {
   );
 }
 
-export default RequestsTab;
+export default requestsTab;

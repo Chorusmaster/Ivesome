@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { formatDistanceToNowStrict } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { getDateLocale } from "@/shared/lib/utils";
 import Avatar from "@/shared/ui/avatar";
 import type { ProjectComment } from "../comments.api";
 import { Link } from "react-router-dom";
 import { createReport } from "@/features/reports/reports.api";
 import { ReportDialog } from "@/shared/ui/report-dialog";
+import { useTranslation } from "react-i18next";
 
 type CommentProps = {
   comment: ProjectComment;
@@ -22,6 +23,7 @@ function Comment({
   onEdit,
   onDelete,
 }: CommentProps) {
+  const { t } = useTranslation();
   const [isReplying, setIsReplying] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [content, setContent] = useState(comment.content);
@@ -31,11 +33,12 @@ function Comment({
   const [reportReason, setReportReason] = useState("");
   const [reportSubmitting, setReportSubmitting] = useState(false);
   const [reportError, setReportError] = useState("");
+
   const authorName = comment.user
     ? comment.user.firstName && comment.user.lastName
       ? `${comment.user.firstName} ${comment.user.lastName}`
       : comment.user.login
-    : "Deleted user";
+    : t("projects.comment.deletedUser");
 
   async function submitEdit() {
     if (!content.trim()) return;
@@ -75,7 +78,7 @@ function Comment({
       setReportReason("");
       setReportOpen(false);
     } catch {
-      setReportError("Unable to submit report. Please try again.");
+      setReportError(t("projects.comment.unableToReport"));
     } finally {
       setReportSubmitting(false);
     }
@@ -97,10 +100,12 @@ function Comment({
             </Link>
             {" · "}
             {formatDistanceToNowStrict(new Date(comment.createdAt), {
-              locale: enUS,
+              locale: getDateLocale(),
               addSuffix: true,
             })}
-            {comment.editedAt && <span className="text-muted"> · edited</span>}
+            {comment.editedAt && (
+              <span className="text-muted"> · {t("projects.comment.edited")}</span>
+            )}
           </div>
 
           {isEditing ? (
@@ -118,7 +123,7 @@ function Comment({
                   disabled={busy}
                   className="button bg-primary text-white disabled:opacity-50"
                 >
-                  Save
+                  {t("projects.comment.save")}
                 </button>
                 <button
                   type="button"
@@ -128,7 +133,7 @@ function Comment({
                   }}
                   className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
                 >
-                  Cancel
+                  {t("projects.comment.cancel")}
                 </button>
               </div>
             </div>
@@ -145,7 +150,7 @@ function Comment({
                 onClick={() => setIsReplying(!isReplying)}
                 className="hover:text-text-primary"
               >
-                Reply
+                {t("projects.comment.reply")}
               </button>
             )}
             {currentUserId === comment.authorId && !isEditing && (
@@ -155,7 +160,7 @@ function Comment({
                   onClick={() => setIsEditing(true)}
                   className="hover:text-text-primary"
                 >
-                  Edit
+                  {t("projects.comment.edit")}
                 </button>
                 <button
                   type="button"
@@ -170,7 +175,7 @@ function Comment({
                   }}
                   className="hover:text-danger disabled:opacity-50"
                 >
-                  Delete
+                  {t("projects.comment.delete")}
                 </button>
               </>
             )}
@@ -181,9 +186,9 @@ function Comment({
                   type="button"
                   onClick={() => setReportOpen(true)}
                   className="flex items-center gap-1 hover:text-danger"
-                  aria-label="Report comment"
+                  aria-label={t("projects.comment.reportAriaLabel")}
                 >
-                  Report
+                  {t("projects.comment.report")}
                 </button>
               )}
           </div>
@@ -203,7 +208,7 @@ function Comment({
               <textarea
                 value={reply}
                 onChange={(event) => setReply(event.target.value)}
-                placeholder="Write a reply..."
+                placeholder={t("projects.comment.writeReplyPlaceholder")}
                 className="bg-background border border-border rounded-card w-full min-h-20 p-2"
                 maxLength={2000}
               />
@@ -214,7 +219,7 @@ function Comment({
                   disabled={busy || !reply.trim()}
                   className="button bg-primary text-white disabled:opacity-50 mt-2"
                 >
-                  Publish reply
+                  {t("projects.comment.publishReply")}
                 </button>
                 <button
                   type="button"
@@ -223,7 +228,7 @@ function Comment({
                   }}
                   className="button border border-border text-muted hover:text-text-secondary hover:border-text-secondary transition"
                 >
-                  Cancel
+                  {t("projects.comment.cancel")}
                 </button>
               </div>
             </div>

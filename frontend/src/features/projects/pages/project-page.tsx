@@ -1,4 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import Card from "@/shared/ui/card";
 import ProjectHeader from "@/features/projects/ui/project-header";
 import ProjectGallery from "@/features/projects/ui/project-gallery";
@@ -9,7 +12,6 @@ import ProjectDiscussion from "@/features/projects/ui/project-discussion";
 import { useProject } from "../use-project";
 import Loading from "@/shared/ui/loading";
 import { useAuth } from "@/features/auth/auth.context";
-import { useEffect, useState } from "react";
 import { deleteProject, turnIdeaIntoProject } from "../projects.api";
 import {
   createComment,
@@ -25,6 +27,7 @@ import {
 import { createReport } from "@/features/reports/reports.api";
 
 function ProjectPage() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -67,7 +70,7 @@ function ProjectPage() {
         setCommentsError("");
         setComments(await getComments(projectId));
       } catch {
-        setCommentsError("Unable to load discussion");
+        setCommentsError(t("projects.discussionError"));
       } finally {
         setCommentsLoading(false);
       }
@@ -84,7 +87,7 @@ function ProjectPage() {
 
     loadComments();
     loadParticipationRequests();
-  }, [id]);
+  }, [id, t]);
 
   async function handleCreateComment(
     event: React.SubmitEvent<HTMLFormElement>,
@@ -149,16 +152,16 @@ function ProjectPage() {
   }
 
   if (loading) {
-    return <Loading fullScreen={true} text="Loading data..."></Loading>;
+    return <Loading fullScreen={true} text={t("projects.loadingData")} />;
   }
 
   if (!id || !project) {
-    return <div className="text-text-primary">Project not found</div>;
+    return <div className="text-text-primary">{t("projects.notFound")}</div>;
   }
 
   if (error) {
     console.error(error);
-    return <div className="text-danger">Error while loading project data</div>;
+    return <div className="text-danger">{t("projects.loadError")}</div>;
   }
 
   const handleShare = async () => {
@@ -168,7 +171,7 @@ function ProjectPage() {
   const handleDeleteProject = async () => {
     if (!id || !project) return;
 
-    const confirmed = window.confirm("Delete this project?");
+    const confirmed = window.confirm(t("projects.deleteConfirmation"));
     if (!confirmed) return;
 
     await deleteProject(id);
@@ -199,7 +202,7 @@ function ProjectPage() {
       setRequestSent(true);
       setRequestMessage("");
     } catch {
-      setRequestError("Unable to send participation request");
+      setRequestError(t("projects.requestError"));
     } finally {
       setRequestSubmitting(false);
     }
@@ -222,7 +225,7 @@ function ProjectPage() {
       setReportOpen(false);
     } catch (error) {
       console.error(error);
-      setReportError("Unable to submit report. Please try again.");
+      setReportError(t("projects.reportError"));
     } finally {
       setReportSubmitting(false);
     }
@@ -284,7 +287,9 @@ function ProjectPage() {
           />
           {project.skills && project.skills.length > 0 && (
             <Card>
-              <h2 className="subheading text-text-primary">Required skills</h2>
+              <h2 className="subheading text-text-primary">
+                {t("projects.details.requiredSkills")}
+              </h2>
               <div className="flex flex-wrap gap-2">
                 {project.skills?.map((skill) => (
                   <span

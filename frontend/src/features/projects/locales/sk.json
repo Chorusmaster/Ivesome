@@ -1,0 +1,119 @@
+{
+  "loadingProject": "Načítavanie projektu...",
+  "loadingData": "Načítavanie údajov...",
+  "notFound": "Projekt sa nenašiel",
+  "loadError": "Chyba pri načítavaní údajov projektu",
+  "deleteConfirmation": "Odstrániť tento projekt?",
+  "requestError": "Žiadosť o účasť sa nepodarilo odoslať",
+  "reportError": "Nahlásenie sa nepodarilo odoslať. Skúste to znova.",
+  "discussionError": "Diskusiu sa nepodarilo načítať",
+  "editor": {
+    "editTitle": "Upraviť projekt",
+    "newTitle": "Nový nápad",
+    "editDescription": "Aktualizujte podrobnosti svojho projektu a posúvajte svoj nápad ďalej.",
+    "newDescription": "Podeľte sa so svetom o to, čo máte dnes na mysli"
+  },
+  "details": {
+    "requiredSkills": "Požadované zručnosti"
+  },
+  "comment": {
+    "deletedUser": "Odstránený používateľ",
+    "edited": "upravené",
+    "save": "Uložiť",
+    "cancel": "Zrušiť",
+    "reply": "Odpovedať",
+    "edit": "Upraviť",
+    "delete": "Odstrániť",
+    "report": "Nahlásiť",
+    "reportAriaLabel": "Nahlásiť komentár",
+    "writeReplyPlaceholder": "Napíšte odpoveď...",
+    "publishReply": "Zverejniť odpoveď",
+    "unableToReport": "Nahlásenie sa nepodarilo odoslať. Skúste to znova."
+  },
+  "participation": {
+    "button": {
+      "sent": "Žiadosť odoslaná",
+      "send": "Odoslať žiadosť o účasť"
+    },
+    "dialog": {
+      "title": "Odoslať žiadosť o účasť",
+      "description": "Napíšte vlastníkovi projektu, prečo sa chcete pripojiť k jeho tímu.",
+      "close": "Zavrieť",
+      "sending": "Odosielanie...",
+      "submit": "Odoslať žiadosť"
+    }
+  },
+  "projectAbout": {
+    "title": "O nápade"
+  },
+  "projectActions": {
+    "openWorkspace": "Otvoriť pracovný priestor",
+    "edit": "Upraviť",
+    "delete": "Odstrániť"
+  },
+  "projectDiscussion": {
+    "title": "Diskusia",
+    "commentsCount": "{{count}} komentárov",
+    "commentsCount_one": "{{count}} komentár",
+    "commentPlaceholder": "Zanechajte komentár alebo otázku pre autora...",
+    "publish": "Zverejniť",
+    "signInToJoin": "Prihláste sa a zapojte sa do diskusie.",
+    "loading": "Načítavanie diskusie...",
+    "noComments": "Zatiaľ žiadne komentáre."
+  },
+  "projectEditor": {
+    "basicInfo": "Základné informácie",
+    "titleLabel": "Názov",
+    "titlePlaceholder": "Nejaký super skvelý nápad",
+    "shortDescLabel": "Krátky popis",
+    "shortDescPlaceholder": "Jedna veta, ktorá vysvetľuje podstatu vášho nápadu",
+    "longDescLabel": "Dlhý popis",
+    "longDescPlaceholder": "Problém, riešenie, cieľová skupina, odlíšenie od existujúcich produktov...",
+    "visibilityLabel": "Viditeľnosť",
+    "visibilityOptions": {
+      "private": "Súkromné",
+      "public": "Verejné"
+    },
+    "tagsLabel": "Značky",
+    "tagsPlaceholder": "produktivita, saas, b2b",
+    "skillsLabel": "Zručnosti",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "avatarTitle": "Avatar",
+    "mediaTitle": "Médiá",
+    "cancel": "Zrušiť",
+    "publishing": "Zverejňovanie...",
+    "publish": "Zverejniť"
+  },
+  "projectGallery": {
+    "title": "Galéria"
+  },
+  "projectHeader": {
+    "feed": "Feed",
+    "published": "Zverejnené {{timeAgo}}"
+  },
+  "projectTeam": {
+    "title": "Tím"
+  },
+  "projectStages": {
+    "idea": "Nápad",
+    "teamBuilding": "Tvorba tímu",
+    "inProgress": "Prebieha vývoj",
+    "completed": "Dokončené"
+  },
+  "projectRoles": {
+    "owner": "Vlastník",
+    "member": "Člen",
+    "admin": "Administrátor",
+    "lead": "Vedúci"
+  },
+  "turnIntoProjectDialog": {
+    "button": "Premeniť na projekt",
+    "title": "Premeniť nápad na projekt",
+    "description": "Týmto sa vytvorí pracovný priestor projektu a nápad sa presunie do fázy <1>Tvorba tímu</1>.",
+    "warningTitle": "Táto akcia je nevratná",
+    "warningDescription": "Po konverzii sa z tohto nápadu stane projekt a nebude možné ho vrátiť späť.",
+    "cancel": "Zrušiť",
+    "converting": "Konvertovanie...",
+    "submit": "Premeniť na projekt"
+  }
+}

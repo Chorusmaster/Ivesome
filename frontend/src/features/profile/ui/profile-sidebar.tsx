@@ -1,4 +1,5 @@
 import { BriefcaseBusiness, Globe, Lightbulb, Triangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import Card from "@/shared/ui/card";
 import type { User } from "@/features/auth/auth.types";
 import type { ProfileStats } from "../profile.types";
@@ -10,31 +11,37 @@ function ProfileSidebar({
   user: User;
   profileStats: ProfileStats | undefined;
 }) {
+  const { t } = useTranslation();
+
   return (
     <aside className="flex flex-col gap-4">
       <Card>
-        <h2 className="subheading text-text-primary">Activity</h2>
+        <h2 className="subheading text-text-primary">
+          {t("profile.sidebar.activity")}
+        </h2>
         <div className="flex flex-col gap-3">
           <Activity
             icon={<Lightbulb size={18} />}
-            label="Ideas"
+            label={t("profile.sidebar.ideas")}
             value={profileStats?.ideas ?? "-"}
           />
           <Activity
             icon={<BriefcaseBusiness size={18} />}
-            label="Projects"
+            label={t("profile.sidebar.projects")}
             value={profileStats?.projects ?? "-"}
           />
           <Activity
             icon={<Triangle size={18} />}
-            label="Upvotes received"
+            label={t("profile.sidebar.upvotes")}
             value={profileStats?.upvotes ?? "-"}
           />
         </div>
       </Card>
       {user.links && user.links.length > 0 && (
         <Card>
-          <h2 className="subheading text-text-primary">Links</h2>
+          <h2 className="subheading text-text-primary">
+            {t("profile.sidebar.links")}
+          </h2>
           <div className="flex flex-col gap-3">
             {user.links.map((link) => (
               <a
@@ -54,7 +61,9 @@ function ProfileSidebar({
       {((user.skills && user.skills.length > 0) ||
         (user.interests && user.interests.length > 0)) && (
         <Card>
-          <h2 className="subheading text-text-primary">Skills & interests</h2>
+          <h2 className="subheading text-text-primary">
+            {t("profile.sidebar.skillsAndInterests")}
+          </h2>
           <div className="flex flex-wrap gap-2">
             {user.skills?.map((skill) => (
               <span

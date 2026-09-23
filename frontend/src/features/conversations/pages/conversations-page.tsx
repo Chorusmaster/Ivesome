@@ -11,12 +11,14 @@ import { formatMessageDate } from "@/shared/lib/utils";
 import Avatar from "@/shared/ui/avatar";
 import { useAuth } from "@/features/auth/auth.context";
 import Navbar from "@/shared/ui/navbar";
+import { useTranslation } from "react-i18next";
 
 function ConversationsPage() {
   const [conversations, setConversations] = useState<ConversationType[]>([]);
   const { conversationId } = useParams();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   function setConversation(id: string) {
     navigate(`/conversations/${id}`, { replace: true });
@@ -106,7 +108,7 @@ function ConversationsPage() {
                         ? `${conversation.otherMember.user.firstName} ${conversation.otherMember.user.lastName}`
                         : conversation.otherMember?.user?.login
                           ? conversation.otherMember.user.login
-                          : "Anonymous user"}
+                          : t("shared.userFallbacks.anonymous")}
                     </p>
 
                     <p className="truncate text-small text-text-secondary">
@@ -134,11 +136,11 @@ function ConversationsPage() {
             />
           ) : conversations.length == 0 ? (
             <div className="flex-1 flex items-center justify-center text-text-secondary">
-              No conversations yet
+              {t("conversations.noConversations")}
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center text-text-secondary">
-              Select a conversation
+              {t("conversations.selectConversation")}
             </div>
           )}
         </div>

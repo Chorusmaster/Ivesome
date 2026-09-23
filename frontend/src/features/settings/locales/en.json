@@ -1,0 +1,9 @@
+{
+  "title": "User settings",
+  "description": "Manage your account and personal preferences.",
+  "preferences": "Preferences",
+  "theme": "Theme",
+  "language": "Language",
+  "light": "☀️ Light",
+  "dark": "🌠 Dark"
+}

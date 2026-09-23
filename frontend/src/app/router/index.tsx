@@ -11,7 +11,6 @@ import ResetPasswordPage from "@/features/auth/pages/reset-password-page";
 import EmailVerificationPage from "@/features/auth/pages/email-verification-page";
 import HomePage from "@/pages/home-page";
 import SearchPage from "@/features/search/pages/search-page";
-import DashboardPage from "@/pages/dashboard-page";
 import ProjectPage from "@/features/projects/pages/project-page";
 import ProfilePage from "@/features/profile/pages/profile-page";
 import ProfileEditPage from "@/pages/profile-edit-page";
@@ -60,10 +59,6 @@ export const router = createBrowserRouter([
           {
             element: <MainLayout />,
             children: [
-              {
-                path: "dashboard",
-                element: <DashboardPage />,
-              },
               {
                 path: "profile",
                 element: <ProfilePage />,

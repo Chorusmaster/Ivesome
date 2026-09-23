@@ -1,0 +1,14 @@
+{
+  "title": "Notifications",
+  "openNotifications": "Open notifications",
+  "markAllRead": "Mark all read",
+  "markAsRead": "Mark notification as read",
+  "isRead": "Notification is read",
+  "delete": "Delete notification",
+  "loading": "Loading notifications...",
+  "empty": "No notifications yet.",
+  "invalidCommentError": "Invalid comment reference",
+  "markAllReadError": "Unexpected error happened while marking notification as read",
+  "markReadError": "Unexpected error happened while marking notifications as read",
+  "deleteError": "Unexpected error happened while deleting notification"
+}

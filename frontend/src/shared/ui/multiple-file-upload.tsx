@@ -1,5 +1,6 @@
 import { useImperativeHandle, useRef, forwardRef, useState } from "react";
 import { ImagePlus, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type MultipleFileUploadProps = {
   files: File[];
@@ -18,6 +19,7 @@ const MultipleFileUpload = forwardRef<
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [previews, setPreviews] = useState<string[]>([]);
+  const { t } = useTranslation();
 
   const reset = () => {
     previews.forEach((preview) => URL.revokeObjectURL(preview));
@@ -82,11 +84,11 @@ const MultipleFileUpload = forwardRef<
         <ImagePlus size={32} className="text-muted mb-2" />
 
         <p className="text-text-primary font-medium mb-1">
-          Drag & Drop your images here
+          {t("shared.multipleFileUpload.dropMessage")}
         </p>
 
         <p className="text-muted text-small">
-          or click to select multiple images
+          {t("shared.multipleFileUpload.clickMessage")}
         </p>
 
         <p className="text-muted text-small mt-1">

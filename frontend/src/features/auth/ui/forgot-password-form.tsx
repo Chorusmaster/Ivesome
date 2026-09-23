@@ -2,26 +2,12 @@ import { AlertCircle, CheckCircle, KeyRound } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
 
 type ForgotPasswordFormVariant = "request" | "sent" | "invalid";
-
-const content = {
-  request: {
-    title: "Forgot your password?",
-    description: "Enter your email address and we'll send you a reset link.",
-  },
-  sent: {
-    title: "Check your email",
-    description: "We've sent a password reset link to",
-  },
-  invalid: {
-    title: "Reset link invalid",
-    description: "The password reset link is invalid or has expired.",
-  },
-};
 
 type ForgotPasswordFormProps = {
   variant?: ForgotPasswordFormVariant;
@@ -34,17 +20,23 @@ type ForgotPasswordFormProps = {
 function ForgotPasswordForm({
   variant = "request",
   email = "",
-  error = content["invalid"].title,
+  error,
   onSubmit,
   onResendEmail,
 }: ForgotPasswordFormProps) {
+  const { t } = useTranslation();
   const [inputEmail, setInputEmail] = useState(email ?? "");
   const [emailError, setEmailError] = useState("");
   const [generalError, setGeneralError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => 
-  {
+  const displayEmail = email || t("auth.common.fallbackEmail");
+  const displayTitle =
+    variant === "invalid"
+      ? error || t("auth.forgotPassword.invalid.title")
+      : t(`auth.forgotPassword.${variant}.title`);
+
+  const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     setEmailError("");
     setGeneralError("");
@@ -64,11 +56,11 @@ function ForgotPasswordForm({
           return;
         }
 
-        setGeneralError(message ?? "Unable to send reset email.");
+        setGeneralError(message ?? t("auth.forgotPassword.errors.unableToSend"));
         return;
       }
 
-      setGeneralError("Something went wrong. Please try again later.");
+      setGeneralError(t("auth.common.errors.unexpected"));
     } finally {
       setIsLoading(false);
     }
@@ -91,9 +83,11 @@ function ForgotPasswordForm({
         <div className="flex flex-col items-center">
           <div
             className={`mb-6 flex h-16 w-16 items-center justify-center rounded-full ${
-              variant === "request" ? "bg-primary/10": 
-              variant === "sent" ? "bg-success/15" : 
-              "bg-danger/15"
+              variant === "request"
+                ? "bg-primary/10"
+                : variant === "sent"
+                  ? "bg-success/15"
+                  : "bg-danger/15"
             }`}
           >
             {variant === "request" ? (
@@ -106,16 +100,15 @@ function ForgotPasswordForm({
           </div>
 
           <h2 className="text-heading font-heading text-text-primary">
-            {variant === "invalid" ? error : content[variant].title}
+            {displayTitle}
           </h2>
 
           <p className="mt-3 text-small text-text-secondary">
-            {content[variant].description}
+            {t(`auth.forgotPassword.${variant}.description`)}
           </p>
+
           {(variant === "sent" || variant === "invalid") && (
-            <p className="mt-1 font-medium text-text-primary">
-              {email || "your email"}
-            </p>
+            <p className="mt-1 font-medium text-text-primary">{displayEmail}</p>
           )}
 
           {variant === "request" ? (
@@ -123,8 +116,8 @@ function ForgotPasswordForm({
               <Input
                 id="email"
                 type="email"
-                label="Email"
-                placeholder="you@example.com"
+                label={t("auth.common.labels.email")}
+                placeholder={t("auth.common.placeholders.email")}
                 autoComplete="email"
                 value={inputEmail}
                 onChange={(event) => setInputEmail(event.target.value)}
@@ -142,7 +135,9 @@ function ForgotPasswordForm({
                 disabled={isLoading}
                 className="button mt-6 w-full cursor-pointer bg-primary text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoading ? "Sending..." : "Send reset link"}
+                {isLoading
+                  ? t("auth.common.actions.sending")
+                  : t("auth.forgotPassword.submitButton")}
               </button>
             </form>
           ) : (
@@ -153,7 +148,9 @@ function ForgotPasswordForm({
                 disabled={isLoading}
                 className="button bg-primary hover:bg-primary-hover text-white w-full disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isLoading ? "Sending..." : "Send new reset link"}
+                {isLoading
+                  ? t("auth.common.actions.sending")
+                  : t("auth.forgotPassword.resendButton")}
               </button>
 
               <div className="mt-4 w-full">
@@ -162,7 +159,7 @@ function ForgotPasswordForm({
                     type="button"
                     className="w-full text-small text-muted hover:text-text-secondary"
                   >
-                    Return to login
+                    {t("auth.common.actions.returnToLogin")}
                   </button>
                 </Link>
               </div>
@@ -175,5 +172,4 @@ function ForgotPasswordForm({
 }
 
 export default ForgotPasswordForm;
-
 export type { ForgotPasswordFormVariant };

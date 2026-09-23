@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Bell, CheckCheck, Trash2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Popover } from "../../../shared/ui/popover";
 import {
   deleteNotification,
@@ -15,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { getComment } from "@/features/projects/comments.api";
 
 function NotificationPopover() {
+  const { t } = useTranslation();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -45,9 +47,9 @@ function NotificationPopover() {
   ) => {
     if (!id) {
       if (type !== "NONE") {
-        throw new Error("Invalid comment reference");
+        throw new Error(t("notifications.invalidCommentError"));
       }
-    return;
+      return;
     }
     if (type === "COMMENT") {
       const comment = await getComment(id);
@@ -70,9 +72,7 @@ function NotificationPopover() {
         current.map((notification) => ({ ...notification, isRead: true })),
       );
     } catch {
-      console.error(
-        "Unexpected error happened while marking notification as read",
-      );
+      console.error(t("notifications.markAllReadError"));
     }
   };
 
@@ -87,9 +87,7 @@ function NotificationPopover() {
         ),
       );
     } catch {
-      console.error(
-        "Unexpected error happened while marking notifications as read",
-      );
+      console.error(t("notifications.markReadError"));
     }
   };
 
@@ -100,7 +98,7 @@ function NotificationPopover() {
         current.filter((notification) => notification.id !== notificationId),
       );
     } catch {
-      console.error("Unexpected error happened while deleting notification");
+      console.error(t("notifications.deleteError"));
     }
   };
 
@@ -108,7 +106,7 @@ function NotificationPopover() {
     <Popover>
       <Popover.Trigger
         type="button"
-        aria-label="Open notifications"
+        aria-label={t("notifications.openNotifications")}
         className="relative rounded-button p-2 transition-colors hover:bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
       >
         <Bell size={24} className="text-muted" />
@@ -120,7 +118,9 @@ function NotificationPopover() {
       </Popover.Trigger>
       <Popover.Content className="w-96 p-0">
         <div className="flex items-center justify-between border-b border-border px-3 py-3">
-          <h2 className="font-heading text-text-primary ml-6">Notifications</h2>
+          <h2 className="font-heading text-text-primary ml-6">
+            {t("notifications.title")}
+          </h2>
           {notifications.some((notification) => !notification.isRead) && (
             <button
               type="button"
@@ -128,7 +128,7 @@ function NotificationPopover() {
               className="inline-flex items-center gap-1 text-small text-primary hover:text-primary-hover"
             >
               <CheckCheck size={14} />
-              Mark all read
+              {t("notifications.markAllRead")}
             </button>
           )}
         </div>
@@ -136,11 +136,11 @@ function NotificationPopover() {
         <div className="max-h-80 overflow-y-auto">
           {loading ? (
             <p className="px-3 py-6 text-center text-small text-muted">
-              Loading notifications...
+              {t("notifications.loading")}
             </p>
           ) : notifications.length === 0 ? (
             <p className="px-3 py-6 text-center text-small text-muted">
-              No notifications yet.
+              {t("notifications.empty")}
             </p>
           ) : (
             <ul className="divide-y divide-border">
@@ -161,8 +161,8 @@ function NotificationPopover() {
                     }
                     aria-label={
                       notification.isRead
-                        ? "Notification is read"
-                        : "Mark notification as read"
+                        ? t("notifications.isRead")
+                        : t("notifications.markAsRead")
                     }
                   />
 
@@ -170,13 +170,12 @@ function NotificationPopover() {
                     <button
                       className="text-small text-text-primary hover:text-primary-hover wrap-break-word"
                       onClick={async () => {
-                          await handleNotificationReference(
-                            notification.referenceType,
-                            notification.referenceId,
-                          );
-                          handleMarkAsRead(notification.id);
-                        }
-                      }
+                        await handleNotificationReference(
+                          notification.referenceType,
+                          notification.referenceId,
+                        );
+                        handleMarkAsRead(notification.id);
+                      }}
                     >
                       {notification.message}
                     </button>
@@ -189,7 +188,7 @@ function NotificationPopover() {
                     type="button"
                     onClick={() => handleDelete(notification.id)}
                     className="rounded-button w-6 h-6 text-muted transition-colors hover:bg-background hover:text-danger flex items-center justify-center"
-                    aria-label="Delete notification"
+                    aria-label={t("notifications.delete")}
                   >
                     <Trash2 size={14} />
                   </button>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import axios from "axios";
 import type { ProfileLinkInput } from "../profile.types";
 import { useAuth } from "@/features/auth/auth.context.js";
@@ -10,6 +11,7 @@ import Textarea from "@/shared/ui/textarea";
 import FileUpload from "@/shared/ui/file-upload";
 
 function ProfileForm() {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, refreshUser, updateProfile } = useAuth();
 
@@ -61,9 +63,7 @@ function ProfileForm() {
           setGeneralError(errorsData?.message);
         }
       } else {
-        setGeneralError(
-          "An unexpected error occurred. Please try again later.",
-        );
+        setGeneralError(t("profile.form.unexpectedError"));
       }
     }
   };
@@ -114,84 +114,92 @@ function ProfileForm() {
   return (
     <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
       <Card>
-        <div className="heading mb-8 text-text-primary">Basic information</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("profile.form.basicInfo")}
+        </div>
         <div className="grid grid-cols-2 gap-4 mb-4">
           <Input
-            label="First name"
+            label={t("profile.form.firstName")}
             id="first_name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            placeholder="John"
+            placeholder={t("profile.form.firstNamePlaceholder")}
           />
           <Input
-            label="Last name"
+            label={t("profile.form.lastName")}
             id="last_name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            placeholder="Doe"
+            placeholder={t("profile.form.lastNamePlaceholder")}
           />
         </div>
         <Input
-          label="Login"
+          label={t("profile.form.login")}
           id="login"
           value={login}
           onChange={(e) => setLogin(e.target.value)}
-          placeholder="Product designer & founder"
+          placeholder={t("profile.form.loginPlaceholder")}
           className="mb-4"
         />
         <Input
-          label="Location"
+          label={t("profile.form.location")}
           id="location"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="City, Country"
+          placeholder={t("profile.form.locationPlaceholder")}
         />
       </Card>
 
       <Card>
-        <div className="heading mb-8 text-text-primary">About you</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("profile.form.aboutYou")}
+        </div>
         <Textarea
-          label="Short bio"
+          label={t("profile.form.bio")}
           id="bio"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-          placeholder="One sentence that describes you"
+          placeholder={t("profile.form.bioPlaceholder")}
           className="min-h-16 resize-none mb-4"
         />
         <Textarea
-          label="About"
+          label={t("profile.form.about")}
           id="about"
           value={about}
           onChange={(e) => setAbout(e.target.value)}
-          placeholder="Background, interests, what you're building on Ivesome..."
+          placeholder={t("profile.form.aboutPlaceholder")}
           className="min-h-36"
         />
       </Card>
 
       <Card>
-        <div className="heading mb-8 text-text-primary">Skills and links</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("profile.form.skillsAndLinks")}
+        </div>
 
         <div className="grid grid-cols-2 gap-4">
           <Input
-            label="Skills"
+            label={t("profile.form.skills")}
             id="skills"
             value={skills}
             onChange={(e) => setSkills(e.target.value)}
-            placeholder="backend, Node.js, Express.js"
+            placeholder={t("profile.form.skillsPlaceholder")}
             className="mb-4"
           />
 
           <Input
-            label="Interests"
+            label={t("profile.form.interests")}
             id="interests"
             value={interests}
             onChange={(e) => setInterests(e.target.value)}
-            placeholder="productivity, saas, b2b"
+            placeholder={t("profile.form.interestsPlaceholder")}
           />
         </div>
 
         <div>
-          <div className="font-medium text-text-primary">Websites</div>
+          <div className="font-medium text-text-primary">
+            {t("profile.form.websites")}
+          </div>
           <div className="flex gap-4 items-start">
             <button
               type="button"
@@ -199,7 +207,7 @@ function ProfileForm() {
               disabled={links.length >= 10}
               className="mt-2 text-text-primary button shrink-0 border border-border bg-surface px-3 text-sm hover:shadow-sm disabled:shadow-none disabled:text-muted disabled:border-muted"
             >
-              New link
+              {t("profile.form.newLink")}
             </button>
             <div className="flex-1 flex flex-col gap-2">
               {links.map((link) => (
@@ -223,10 +231,10 @@ function ProfileForm() {
                   <button
                     type="button"
                     onClick={() => removeLink(link.id)}
-                    className="button h-[42px] min-w-[42px] shrink-0 border border-border bg-surface px-3 text-sm text-muted hover:border-danger hover:text-danger"
-                    aria-label="Delete link"
+                    className="button h-10.5 min-w-10.5 shrink-0 border border-border bg-surface px-3 text-sm text-muted hover:border-danger hover:text-danger"
+                    aria-label={t("profile.form.deleteLink")}
                   >
-                    Delete
+                    {t("profile.form.delete")}
                   </button>
                 </div>
               ))}
@@ -236,7 +244,9 @@ function ProfileForm() {
       </Card>
 
       <Card>
-        <div className="heading mb-8 text-text-primary">Profile photo</div>
+        <div className="heading mb-8 text-text-primary">
+          {t("profile.form.profilePhoto")}
+        </div>
         <FileUpload file={avatar} setFile={setAvatar} />
       </Card>
 
@@ -245,7 +255,7 @@ function ProfileForm() {
           to="/profile"
           className="button bg-surface text-text-primary hover:shadow-sm border border-border"
         >
-          Cancel
+          {t("profile.form.cancel")}
         </Link>
         <div>
           {generalError && (
@@ -255,7 +265,7 @@ function ProfileForm() {
             type="submit"
             className="button bg-primary hover:bg-primary-hover text-white"
           >
-            Save changes
+            {t("profile.form.saveChanges")}
           </button>
         </div>
       </Card>

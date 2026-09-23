@@ -18,6 +18,7 @@ import {
 } from "@/shared/ui/dropdown-menu";
 import { Check, MessageSquareReply, Send, SquarePen, X } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 type ConversationProps = {
   conversationId: string;
@@ -30,6 +31,7 @@ function Conversation({
   messages,
   onMessagesChange,
 }: ConversationProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [messageContent, setMessageContent] = useState("");
   const [replyingTo, setReplyingTo] = useState<ConversationMessage | null>(
@@ -50,10 +52,10 @@ function Conversation({
     return (
       <div className="mb-2 border-l-2 bg-primary-light/20 px-2 text-xs text-text-secondary">
         <p className="font-medium text-text-primary">
-          {message.parent?.author?.login ?? "Original message"}
+          {message.parent?.author?.login ?? t("conversations.conversation.originalMessage")}
         </p>
         <p className="truncate text-text-primary">
-          {message.parent?.content ?? "Message unavailable"}
+          {message.parent?.content ?? t("conversations.conversation.messageUnavailable")}
         </p>
       </div>
     );
@@ -89,7 +91,7 @@ function Conversation({
       replyingTo?.id,
     );
     onMessagesChange([...messages, message]);
-    setMessageContent("");
+    setMessageContent("conversations.");
     setReplyingTo(null);
   }
 
@@ -128,7 +130,7 @@ function Conversation({
                   <div className="flex items-center justify-end gap-1 mt-1 text-xs text-muted">
                     <button
                       type="button"
-                      aria-label="Save message"
+                      aria-label={t("conversations.conversation.saveMessage")}
                       onClick={() => saveEditing(message.id)}
                     >
                       <Check
@@ -138,7 +140,7 @@ function Conversation({
                     </button>
                     <button
                       type="button"
-                      aria-label="Cancel editing"
+                      aria-label={t("conversations.conversation.cancelEditing")}
                       onClick={() => setEditingMessageId(null)}
                     >
                       <X
@@ -154,7 +156,10 @@ function Conversation({
                     <DropdownMenu>
                       <DropdownMenuTrigger
                         render={
-                          <button type="button" aria-label="Message actions">
+                          <button
+                            type="button"
+                            aria-label={t("conversations.conversation.messageActions")}
+                          >
                             <SquarePen
                               size={13}
                               className="text-muted/70 hover:text-muted mt-px"
@@ -168,13 +173,13 @@ function Conversation({
                             className="hover:bg-background! focus:bg-background!"
                             onClick={() => startEditing(message)}
                           >
-                            Edit
+                            {t("conversations.conversation.edit")}
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="hover:bg-background! focus:bg-background!"
                             onClick={() => handleDeleteMessage(message.id)}
                           >
-                            Delete
+                            {t("conversations.conversation.delete")}
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
                       </DropdownMenuContent>
@@ -202,14 +207,16 @@ function Conversation({
                 <div
                   className={`flex items-center "justify-start gap-2 mt-1 text-xs text-muted`}
                 >
-                  <span>{message.author?.login ?? "Anonymous user"}</span>
+                  <span>
+                    {message.author?.login ?? t("conversations.conversation.anonymousUser")}
+                  </span>
                   <span>·</span>
                   <span>{formatMessageDate(message.createdAt)}</span>
                   <span>·</span>
                   <span>
                     <button
                       type="button"
-                      aria-label="Reply to message"
+                      aria-label={t("conversations.conversation.replyToMessage")}
                       onClick={() => setReplyingTo(message)}
                     >
                       <MessageSquareReply
@@ -232,11 +239,14 @@ function Conversation({
           {replyingTo && (
             <div className="flex items-center justify-between text-small text-text-secondary mb-1">
               <span>
-                Replying to {replyingTo.author?.login ?? "Anonymous user"}
+                {t("conversations.conversation.replyingTo", {
+                  name:
+                    replyingTo.author?.login ?? t("conversations.conversation.anonymousUser"),
+                })}
               </span>
               <button
                 type="button"
-                aria-label="Cancel reply"
+                aria-label={t("conversations.conversation.cancelReply")}
                 onClick={() => setReplyingTo(null)}
               >
                 <X size={14} />
@@ -246,7 +256,7 @@ function Conversation({
           <Input
             autoComplete="off"
             className="bg-background"
-            placeholder="Type your message here"
+            placeholder={t("conversations.conversation.typeMessage")}
             value={messageContent}
             onChange={(event) => setMessageContent(event.target.value)}
           />

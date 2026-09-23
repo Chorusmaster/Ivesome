@@ -1,8 +1,11 @@
 import { Link, Outlet } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 import Logo from "@/assets/logo.svg?react";
 
 function AuthLayout() {
+  const { t } = useTranslation();
+
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-5">
       <div className="relative overflow-hidden bg-primary lg:col-span-2 flex flex-col justify-center px-8 py-10 lg:px-12 xl:px-16">
@@ -26,11 +29,10 @@ function AuthLayout() {
 
           <div className="relative z-10 max-w-md">
             <h1 className="text-title font-heading leading-tight text-white">
-              Where ideas find their people
+              {t("app.authLayout.heading")}
             </h1>
             <p className="mt-4 text-body leading-relaxed text-primary-light/90">
-              Share concepts, gather feedback, and connect with collaborators who
-              want to build something meaningful.
+              {t("app.authLayout.description")}
             </p>
           </div>
         </div>

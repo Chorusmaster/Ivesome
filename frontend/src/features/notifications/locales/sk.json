@@ -1,0 +1,14 @@
+{
+  "title": "Oznámenia",
+  "openNotifications": "Otvoriť oznámenia",
+  "markAllRead": "Označiť všetky ako prečítané",
+  "markAsRead": "Označiť oznámenie ako prečítané",
+  "isRead": "Oznámenie je prečítané",
+  "delete": "Odstrániť oznámenie",
+  "loading": "Načítavanie oznámení...",
+  "empty": "Zatiaľ nemáte žiadne oznámenia.",
+  "invalidCommentError": "Neplatný odkaz na komentár",
+  "markAllReadError": "Pri označovaní oznámení ako prečítaných nastala neočakávaná chyba",
+  "markReadError": "Pri označovaní oznámení ako prečítaných nastala neočakávaná chyba",
+  "deleteError": "Pri odstraňovaní oznámenia nastala neočakávaná chyba"
+}

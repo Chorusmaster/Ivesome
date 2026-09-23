@@ -1,0 +1,48 @@
+{
+  "loading": "Načítavanie pracovného priestoru...",
+  "errorLoading": "Pracovný priestor sa nepodarilo načítať",
+  "notFound": "Pracovný priestor sa nenašiel",
+  "membersCount": "členov",
+  "backToPublic": "Späť na verejnú stránku",
+  "tabs": {
+    "tasks": "Úlohy",
+    "chat": "Chat",
+    "members": "Členovia",
+    "requests": "Žiadosti o účasť",
+    "settings": "Nastavenia"
+  },
+  "membersTab": {
+    "title": "Členovia",
+    "description": "Ľudia pracujúci na tomto projekte"
+  },
+  "requestsTab": {
+    "title": "Žiadosti o účasť",
+    "description": "Ľudia, ktorí sa chcú zúčastniť na tomto projekte",
+    "accept": "Prijať",
+    "reject": "Odmietnuť",
+    "noRequests": "Zatiaľ žiadne žiadosti o účasť"
+  },
+  "taskForm": {
+    "titleEdit": "Upraviť úlohu",
+    "titleAdd": "Pridať úlohu",
+    "descEdit": "Aktualizujte údaje úlohy a uložte zmeny",
+    "descAdd": "Vytvoriť úlohu",
+    "labelTitle": "Názov",
+    "labelDescription": "Popis",
+    "labelStatus": "Stav",
+    "labelDeadline": "Termín",
+    "cancel": "Zrušiť",
+    "saving": "Ukladanie...",
+    "saveChanges": "Uložiť zmeny",
+    "addTask": "Pridať úlohu"
+  },
+  "tasksTab": {
+    "title": "Úlohy",
+    "description": "Spravujte úlohy a sledujte pokrok projektu.",
+    "addTask": "Pridať úlohu",
+    "errorSave": "Úlohu sa nepodarilo uložiť. Skúste to znova.",
+    "noTasks": "Zatiaľ žiadne úlohy. Pridajte prvú úlohu a začnite.",
+    "editAction": "Upraviť {{title}}",
+    "deleteAction": "Odstrániť {{title}}"
+  }
+}

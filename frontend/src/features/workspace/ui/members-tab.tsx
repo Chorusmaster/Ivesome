@@ -1,21 +1,25 @@
 import type { Workspace } from "../workspace.types";
 import Avatar from "@/shared/ui/avatar";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-interface MembersTabProps {
+interface membersTabProps {
   workspace: Workspace;
 }
 
-function MembersTab({ workspace }: MembersTabProps) {
+function membersTab({ workspace }: membersTabProps) {
+  const { t } = useTranslation();
   const members = workspace.project.members;
 
   return (
     <div className="main-container-narrow">
       <div className="mb-6">
-        <h2 className="font-heading text-heading text-text-primary">Members</h2>
+        <h2 className="font-heading text-heading text-text-primary">
+          {t("workspace.membersTab.title")}
+        </h2>
 
         <p className="text-sm text-text-secondary mt-1">
-          People working on this project
+          {t("workspace.membersTab.description")}
         </p>
       </div>
 
@@ -58,4 +62,4 @@ function MembersTab({ workspace }: MembersTabProps) {
   );
 }
 
-export default MembersTab;
+export default membersTab;

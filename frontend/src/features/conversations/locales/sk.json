@@ -1,0 +1,18 @@
+{
+  "noConversations": "Zatiaľ nemáte žiadne konverzácie",
+  "selectConversation": "Vyberte konverzáciu",
+  "conversation": {
+    "originalMessage": "Pôvodná správa",
+    "messageUnavailable": "Správa nie je dostupná",
+    "edit": "Upraviť",
+    "delete": "Odstrániť",
+    "anonymousUser": "Anonymný používateľ",
+    "replyingTo": "Odpovedáte používateľovi {{name}}",
+    "typeMessage": "Napíšte novú správu=",
+    "saveMessage": "Uložiť správu",
+    "cancelEditing": "Zrušiť úpravu",
+    "messageActions": "Akcie správy",
+    "replyToMessage": "Odpovedať na správu",
+    "cancelReply": "Zrušiť odpoveď"
+  }
+}

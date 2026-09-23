@@ -1,0 +1,92 @@
+{
+  "common": {
+    "labels": {
+      "email": "Email",
+      "login": "Login",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "newPassword": "New password"
+    },
+    "placeholders": {
+      "email": "you@example.com",
+      "login": "your-nickname",
+      "createPassword": "Create a password",
+      "enterPassword": "Enter your password",
+      "confirmPassword": "Confirm your password",
+      "newPassword": "Create a new password",
+      "confirmNewPassword": "Confirm your new password"
+    },
+    "actions": {
+      "returnToLogin": "Return to login",
+      "logIn": "Log in",
+      "createOne": "Create one",
+      "sending": "Sending...",
+      "updating": "Updating..."
+    },
+    "errors": {
+      "unexpected": "An unexpected error occurred. Please try again later."
+    },
+    "fallbackEmail": "your email"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Join Ivesome and start sharing your ideas",
+    "submitButton": "Create account",
+    "footerText": "Already have an account?"
+  },
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Log in to your account to continue",
+    "forgotPassword": "Forgot password?",
+    "submitButton": "Log in",
+    "footerText": "Don't have an account?"
+  },
+  "resetPassword": {
+    "title": "Set a new password",
+    "subtitle": "Choose a strong password for your account",
+    "submitButton": "Reset password",
+    "errors": {
+      "missingToken": "The password reset token is missing or invalid.",
+      "passwordTooShort": "Password must be at least 8 characters long.",
+      "passwordsDoNotMatch": "Passwords do not match.",
+      "unableToReset": "Unable to reset password."
+    }
+  },
+  "emailVerification": {
+    "verify": {
+      "title": "Verify your email",
+      "description": "We've sent the verification link to",
+      "hint": "Please click the link in the email to verify your account. The link will expire in 24 hours."
+    },
+    "resent": {
+      "title": "Email resent successfully",
+      "description": "We've resent the verification link to",
+      "hint": "Please click the link in the email to verify your account. If you don't see it, check your spam folder."
+    },
+    "invalid": {
+      "title": "Invalid link",
+      "description": "The verification link is invalid.",
+      "hint": "You can request a new verification link below. We'll send it to your registered email address."
+    },
+    "resendButton": "Send new verification link"
+  },
+  "forgotPassword": {
+    "request": {
+      "title": "Forgot your password?",
+      "description": "Enter your email address and we'll send you a reset link."
+    },
+    "sent": {
+      "title": "Check your email",
+      "description": "We've sent a password reset link to"
+    },
+    "invalid": {
+      "title": "Reset link invalid",
+      "description": "The password reset link is invalid or has expired."
+    },
+    "submitButton": "Send reset link",
+    "resendButton": "Send new reset link",
+    "errors": {
+      "unableToSend": "Unable to send reset email."
+    }
+  }
+}

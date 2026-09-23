@@ -6,6 +6,7 @@ import type { TaskStatus } from "../workspace.types";
 import { STATUS_LABELS } from "../workspace.types";
 import type { TaskFormState } from "./task-form";
 import TaskForm from "./task-form";
+import { useTranslation } from "react-i18next";
 
 type TasksTabProps = {
   workspaceId: string;
@@ -31,6 +32,7 @@ function formFromTask(task: WorkspaceTask): TaskFormState {
 }
 
 function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
+  const { t } = useTranslation();
   const [tasks, setTasks] = useState(initialTasks);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [formState, setFormState] = useState<TaskFormState>(EMPTY_FORM);
@@ -80,7 +82,7 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
       }
       setDialogOpen(false);
     } catch {
-      setFormError("Unable to save task. Please try again.");
+      setFormError(t("workspace.tasksTab.errorSave"));
     } finally {
       setSaving(false);
     }
@@ -116,10 +118,12 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
     <div className="main-container-narrow">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h2 className="font-heading text-heading text-text-primary">Tasks</h2>
+          <h2 className="font-heading text-heading text-text-primary">
+            {t("workspace.tasksTab.title")}
+          </h2>
 
           <p className="text-sm text-text-secondary mt-1">
-            Manage tasks and track project progress.
+            {t("workspace.tasksTab.description")}
           </p>
         </div>
 
@@ -129,7 +133,7 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
           className="button bg-primary hover:bg-primary-hover text-white flex items-center gap-2"
         >
           <Plus size={16} />
-          Add task
+          {t("workspace.tasksTab.addTask")}
         </button>
       </div>
 
@@ -190,8 +194,8 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
                 </select>
                 <button
                   type="button"
-                  title={`Edit ${task.title}`}
-                  aria-label={`Edit ${task.title}`}
+                  title={t("workspace.tasksTab.editAction", { title: task.title })}
+                  aria-label={t("workspace.tasksTab.editAction", { title: task.title })}
                   onClick={() => openEditDialog(task)}
                   className="text-text-secondary hover:text-primary transition"
                 >
@@ -199,8 +203,10 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
                 </button>
                 <button
                   type="button"
-                  title={`Delete ${task.title}`}
-                  aria-label={`Delete ${task.title}`}
+                  title={t("workspace.tasksTab.deleteAction", { title: task.title })}
+                  aria-label={t("workspace.tasksTab.deleteAction", {
+                    title: task.title,
+                  })}
                   onClick={() => handleTaskDelete(task.id)}
                   className="text-text-secondary hover:text-primary transition"
                 >
@@ -214,7 +220,7 @@ function TasksTab({ workspaceId, tasks: initialTasks }: TasksTabProps) {
 
       {sortedTasks.length === 0 && (
         <div className="bg-surface border border-border rounded-lg p-8 text-center text-text-secondary">
-          No tasks yet. Add the first task to get started.
+          {t("workspace.tasksTab.noTasks")}
         </div>
       )}
 

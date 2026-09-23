@@ -1,0 +1,119 @@
+{
+  "loadingProject": "Loading project...",
+  "loadingData": "Loading data...",
+  "notFound": "Project not found",
+  "loadError": "Error while loading project data",
+  "deleteConfirmation": "Delete this project?",
+  "requestError": "Unable to send participation request",
+  "reportError": "Unable to submit report. Please try again.",
+  "discussionError": "Unable to load discussion",
+  "editor": {
+    "editTitle": "Edit project",
+    "newTitle": "New idea",
+    "editDescription": "Update your project details and keep your idea moving forward.",
+    "newDescription": "Share with the world what's on your mind today"
+  },
+  "details": {
+    "requiredSkills": "Required skills"
+  },
+  "comment": {
+    "deletedUser": "Deleted user",
+    "edited": "edited",
+    "save": "Save",
+    "cancel": "Cancel",
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "report": "Report",
+    "reportAriaLabel": "Report comment",
+    "writeReplyPlaceholder": "Write a reply...",
+    "publishReply": "Publish reply",
+    "unableToReport": "Unable to submit report. Please try again."
+  },
+  "participation": {
+    "button": {
+      "sent": "Request sent",
+      "send": "Send participation request"
+    },
+    "dialog": {
+      "title": "Send participation request",
+      "description": "Tell the project owner why you'd like to join their team.",
+      "close": "Close",
+      "sending": "Sending...",
+      "submit": "Send request"
+    }
+  },
+  "projectAbout": {
+    "title": "About idea"
+  },
+  "projectActions": {
+    "openWorkspace": "Open workspace",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "projectDiscussion": {
+    "title": "Discussion",
+    "commentsCount": "{{count}} comments",
+    "commentsCount_one": "{{count}} comment",
+    "commentPlaceholder": "Leave a comment or question for the author...",
+    "publish": "Publish",
+    "signInToJoin": "Sign in to join the discussion.",
+    "loading": "Loading discussion...",
+    "noComments": "No comments yet."
+  },
+  "projectEditor": {
+    "basicInfo": "Basic information",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Some super cool idea",
+    "shortDescLabel": "Short description",
+    "shortDescPlaceholder": "One sentence that explains the essence of your idea",
+    "longDescLabel": "Long description",
+    "longDescPlaceholder": "Problem, solution, audience, how it differs from existing products...",
+    "visibilityLabel": "Visibility",
+    "visibilityOptions": {
+      "private": "Private",
+      "public": "Public"
+    },
+    "tagsLabel": "Tags",
+    "tagsPlaceholder": "productivity, saas, b2b",
+    "skillsLabel": "Skills",
+    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "avatarTitle": "Avatar",
+    "mediaTitle": "Media",
+    "cancel": "Cancel",
+    "publishing": "Publishing...",
+    "publish": "Publish"
+  },
+  "projectGallery": {
+    "title": "Gallery"
+  },
+  "projectHeader": {
+    "feed": "Feed",
+    "published": "Published {{timeAgo}}"
+  },
+  "projectTeam": {
+    "title": "Team"
+  },
+  "projectStages": {
+    "idea": "Idea",
+    "teamBuilding": "Team Building",
+    "inProgress": "In Progress",
+    "completed": "Completed"
+  },
+  "projectRoles": {
+    "owner": "Owner",
+    "member": "Member",
+    "admin": "Admin",
+    "lead": "Lead"
+  },
+  "turnIntoProjectDialog": {
+    "button": "Turn into project",
+    "title": "Turn idea into project",
+    "description": "This will create a project workspace and move it to the <1>Team Building</1> stage.",
+    "warningTitle": "This action is irreversible",
+    "warningDescription": "Once converted, this idea will become a project and cannot be reverted back.",
+    "cancel": "Cancel",
+    "converting": "Converting...",
+    "submit": "Turn into project"
+  }
+}
