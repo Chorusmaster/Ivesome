@@ -1,9 +1,51 @@
 {
   "title": "Nastavenia používateľa",
   "description": "Spravujte svoj účet a osobné preferencie.",
-  "preferences": "Preferencie",
-  "theme": "Téma",
-  "language": "Jazyk",
-  "light": "☀️ Svetlá",
-  "dark": "🌠 Tmavá"
+
+  "preferences": {
+    "title": "Preferencie",
+    "theme": "Téma",
+    "language": "Jazyk",
+    "light": "☀️ Svetlá",
+    "dark": "🌠 Tmavá"
+  },
+
+  "privacy": {
+    "title": "Súkromie",
+    "publicProfile": "Verejný profil",
+    "publicProfileVisible": "Váš profil je viditeľný pre všetkých návštevníkov platformy",
+    "publicProfileHidden": "Ostatní používatelia vidia iba vaše meno, používateľské meno a avatar",
+    "showEmail": "Zobraziť e-mail",
+    "emailVisible": "Váš e-mail je viditeľný pre všetkých návštevníkov platformy",
+    "emailHidden": "Váš e-mail je viditeľný iba pre vás"
+  },
+
+  "notifications": {
+    "title": "Oznámenia",
+    "enableAll": "Povoliť všetky",
+    "enableAllDescription": "Povoliť alebo zakázať všetky typy oznámení naraz",
+    "project": "Oznámenia o projektoch",
+    "projectDescription": "Dostávajte oznámenia o aktivitách súvisiacich s projektmi, ktoré sledujete alebo na ktorých sa podieľate",
+    "participationRequests": "Žiadosti o účasť",
+    "participationRequestsDescription": "Dostávajte oznámenia, keď sa chce niekto pripojiť k vášmu projektu",
+    "comments": "Oznámenia o komentároch",
+    "commentsDescription": "Dostávajte oznámenia, keď niekto komentuje vaše projekty alebo odpovie na vaše komentáre",
+    "conversations": "Oznámenia o konverzáciách",
+    "conversationsDescription": "Dostávajte oznámenia o nových správach a aktivitách vo vašich konverzáciách",
+    "reports": "Oznámenia o nahláseniach",
+    "reportsDescription": "Dostávajte oznámenia o aktualizáciách nahlásení, ktoré ste odoslali",
+    "other": "Ostatné oznámenia",
+    "otherDescription": "Dostávajte oznámenia o dôležitých aktivitách na platforme, ktoré nepatria do žiadnej inej kategórie oznámení."
+  },
+
+  "security": {
+    "title": "Bezpečnosť",
+    "changePassword": "Zmeniť heslo",
+    "logOut": "Odhlásiť sa"
+  },
+
+  "dangerZone": {
+    "title": "Nebezpečná zóna",
+    "deleteAccount": "Odstrániť účet"
+  }
 }
