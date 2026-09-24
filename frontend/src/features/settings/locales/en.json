@@ -1,9 +1,51 @@
 {
   "title": "User settings",
   "description": "Manage your account and personal preferences.",
-  "preferences": "Preferences",
-  "theme": "Theme",
-  "language": "Language",
-  "light": "☀️ Light",
-  "dark": "🌠 Dark"
+
+  "preferences": {
+    "title": "Preferences",
+    "theme": "Theme",
+    "language": "Language",
+    "light": "☀️ Light",
+    "dark": "🌠 Dark"
+  },
+
+  "privacy": {
+    "title": "Privacy",
+    "publicProfile": "Public profile",
+    "publicProfileVisible": "Your profile is visible to all platform visitors",
+    "publicProfileHidden": "Only your name, username and avatar is visible to other users",
+    "showEmail": "Show email",
+    "emailVisible": "Your email is visible to all platform visitors",
+    "emailHidden": "Your email is visible only to you"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "enableAll": "Enable all",
+    "enableAllDescription": "Enable or disable all notification types at once",
+    "project": "Project notifications",
+    "projectDescription": "Get notified about activity related to projects you follow or participate in",
+    "participationRequests": "Participation requests",
+    "participationRequestsDescription": "Get notified when someone wants to join your project",
+    "comments": "Comment notifications",
+    "commentsDescription": "Get notified when someone comments on your projects or replies to your comments",
+    "conversations": "Conversation notifications",
+    "conversationsDescription": "Get notified about new messages and activity in your conversations",
+    "reports": "Report notifications",
+    "reportsDescription": "Get notified about updates to reports you have submitted",
+    "other": "Other notifications",
+    "otherDescription": "Receive notifications about important platform activity that doesn't belong to any other notification category."
+  },
+
+  "security": {
+    "title": "Security",
+    "changePassword": "Change password",
+    "logOut": "Log out"
+  },
+
+  "dangerZone": {
+    "title": "Danger zone",
+    "deleteAccount": "Delete account"
+  }
 }
