@@ -4,6 +4,7 @@ import {
   register as performRegister, 
   login as performLogin, 
   logout as performLogout, 
+  deleteAccount as performDeleteAccount,
   verifyEmail as performEmailVerification 
 } from "./auth.api";
 import { AuthContext } from "./auth.context";
@@ -61,6 +62,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }
 
+  async function deleteAccount() {
+    setIsLoading(true);
+    try {
+      await performDeleteAccount();
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   async function updateProfile(data: UpdateProfileData) {
     setIsLoading(true);
     const user = await performProfileUpdate(data);
@@ -93,6 +104,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         register,
         login,
         logout,
+        deleteAccount,
         verifyEmail,
         updateProfile
       }}

@@ -83,7 +83,7 @@ function HomePage() {
           <div className="relative mx-auto w-full max-w-148 lg:justify-self-end">
             {projects.length > 0 && (
               <div className="relative overflow-hidden">
-                <Marquee duration={40} pauseOnHover>
+                <Marquee duration={10 * projects.length} pauseOnHover>
                   <div className="flex gap-4 mr-4">
                     {projects.map((project) => (
                       <DiscoveryCard key={project.id} project={project} />

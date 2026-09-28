@@ -24,7 +24,6 @@ export default function Toggle({
         relative h-6 w-11 shrink-0 rounded-full cursor-pointer
         transition-colors duration-200
         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary
-        disabled:cursor-not-allowed disabled:opacity-50
         ${checked ? "bg-primary" : "bg-muted"}
         ${className}
       `}

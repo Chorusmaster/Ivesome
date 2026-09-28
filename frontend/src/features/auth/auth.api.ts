@@ -27,6 +27,10 @@ export const logout = async () => {
   return data;
 };
 
+export const deleteAccount = async () => {
+  await api.delete("/users/me");
+};
+
 export const refresh = async () => {
   const { data } = await api.post("/auth/refresh");
   return data;

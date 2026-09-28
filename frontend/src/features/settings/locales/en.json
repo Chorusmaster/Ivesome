@@ -1,7 +1,6 @@
 {
   "title": "User settings",
   "description": "Manage your account and personal preferences.",
-
   "preferences": {
     "title": "Preferences",
     "theme": "Theme",
@@ -47,5 +46,15 @@
   "dangerZone": {
     "title": "Danger zone",
     "deleteAccount": "Delete account"
+  },
+
+  "deleteProfileDialog": {
+    "title": "Delete profile",
+    "description": "This action is permanent and cannot be undone. All your profile data will be deleted.",
+    "confirmationLabel": "Type DELETE PROFILE to confirm:",
+    "error": "Could not delete your account. Please try again.",
+    "cancel": "Cancel",
+    "submit": "Delete profile",
+    "submitting": "Deleting..."
   }
 }

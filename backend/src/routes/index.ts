@@ -10,6 +10,7 @@ import conversationRoutes from "../features/conversation/conversation.routes.js"
 import workspaceRoutes from "../features/workspace/workspace.routes.js";
 import notificationRoutes from "../features/notification/notification.routes.js";
 import reportRoutes from "../features/report/report.routes.js";
+import settingsRoutes from "../features/settings/settings.routes.js";
 
 const router = Router();
 
@@ -23,6 +24,7 @@ router.use(participationRequestRoutes);
 router.use(conversationRoutes);
 router.use(notificationRoutes);
 router.use(reportRoutes);
+router.use(settingsRoutes);
 router.use("/workspaces", workspaceRoutes);
 
 export default router;

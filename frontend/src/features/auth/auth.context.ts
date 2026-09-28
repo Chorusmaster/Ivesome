@@ -9,6 +9,7 @@ type AuthContextValue = {
   register: (login: string, email: string, password: string, passwordConfirm: string) => Promise<void>;
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
   verifyEmail: (token: string) => Promise<void>;
   updateProfile: (data: UpdateProfileData) => Promise<void>;
 };
