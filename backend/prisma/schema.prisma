@@ -149,6 +149,7 @@ model User {
   reports               Report[]
   authTokens            AuthToken[]
   refreshSessions       RefreshSession[]
+  settings              Settings?
 }
 
 model Project {
@@ -274,13 +275,13 @@ model Task {
 }
 
 model Notification {
-  id            String        @id @default(uuid())
+  id            String                    @id @default(uuid())
   userId        String
   message       String
   referenceType NotificationReferenceType
   referenceId   String?
-  isRead        Boolean       @default(false)
-  createdAt     DateTime      @default(now())
+  isRead        Boolean                   @default(false)
+  createdAt     DateTime                  @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
@@ -308,7 +309,7 @@ model Upvote {
 }
 
 model Report {
-  id         String  @id @default(uuid())
+  id         String           @id @default(uuid())
   reporterId String?
   targetType ReportTargetType
   targetId   String
@@ -316,4 +317,21 @@ model Report {
   status     ReportStatus
 
   reporter User? @relation(fields: [reporterId], references: [id], onDelete: SetNull)
+}
+
+model Settings {
+  id     String @id @default(uuid())
+  userId String @unique
+
+  publicProfile Boolean @default(true)
+  showEmail     Boolean @default(true)
+
+  notifyProject              Boolean @default(true)
+  notifyParticipationRequest Boolean @default(true)
+  notifyComment              Boolean @default(true)
+  notifyConversation         Boolean @default(true)
+  notifyReport               Boolean @default(true)
+  notifyOther                Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

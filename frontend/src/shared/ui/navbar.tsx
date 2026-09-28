@@ -104,7 +104,7 @@ function Navbar() {
             <Popover.Trigger
               type="button"
               aria-label={t("shared.navbar.userMenu.ariaLabel")}
-              className="mt-2 rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
             >
               <Avatar
                 user={user ?? undefined}

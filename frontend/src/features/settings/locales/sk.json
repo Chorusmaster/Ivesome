@@ -47,5 +47,15 @@
   "dangerZone": {
     "title": "Nebezpečná zóna",
     "deleteAccount": "Odstrániť účet"
+  },
+
+  "deleteProfileDialog": {
+    "title": "Odstrániť profil",
+    "description": "Táto akcia je trvalá a nedá sa vrátiť späť. Všetky vaše údaje profilu budú odstránené.",
+    "confirmationLabel": "Na potvrdenie napíšte DELETE PROFILE:",
+    "error": "Nepodarilo sa odstrániť váš účet. Skúste to znova.",
+    "cancel": "Zrušiť",
+    "submit": "Odstrániť profil",
+    "submitting": "Odstraňuje sa..."
   }
 }

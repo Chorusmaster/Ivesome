@@ -1,9 +1,13 @@
 import type { RawUpdateUserData, UserStatus } from "./user.types.js";
-import { getUserById, updateUser } from "./user.repository.js";
+import { deleteUserById, getUserById, updateUser } from "./user.repository.js";
 import { ApiError } from "../../types/error.types.js";
 
 export async function getUser(userId: string) {
   return await getUserById(userId);
+}
+
+export async function deleteUser(userId: string) {
+  return await deleteUserById(userId);
 }
 
 export async function updateProfile(

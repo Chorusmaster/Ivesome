@@ -2,12 +2,27 @@ import { prisma } from "../config/database.js";
 
 async function clearDatabase() {
 
-  await Promise.all([
-    prisma.user.deleteMany(),
-    prisma.refreshSession.deleteMany(),
-    prisma.authToken.deleteMany(),
-    prisma.project.deleteMany(),
-  ]);
+  await prisma.$executeRawUnsafe(`
+    TRUNCATE TABLE
+      "AuthToken",
+      "Comment",
+      "Conversation",
+      "ConversationMember",
+      "Favourite",
+      "Message",
+      "Notification",
+      "ParticipationRequest",
+      "Project",
+      "ProjectMember",
+      "RefreshSession",
+      "Report",
+      "Settings",
+      "Task",
+      "Upvote",
+      "User",
+      "Workspace"
+    RESTART IDENTITY CASCADE;
+  `);
 
   console.log("Database cleared");
 }

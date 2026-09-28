@@ -1,5 +1,10 @@
 import type { Request, Response } from "express";
-import { updateProfile, getUser, updateUserStatus } from "./user.service.js";
+import {
+  updateProfile,
+  getUser,
+  deleteUser,
+  updateUserStatus,
+} from "./user.service.js";
 import { getParam } from "../../utils/validation.js";
 import { ApiError } from "../../types/error.types.js";
 
@@ -15,6 +20,13 @@ export async function updateProfileHandler(req: Request, res: Response) {
 
 export async function getUserHandler(req: Request, res: Response) {
   res.json(await getUser(getParam(req.params.id, "user id")));
+}
+
+export async function deleteMeHandler(req: Request, res: Response) {
+  await deleteUser(req.user.id);
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  res.status(204).send();
 }
 
 export async function updateUserStatusHandler(req: Request, res: Response) {

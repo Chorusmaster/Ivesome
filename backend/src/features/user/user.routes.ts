@@ -5,6 +5,7 @@ import { requireAdmin } from "../../middlewares/admin.middleware.js";
 import {
   updateProfileHandler,
   getUserHandler,
+  deleteMeHandler,
   updateUserStatusHandler,
 } from "./user.controller.js";
 import { upload } from "../storage/storage.service.js";
@@ -19,6 +20,8 @@ router.put(
 );
 
 router.get("/user/:id", getUserHandler);
+
+router.delete("/users/me", authenticate, deleteMeHandler);
 
 router.patch(
   "/users/:userId/status",

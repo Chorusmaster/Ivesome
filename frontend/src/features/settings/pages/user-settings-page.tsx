@@ -1,43 +1,108 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/features/auth/auth.context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import i18n from "@/app/i18n";
 import Card from "@/shared/ui/card";
 import Select from "@/shared/ui/select";
 import SettingsEntry from "../ui/settings-entry";
 import Toggle from "@/shared/ui/toggle";
-
-interface NotificationsSettings {
-  project: boolean;
-  participationRequest: boolean;
-  comment: boolean;
-  conversation: boolean;
-  report: boolean;
-  other: boolean;
-}
+import {
+  getSettings,
+  updateSettings,
+  type UpdateSettingsData,
+  type UserSettings,
+} from "../settings.api";
+import { DeleteProfileDialog } from "../ui/delete-profile-dialog";
 
 export default function UserSettingsPage() {
-  const { user } = useAuth();
+  const { user, logout, deleteAccount } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const [publicProfile, setPublicProfile] = useState(true);
-  const [showEmail, setShowEmail] = useState(true);
+  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [isSettingsLoading, setIsSettingsLoading] = useState(true);
+  const [savingKeys, setSavingKeys] = useState<Set<string>>(new Set());
+  const [settingsError, setSettingsError] = useState<"load" | "save" | null>(
+    null,
+  );
 
-  const [notifications, setNotifications] = useState<NotificationsSettings>({
-    project: false,
-    participationRequest: false,
-    comment: false,
-    conversation: false,
-    report: false,
-    other: false,
-  });
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
+  const [deleteAccountError, setDeleteAccountError] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+
+    let isCurrent = true;
+    setIsSettingsLoading(true);
+    setSettingsError(null);
+
+    getSettings()
+      .then((result) => {
+        if (isCurrent) setSettings(result);
+      })
+      .catch(() => {
+        if (isCurrent) setSettingsError("load");
+      })
+      .finally(() => {
+        if (isCurrent) setIsSettingsLoading(false);
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, [user?.id]);
+
+  async function handleSettingsChange(changes: UpdateSettingsData) {
+    if (!settings) return;
+
+    const keysToUpdate = Object.keys(changes);
+    const previousSettings = { ...settings };
+
+    setSettings((prev) => (prev ? { ...prev, ...changes } : null));
+    setSettingsError(null);
+
+    setSavingKeys((prev) => {
+      const next = new Set(prev);
+      keysToUpdate.forEach((k) => next.add(k));
+      return next;
+    });
+
+    try {
+      await updateSettings(changes);
+    } catch {
+      setSettings(previousSettings);
+      setSettingsError("save");
+    } finally {
+      setSavingKeys((prev) => {
+        const next = new Set(prev);
+        keysToUpdate.forEach((k) => next.delete(k));
+        return next;
+      });
+    }
+  }
+
+  async function handleDeleteProfile() {
+    setIsDeletingAccount(true);
+    setDeleteAccountError(false);
+    try {
+      await deleteAccount();
+      setDeleteDialogOpen(false);
+      navigate("/login");
+    } catch {
+      setDeleteAccountError(true);
+    } finally {
+      setIsDeletingAccount(false);
+    }
+  }
 
   if (!user) {
     navigate("/register");
     return;
   }
+
+  sessionStorage.setItem("email", user.email);
 
   return (
     <div className="main-container-narrow">
@@ -107,12 +172,22 @@ export default function UserSettingsPage() {
           <SettingsEntry
             title={t("settings.privacy.publicProfile")}
             description={
-              publicProfile
+              (settings?.publicProfile ?? true)
                 ? t("settings.privacy.publicProfileVisible")
                 : t("settings.privacy.publicProfileHidden")
             }
             action={
-              <Toggle checked={publicProfile} onChange={setPublicProfile} />
+              <Toggle
+                checked={settings?.publicProfile ?? true}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("publicProfile")
+                }
+                onChange={(value) =>
+                  void handleSettingsChange({ publicProfile: value })
+                }
+              />
             }
           />
 
@@ -121,11 +196,21 @@ export default function UserSettingsPage() {
           <SettingsEntry
             title={t("settings.privacy.showEmail")}
             description={
-              showEmail
+              (settings?.showEmail ?? true)
                 ? t("settings.privacy.emailVisible")
                 : t("settings.privacy.emailHidden")
             }
-            action={<Toggle checked={showEmail} onChange={setShowEmail} />}
+            action={
+              <Toggle
+                checked={settings?.showEmail ?? true}
+                disabled={
+                  isSettingsLoading || !settings || savingKeys.has("showEmail")
+                }
+                onChange={(value) =>
+                  void handleSettingsChange({ showEmail: value })
+                }
+              />
+            }
           />
         </Card>
 
@@ -138,21 +223,22 @@ export default function UserSettingsPage() {
             action={
               <Toggle
                 checked={
-                  notifications.project &&
-                  notifications.participationRequest &&
-                  notifications.comment &&
-                  notifications.conversation &&
-                  notifications.report &&
-                  notifications.other
+                  settings?.notifyProject === true &&
+                  settings.notifyParticipationRequest &&
+                  settings.notifyComment &&
+                  settings.notifyConversation &&
+                  settings.notifyReport &&
+                  settings.notifyOther
                 }
+                disabled={isSettingsLoading || !settings || savingKeys.size > 0}
                 onChange={(value) =>
-                  setNotifications({
-                    project: value,
-                    participationRequest: value,
-                    comment: value,
-                    conversation: value,
-                    report: value,
-                    other: value,
+                  void handleSettingsChange({
+                    notifyProject: value,
+                    notifyParticipationRequest: value,
+                    notifyComment: value,
+                    notifyConversation: value,
+                    notifyReport: value,
+                    notifyOther: value,
                   })
                 }
               />
@@ -169,12 +255,14 @@ export default function UserSettingsPage() {
             description={t("settings.notifications.projectDescription")}
             action={
               <Toggle
-                checked={notifications.project}
+                checked={settings?.notifyProject ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("notifyProject")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    project: value,
-                  }))
+                  void handleSettingsChange({ notifyProject: value })
                 }
               />
             }
@@ -189,12 +277,16 @@ export default function UserSettingsPage() {
             )}
             action={
               <Toggle
-                checked={notifications.participationRequest}
+                checked={settings?.notifyParticipationRequest ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("notifyParticipationRequest")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    participationRequest: value,
-                  }))
+                  void handleSettingsChange({
+                    notifyParticipationRequest: value,
+                  })
                 }
               />
             }
@@ -207,12 +299,14 @@ export default function UserSettingsPage() {
             description={t("settings.notifications.commentsDescription")}
             action={
               <Toggle
-                checked={notifications.comment}
+                checked={settings?.notifyComment ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("notifyComment")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    comment: value,
-                  }))
+                  void handleSettingsChange({ notifyComment: value })
                 }
               />
             }
@@ -225,12 +319,14 @@ export default function UserSettingsPage() {
             description={t("settings.notifications.conversationsDescription")}
             action={
               <Toggle
-                checked={notifications.conversation}
+                checked={settings?.notifyConversation ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("nofityConversation")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    conversation: value,
-                  }))
+                  void handleSettingsChange({ notifyConversation: value })
                 }
               />
             }
@@ -243,12 +339,14 @@ export default function UserSettingsPage() {
             description={t("settings.notifications.reportsDescription")}
             action={
               <Toggle
-                checked={notifications.report}
+                checked={settings?.notifyReport ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("notifyReport")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    report: value,
-                  }))
+                  void handleSettingsChange({ notifyReport: value })
                 }
               />
             }
@@ -261,12 +359,14 @@ export default function UserSettingsPage() {
             description={t("settings.notifications.otherDescription")}
             action={
               <Toggle
-                checked={notifications.other}
+                checked={settings?.notifyOther ?? false}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("notifyOther")
+                }
                 onChange={(value) =>
-                  setNotifications((prev) => ({
-                    ...prev,
-                    other: value,
-                  }))
+                  void handleSettingsChange({ notifyOther: value })
                 }
               />
             }
@@ -277,11 +377,20 @@ export default function UserSettingsPage() {
           <h2 className="subheading">{t("settings.security.title")}</h2>
 
           <div className="flex gap-2">
-            <button className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2">
+            <Link
+              to="/forgot-password"
+              className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2"
+            >
               {t("settings.security.changePassword")}
-            </button>
+            </Link>
 
-            <button className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2">
+            <button
+              onClick={() => {
+                logout();
+                navigate("/login");
+              }}
+              className="button border border-border text-text-secondary hover:text-primary hover:border-primary transition flex items-center gap-2"
+            >
               {t("settings.security.logOut")}
             </button>
           </div>
@@ -292,9 +401,23 @@ export default function UserSettingsPage() {
             {t("settings.dangerZone.title")}
           </h2>
 
-          <button className="button bg-danger hover:bg-danger-hover text-white">
+          <button
+            onClick={() => {
+              setDeleteAccountError(false);
+              setDeleteDialogOpen(true);
+            }}
+            className="button bg-danger hover:bg-danger-hover text-white"
+          >
             {t("settings.dangerZone.deleteAccount")}
           </button>
+
+          <DeleteProfileDialog
+            open={deleteDialogOpen}
+            onOpenChange={setDeleteDialogOpen}
+            submitting={isDeletingAccount}
+            error={deleteAccountError ? t("settings.deleteProfileDialog.error") : undefined}
+            onSubmit={handleDeleteProfile}
+          />
         </Card>
       </div>
     </div>
