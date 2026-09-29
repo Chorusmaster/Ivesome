@@ -5,7 +5,6 @@ const userIncludes = {
   select: {
     id: true,
     login: true,
-    email: true,
     firstName: true,
     lastName: true,
     avatarLink: true,

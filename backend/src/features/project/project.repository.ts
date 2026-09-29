@@ -28,7 +28,6 @@ export async function getProjectById(id: string) {
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,
@@ -66,7 +65,6 @@ export async function getProjectByWorkspaceId(workspaceId: string) {
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,
@@ -114,7 +112,6 @@ export async function getAllProjects({
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,
@@ -292,7 +289,6 @@ export async function createProject(
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,
@@ -343,7 +339,6 @@ export async function updateProject(
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,
@@ -384,7 +379,6 @@ export async function turnIdeaIntoProject(
             select: {
               id: true,
               login: true,
-              email: true,
               firstName: true,
               lastName: true,
               avatarLink: true,

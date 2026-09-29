@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
 import {
   updateProfile,
-  getUser,
+  getUserProfile,
   deleteUser,
   updateUserStatus,
 } from "./user.service.js";
@@ -19,7 +19,9 @@ export async function updateProfileHandler(req: Request, res: Response) {
 }
 
 export async function getUserHandler(req: Request, res: Response) {
-  res.json(await getUser(getParam(req.params.id, "user id")));
+  res.json(
+    await getUserProfile(getParam(req.params.id, "user id"), req.user?.id),
+  );
 }
 
 export async function deleteMeHandler(req: Request, res: Response) {

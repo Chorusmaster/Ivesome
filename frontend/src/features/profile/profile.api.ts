@@ -32,7 +32,6 @@ export const updateProfile = async (data: UpdateProfileData) => {
   formData.append("interests", JSON.stringify(data.interests));
   formData.append("links", JSON.stringify(data.links));
 
-  console.log(data.avatar);
   if (data.avatar) {
     formData.append("avatar", data.avatar);
   }

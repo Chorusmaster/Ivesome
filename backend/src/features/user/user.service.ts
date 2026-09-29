@@ -1,9 +1,44 @@
 import type { RawUpdateUserData, UserStatus } from "./user.types.js";
 import { deleteUserById, getUserById, updateUser } from "./user.repository.js";
 import { ApiError } from "../../types/error.types.js";
+import { getSettingsByUserId } from "../settings/settings.repository.js";
 
 export async function getUser(userId: string) {
   return await getUserById(userId);
+}
+
+export async function getUserProfile(userId: string, requesterId?: string) {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const isOwner = requesterId === userId;
+  const settings = await getSettingsByUserId(userId);
+
+  if (!isOwner && !settings.publicProfile) {
+    throw new ApiError(404, "User not found");
+  }
+
+  const { id, login, email, firstName, lastName, avatarLink, location, bio,
+    about, skills, interests, links, createdAt } = user;
+
+  return {
+    id,
+    login,
+    ...(isOwner || settings.showEmail ? { email } : {}),
+    firstName,
+    lastName,
+    avatarLink,
+    location,
+    bio,
+    about,
+    skills,
+    interests,
+    links,
+    createdAt,
+  };
 }
 
 export async function deleteUser(userId: string) {

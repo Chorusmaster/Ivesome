@@ -104,12 +104,11 @@ function Navbar() {
             <Popover.Trigger
               type="button"
               aria-label={t("shared.navbar.userMenu.ariaLabel")}
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 h-full flex items-end"
             >
               <Avatar
                 user={user ?? undefined}
                 theme="accent"
-                imageUrl={filePathToUrl(user?.avatarLink)}
               />
             </Popover.Trigger>
             <Popover.Content className="flex flex-col gap-1">

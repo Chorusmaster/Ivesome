@@ -25,7 +25,6 @@ type AvatarProps = {
   customText?: string;
   size?: keyof typeof sizes;
   theme?: keyof typeof themes;
-  imageUrl?: string;
 };
 
 function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
@@ -46,7 +45,7 @@ function Avatar({ user, customText, size="md", theme="primary" }: AvatarProps) {
           src={filePathToUrl(user.avatarLink)}
           alt={name.join(" ")}
           onError={() => setImageError(true)}
-          className="size-full rounded-full object-cover"
+          className="block size-full rounded-full object-cover"
         />
       ) : 
         customText ? customText : initials
