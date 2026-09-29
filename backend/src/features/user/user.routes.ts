@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { validate } from "../../middlewares/validate.middleware.js";
 import { authenticate } from "../../middlewares/auth.middleware.js";
+import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
 import { requireAdmin } from "../../middlewares/admin.middleware.js";
 import {
   updateProfileHandler,
@@ -19,7 +19,7 @@ router.put(
   updateProfileHandler,
 );
 
-router.get("/user/:id", getUserHandler);
+router.get("/user/:id", optionalAuth, getUserHandler);
 
 router.delete("/users/me", authenticate, deleteMeHandler);
 

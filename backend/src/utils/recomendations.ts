@@ -8,9 +8,6 @@ export async function getRecommendations(user: User, projects: Project[]) {
   const upvotedProjects = await getUpvotedProjects({ userId: user.id });
   const favouriteProjects = await getFavouriteProjects({ userId: user.id });
 
-  console.log(upvotedProjects);
-  console.log(favouriteProjects);
-
   const recommendations = projects
     .map((project) => ({
       project,

@@ -28,7 +28,6 @@ function ConversationsPage() {
     async function loadConversations() {
       const items = await getConversations();
 
-      console.log(items);
       setConversations(items);
     }
 

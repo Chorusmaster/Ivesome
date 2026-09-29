@@ -60,7 +60,7 @@ function Popover({ children, className, ...props }: PopoverProps) {
       <div
         ref={ref}
         data-slot="popover"
-        className={"relative " + className}
+        className={"relative " + (className ?? "")}
         {...props}
       >
         {children}

@@ -84,7 +84,6 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const user = await getMe();
         setUser(user);
-        console.log(user);
       } catch {
         setUser(null);
       } finally {

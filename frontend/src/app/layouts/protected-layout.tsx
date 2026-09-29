@@ -10,6 +10,7 @@ function ProtectedLayout() {
   }
 
   if (user && user.status=="UNVERIFIED") {
+    console.log(user)
     return <Navigate to="/verify-email" replace />;
   }
 
