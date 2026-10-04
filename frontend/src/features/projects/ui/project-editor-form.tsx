@@ -7,6 +7,7 @@ import Select from "@/shared/ui/select";
 import MultipleFileUpload from "@/shared/ui/multiple-file-upload";
 import FileUpload from "@/shared/ui/file-upload";
 import type { MultipleFileUploadRef } from "@/shared/ui/multiple-file-upload";
+import ListField from "@/shared/ui/list-field";
 
 import type { CreateProjectPayload } from "../projects.types";
 import { useTranslation } from "react-i18next";
@@ -37,10 +38,8 @@ function ProjectEditorForm({
   const [description, setDescription] = useState(
     initialValues?.description ?? "",
   );
-  const [tags, setTags] = useState((initialValues?.tags ?? []).join(", "));
-  const [skills, setSkills] = useState(
-    (initialValues?.skills ?? []).join(", "),
-  );
+  const [tags, setTags] = useState(initialValues?.tags ?? []);
+  const [skills, setSkills] = useState(initialValues?.skills ?? []);
   const [visibility, setVisibility] = useState<"PRIVATE" | "PUBLIC">(
     initialValues?.visibility ?? "PRIVATE",
   );
@@ -55,8 +54,8 @@ function ProjectEditorForm({
     setTitle(initialValues?.title ?? "");
     setShortDescription(initialValues?.shortDescription ?? "");
     setDescription(initialValues?.description ?? "");
-    setTags((initialValues?.tags ?? []).join(", "));
-    setSkills((initialValues?.skills ?? []).join(", "));
+    setTags(initialValues?.tags ?? []);
+    setSkills(initialValues?.skills ?? []);
     setVisibility(initialValues?.visibility ?? "PRIVATE");
   }, [initialValues]);
 
@@ -72,14 +71,8 @@ function ProjectEditorForm({
         title,
         shortDescription,
         description,
-        tags: tags
-          .split("projects.,")
-          .map((tag) => tag.trim())
-          .filter(Boolean),
-        skills: skills
-          .split("projects.,")
-          .map((skill) => skill.trim())
-          .filter(Boolean),
+        tags,
+        skills,
         logo,
         media,
         visibility,
@@ -143,21 +136,26 @@ function ProjectEditorForm({
           ]}
         />
 
-        <div className="grid grid-cols-2 gap-4">
-          <Input
-            label={t("projects.projectEditor.tagsLabel")}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <ListField
             id="tags"
+            label={t("projects.projectEditor.tagsLabel")}
             placeholder={t("projects.projectEditor.tagsPlaceholder")}
-            value={tags}
-            onChange={(e) => setTags(e.target.value)}
+            addLabel={t("projects.projectEditor.add")}
+            removeLabel={t("projects.projectEditor.remove")}
+            resetKey={initialValues}
+            values={tags}
+            onChange={setTags}
           />
-
-          <Input
-            label={t("projects.projectEditor.skillsLabel")}
+          <ListField
             id="skills"
+            label={t("projects.projectEditor.skillsLabel")}
             placeholder={t("projects.projectEditor.skillsPlaceholder")}
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
+            addLabel={t("projects.projectEditor.add")}
+            removeLabel={t("projects.projectEditor.remove")}
+            resetKey={initialValues}
+            values={skills}
+            onChange={setSkills}
           />
         </div>
       </Card>

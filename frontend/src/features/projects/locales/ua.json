@@ -75,9 +75,11 @@
       "public": "Публічна"
     },
     "tagsLabel": "Теги",
-    "tagsPlaceholder": "продуктивність, saas, b2b",
+    "tagsPlaceholder": "Назва нового тегу",
     "skillsLabel": "Навички",
-    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "skillsPlaceholder": "Назва нового інтересу",
+    "add": "Додати",
+    "remove": "Видалити",
     "avatarTitle": "Аватар",
     "mediaTitle": "Медіа",
     "cancel": "Скасувати",
