@@ -9,6 +9,7 @@ import Card from "@/shared/ui/card";
 import Input from "@/shared/ui/input";
 import Textarea from "@/shared/ui/textarea";
 import FileUpload from "@/shared/ui/file-upload";
+import ListField from "@/shared/ui/list-field";
 
 function ProfileForm() {
   const { t } = useTranslation();
@@ -22,24 +23,14 @@ function ProfileForm() {
   const [location, setLocation] = useState("");
   const [bio, setBio] = useState("");
   const [about, setAbout] = useState("");
-  const [skills, setSkills] = useState("");
-  const [interests, setInterests] = useState("");
+  const [skills, setSkills] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>([]);
   const [links, setLinks] = useState<ProfileLinkInput[]>([]);
   const [generalError, setGeneralError] = useState("");
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     try {
-      const skillsFormatted = skills
-        .split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean);
-
-      const interestsFormatted = interests
-        .split(",")
-        .map((interest) => interest.trim())
-        .filter(Boolean);
-
       await updateProfile({
         firstName,
         lastName,
@@ -48,8 +39,8 @@ function ProfileForm() {
         location,
         bio,
         about,
-        skills: skillsFormatted,
-        interests: interestsFormatted,
+        skills,
+        interests,
         links,
       });
 
@@ -102,8 +93,8 @@ function ProfileForm() {
     setLocation(user?.location ?? "");
     setBio(user?.bio ?? "");
     setAbout(user?.about ?? "");
-    setSkills(user?.skills?.join(", ") ?? "");
-    setInterests(user?.interests?.join(", ") ?? "");
+    setSkills(user?.skills ?? []);
+    setInterests(user?.interests ?? []);
     setLinks(
       (user?.links ?? []).map((link) => {
         return { id: crypto.randomUUID(), link: link.link };
@@ -177,22 +168,27 @@ function ProfileForm() {
           {t("profile.form.skillsAndLinks")}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <Input
+        <div className="grid grid-cols-2 gap-4 mb-2">
+          <ListField
             label={t("profile.form.skills")}
             id="skills"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
+            values={skills}
+            onChange={setSkills}
             placeholder={t("profile.form.skillsPlaceholder")}
-            className="mb-4"
+            addLabel={t("profile.form.add")}
+            removeLabel={t("profile.form.remove")}
+            resetKey={user}
           />
 
-          <Input
+          <ListField
             label={t("profile.form.interests")}
             id="interests"
-            value={interests}
-            onChange={(e) => setInterests(e.target.value)}
+            values={interests}
+            onChange={setInterests}
             placeholder={t("profile.form.interestsPlaceholder")}
+            addLabel={t("profile.form.add")}
+            removeLabel={t("profile.form.remove")}
+            resetKey={user}
           />
         </div>
 
@@ -211,7 +207,7 @@ function ProfileForm() {
             </button>
             <div className="flex-1 flex flex-col gap-2">
               {links.map((link) => (
-                <div key={link.id} className="flex items-center gap-2">
+                <div key={link.id} className="flex items-end gap-2">
                   <div className="flex-1">
                     <Input
                       type="url"
@@ -231,7 +227,7 @@ function ProfileForm() {
                   <button
                     type="button"
                     onClick={() => removeLink(link.id)}
-                    className="button h-10.5 min-w-10.5 shrink-0 border border-border bg-surface px-3 text-sm text-muted hover:border-danger hover:text-danger"
+                    className="button h-11.5 min-w-10.5 shrink-0 border border-border bg-surface px-3 text-sm text-muted hover:border-danger hover:text-danger"
                     aria-label={t("profile.form.deleteLink")}
                   >
                     {t("profile.form.delete")}

@@ -75,9 +75,11 @@
       "public": "Verejné"
     },
     "tagsLabel": "Značky",
-    "tagsPlaceholder": "produktivita, saas, b2b",
+    "tagsPlaceholder": "Názov novej značky",
     "skillsLabel": "Zručnosti",
-    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "skillsPlaceholder": "Názov novej zručnosti",
+    "add": "Pridať",
+    "remove": "Odstrániť",
     "avatarTitle": "Avatar",
     "mediaTitle": "Médiá",
     "cancel": "Zrušiť",

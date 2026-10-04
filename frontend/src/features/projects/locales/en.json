@@ -75,9 +75,11 @@
       "public": "Public"
     },
     "tagsLabel": "Tags",
-    "tagsPlaceholder": "productivity, saas, b2b",
+    "tagsPlaceholder": "New tag name",
     "skillsLabel": "Skills",
-    "skillsPlaceholder": "backend, Node.js, Express.js",
+    "skillsPlaceholder": "New skill name",
+    "add": "Add",
+    "remove": "Remove",
     "avatarTitle": "Avatar",
     "mediaTitle": "Media",
     "cancel": "Cancel",
