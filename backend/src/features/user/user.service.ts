@@ -4,7 +4,45 @@ import { ApiError } from "../../types/error.types.js";
 import { getSettingsByUserId } from "../settings/settings.repository.js";
 
 export async function getUser(userId: string) {
-  return await getUserById(userId);
+  const user = await getUserById(userId);
+
+  if (!user) return null;
+
+  const {
+    id,
+    login,
+    email,
+    firstName,
+    lastName,
+    avatarLink,
+    location,
+    bio,
+    role,
+    status,
+    about,
+    skills,
+    interests,
+    links,
+    createdAt,
+  } = user;
+
+  return {
+    id,
+    login,
+    email,
+    firstName,
+    lastName,
+    avatarLink,
+    location,
+    bio,
+    role,
+    status,
+    about,
+    skills,
+    interests,
+    links,
+    createdAt,
+  };
 }
 
 export async function getUserProfile(userId: string, requesterId?: string) {
@@ -21,8 +59,21 @@ export async function getUserProfile(userId: string, requesterId?: string) {
     throw new ApiError(404, "User not found");
   }
 
-  const { id, login, email, firstName, lastName, avatarLink, location, bio,
-    about, skills, interests, links, createdAt } = user;
+  const {
+    id,
+    login,
+    email,
+    firstName,
+    lastName,
+    avatarLink,
+    location,
+    bio,
+    about,
+    skills,
+    interests,
+    links,
+    createdAt,
+  } = user;
 
   return {
     id,
@@ -50,20 +101,25 @@ export async function updateProfile(
   data: RawUpdateUserData,
   avatarLink?: string,
 ) {
-  const skills = data.skills 
-    ? [...new Set(JSON.parse(data.skills))] as string[] 
+  const skills = data.skills
+    ? ([...new Set(JSON.parse(data.skills))] as string[])
     : undefined;
 
-  const interests = data.interests 
-    ? [...new Set(JSON.parse(data.interests))] as string[]
+  const interests = data.interests
+    ? ([...new Set(JSON.parse(data.interests))] as string[])
     : undefined;
 
   return await updateUser(userId, {
-    ...data,
+    login: data.login,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    location: data.location,
+    bio: data.bio,
+    about: data.about,
     skills,
     interests,
     links: data.links ? JSON.parse(data.links) : undefined,
-    avatarLink: avatarLink,
+    avatarLink,
   });
 }
 

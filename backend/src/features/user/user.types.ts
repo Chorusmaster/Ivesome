@@ -8,13 +8,8 @@ export interface CreateUserData {
 
 export interface RawUpdateUserData {
   login?: string | undefined;
-  email?: string | undefined;
-  passwordHash?: string | undefined;
-  role?: UserRole | undefined;
-  status?: UserStatus | undefined;
   firstName?: string | undefined;
   lastName?: string | undefined;
-  avatar?: File | undefined;
   location?: string | undefined;
   bio?: string | undefined;
   about?: string | undefined;
