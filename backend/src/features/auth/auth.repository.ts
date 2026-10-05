@@ -6,7 +6,6 @@ import {
   updateUser,
 } from "../user/user.repository.js";
 import type { AuthTokenType } from "./auth.types.js";
-import type { UpdateUserData } from "../user/user.types.js";
 
 export async function createRefreshSession(
   jti: string,

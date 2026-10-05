@@ -16,6 +16,13 @@ import {
 } from "./project.controller.js";
 import { upload } from "../storage/storage.service.js";
 import { optionalAuth } from "../../middlewares/optional-auth.middleware.js";
+import { validate } from "../../middlewares/validate.middleware.js";
+import {
+  addProjectMemberSchema,
+  createProjectSchema,
+  updateProjectSchema,
+  updateProjectStatusSchema,
+} from "./project.schema.js";
 
 const router = Router();
 
@@ -37,6 +44,7 @@ router.patch(
   "/:projectId/status",
   authenticate,
   requireAdmin,
+  validate(updateProjectStatusSchema),
   updateProjectStatusHandler,
 );
 
@@ -53,6 +61,7 @@ router.post(
     { name: "media", maxCount: 10 },
     { name: "logo", maxCount: 1 },
   ]),
+  validate(createProjectSchema),
   createProjectHandler,
 );
 
@@ -69,12 +78,18 @@ router.put(
     { name: "media", maxCount: 10 },
     { name: "logo", maxCount: 1 },
   ]),
+  validate(updateProjectSchema),
   updateProjectHandler,
 );
 
 router.delete("/:id", authenticate, deleteProjectHandler);
 
-router.post("/:projectId/members/:userId", authenticate, addMemberHandler);
+router.post(
+  "/:projectId/members/:userId",
+  authenticate,
+  validate(addProjectMemberSchema),
+  addMemberHandler,
+);
 
 router.delete("/:projectId/members/:userId", authenticate, removeMemberHandler);
 
