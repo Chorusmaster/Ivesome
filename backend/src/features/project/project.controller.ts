@@ -13,11 +13,11 @@ import {
   removeMember,
   updateProjectStatus,
 } from "./project.service.js";
-import type { 
-  CreateProjectData, 
+import type {
+  CreateProjectData,
   UpdateProjectData,
   ProjectSort,
-  ProjectStage
+  ProjectStage,
 } from "./project.types.js";
 import { ApiError } from "../../types/error.types.js";
 import { getParam } from "../../utils/validation.js";
@@ -78,29 +78,48 @@ export async function listPublicProjectsHandler(req: Request, res: Response) {
   const userId = req.user?.id;
   const sort = req.query.sort as ProjectSort | undefined;
 
-  const stages = (Array.isArray(req.query.stages)
-  ? req.query.stages
-  : req.query.stages
-    ? [req.query.stages]
-    : []) as ProjectStage[];
+  const stages = (
+    Array.isArray(req.query.stages)
+      ? req.query.stages
+      : req.query.stages
+        ? [req.query.stages]
+        : []
+  ) as ProjectStage[];
 
-  const tags = (Array.isArray(req.query.tags)
-  ? req.query.tags
-  : req.query.tags
-    ? [req.query.tags]
-    : []) as string[];
+  const tags = (
+    Array.isArray(req.query.tags)
+      ? req.query.tags
+      : req.query.tags
+        ? [req.query.tags]
+        : []
+  ) as string[];
 
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
 
-  const projects = await listPublicProjects(skip, take, query, sort, stages, tags, userId);
+  const projects = await listPublicProjects(
+    skip,
+    take,
+    query,
+    sort,
+    stages,
+    tags,
+    userId,
+  );
   res.json(projects);
 }
 
-export async function listFavouriteProjectsHandler(req: Request, res: Response) {
+export async function listFavouriteProjectsHandler(
+  req: Request,
+  res: Response,
+) {
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
-  const projects = await listFavouriteProjects(getParam(req.user?.id, "user id"), skip, take);
+  const projects = await listFavouriteProjects(
+    getParam(req.user?.id, "user id"),
+    skip,
+    take,
+  );
   res.json(projects);
 }
 
@@ -214,6 +233,7 @@ export async function addMemberHandler(req: Request, res: Response) {
 
   const member = await addMember(
     req.params.projectId,
+    getParam(req.user?.id, "user id"),
     req.params.userId,
     role || "MEMBER",
   );
@@ -229,6 +249,10 @@ export async function removeMemberHandler(req: Request, res: Response) {
     throw new ApiError(422, "Invalid user id");
   }
 
-  await removeMember(req.params.projectId, req.params.userId);
+  await removeMember(
+    req.params.projectId,
+    getParam(req.user?.id, "user id"),
+    req.params.userId,
+  );
   res.status(204).send();
 }

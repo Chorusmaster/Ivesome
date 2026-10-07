@@ -40,7 +40,7 @@ const profileLinks = z.string().superRefine((value, ctx) => {
   const result = z
     .array(
       z.object({
-        type: z.enum(["GITHUB", "LINKEDIN", "UNKNOWN"]),
+        type: z.enum(["GITHUB", "LINKEDIN", "UNKNOWN"]).optional(),
         link: z.string().trim().min(1),
       }),
     )
