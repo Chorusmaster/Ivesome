@@ -19,9 +19,9 @@ import {
   removeProjectMember,
   getProjectMemberRole,
 } from "./project.repository.js";
-import { 
-  assertCanViewProject, 
-  assertProjectPermission 
+import {
+  assertCanViewProject,
+  assertProjectPermission,
 } from "./project.authorization.js";
 import { ApiError } from "../../types/error.types.js";
 
@@ -50,13 +50,13 @@ export async function listUserProjects(
 }
 
 export async function listPublicProjects(
-  skip?: number, 
+  skip?: number,
   take?: number,
-  query?: string, 
-  sort?: ProjectSort, 
+  query?: string,
+  sort?: ProjectSort,
   stages?: ProjectStage[],
   tags?: string[],
-  userId?: string
+  userId?: string,
 ) {
   return await listPublicProjectsDb({
     ...(skip !== undefined && { skip }),
@@ -70,9 +70,9 @@ export async function listPublicProjects(
 }
 
 export async function listFavouriteProjects(
-  userId: string, 
-  skip?: number, 
-  take?: number
+  userId: string,
+  skip?: number,
+  take?: number,
 ) {
   return await listFavouriteProjectsDb({
     userId,
@@ -85,15 +85,15 @@ export async function createProject(data: CreateProjectData, ownerId: string) {
   const processedData = {
     title: data.title,
     shortDescription: data.shortDescription,
-    ...(data.description !== undefined && {description: data.description}),
+    ...(data.description !== undefined && { description: data.description }),
     stage: data.stage,
     visibility: data.visibility,
-    ...(data.status !== undefined && {status: data.status}),
-    ...(data.tags !== undefined && {tags: [...new Set(data.tags)]}),
-    ...(data.skills !== undefined && {skills: [...new Set(data.skills)]}),
-    ...(data.logoLink !== undefined && {logoLink: data.logoLink}),
-    ...(data.mediaLinks !== undefined && {mediaLinks: data.mediaLinks}),
-  }
+    ...(data.status !== undefined && { status: data.status }),
+    ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
+    ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
+    ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
+    ...(data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks }),
+  };
 
   return await createProjectDb(processedData, ownerId);
 }
@@ -103,30 +103,28 @@ export async function updateProject(
   userId: string,
   data: UpdateProjectData,
 ) {
-  await assertProjectPermission(
-    projectId,
-    userId,
-    ["OWNER"],
-  );
+  await assertProjectPermission(projectId, userId, ["OWNER"]);
 
   if (data.stage) {
     const project = await getProjectById(projectId);
     if (!project?.workspace?.id) {
-      throw new ApiError(409, "Turn idea into project first to change stage")
+      throw new ApiError(409, "Turn idea into project first to change stage");
     }
   }
 
   const processedData = {
-    ...data.title !== undefined && { title: data.title },
-    ...data.shortDescription !== undefined && { shortDescription: data.shortDescription },
-    ...data.description !== undefined && { description: data.description },
-    ...data.stage !== undefined && { stage: data.stage },
-    ...data.visibility !== undefined && { visibility: data.visibility },
-    ...data.status !== undefined && { status: data.status },
-    ...data.tags !== undefined && { tags: [...new Set(data.tags)] },
-    ...data.skills !== undefined && { skills: [...new Set(data.skills)] },
-    ...data.logoLink !== undefined && { logoLink: data.logoLink },
-    ...data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks },
+    ...(data.title !== undefined && { title: data.title }),
+    ...(data.shortDescription !== undefined && {
+      shortDescription: data.shortDescription,
+    }),
+    ...(data.description !== undefined && { description: data.description }),
+    ...(data.stage !== undefined && { stage: data.stage }),
+    ...(data.visibility !== undefined && { visibility: data.visibility }),
+    ...(data.status !== undefined && { status: data.status }),
+    ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
+    ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
+    ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
+    ...(data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks }),
   };
 
   return await updateProjectDb(projectId, processedData);
@@ -152,15 +150,8 @@ export async function turnIdeaIntoProject(projectId: string, userId: string) {
   return turnIdeaIntoProjectDb(projectId);
 }
 
-export async function deleteProject( 
-  projectId: string,
-  userId: string
-) {
-  await assertProjectPermission(
-    projectId,
-    userId,
-    ["OWNER"],
-  );
+export async function deleteProject(projectId: string, userId: string) {
+  await assertProjectPermission(projectId, userId, ["OWNER"]);
 
   return await deleteProjectDb(projectId);
 }
@@ -181,25 +172,22 @@ export async function updateProjectStatus(
 export async function addMember(
   projectId: string,
   userId: string,
+  targetUserId: string,
   role: "OWNER" | "MEMBER" = "MEMBER",
 ) {
-  await assertProjectPermission(
-    projectId,
-    userId,
-    ["OWNER"],
-  );
+  await assertProjectPermission(projectId, userId, ["OWNER"]);
 
-  return await addProjectMember(projectId, userId, role);
+  return await addProjectMember(projectId, targetUserId, role);
 }
 
-export async function removeMember(projectId: string, userId: string) {
-  await assertProjectPermission(
-    projectId,
-    userId,
-    ["OWNER"],
-  );
+export async function removeMember(
+  projectId: string,
+  userId: string,
+  targetUserId: string,
+) {
+  await assertProjectPermission(projectId, userId, ["OWNER"]);
 
-  return await removeProjectMember(projectId, userId);
+  return await removeProjectMember(projectId, targetUserId);
 }
 
 export async function getMemberRole(projectId: string, userId: string) {
