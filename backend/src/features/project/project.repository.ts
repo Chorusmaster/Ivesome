@@ -140,16 +140,22 @@ export async function listUserProjects({
   userId,
   skip,
   take,
+  publicOnly
 }: {
   userId: string;
   skip?: number;
   take?: number;
+  publicOnly?: boolean;
 }): Promise<Project[]> {
   return getAllProjects({
     where: {
       members: {
         some: { userId },
       },
+      ...(publicOnly == true && {
+        status: "ACTIVE",
+        visibility: "PUBLIC"
+      })
     },
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),

@@ -67,9 +67,12 @@ export async function listUserProjectsHandler(req: Request, res: Response) {
     throw new ApiError(422, "Invalid user id");
   }
 
+  const ownProfile = req.user?.id === req.params.userId;
+
   const skip = req.query.skip ? parseInt(req.query.skip as string) : undefined;
   const take = req.query.take ? parseInt(req.query.take as string) : undefined;
-  const projects = await listUserProjects(req.params.userId, skip, take);
+  const projects = await listUserProjects(req.params.userId, skip, take, !ownProfile);
+
   res.json(projects);
 }
 
