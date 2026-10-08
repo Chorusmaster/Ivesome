@@ -32,7 +32,11 @@ router.get(
   listPublicProjectsHandler
 );
 
-router.get("/user/:userId", listUserProjectsHandler);
+router.get(
+  "/user/:userId", 
+  optionalAuth, 
+  listUserProjectsHandler
+);
 
 router.get(
   "/favourite",

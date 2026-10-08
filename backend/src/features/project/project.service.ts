@@ -41,11 +41,13 @@ export async function listUserProjects(
   userId: string,
   skip?: number,
   take?: number,
+  publicOnly?: boolean
 ) {
   return await listUserProjectsDb({
     userId,
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
+    ...(publicOnly !== undefined && { publicOnly }),
   });
 }
 
@@ -88,7 +90,7 @@ export async function createProject(data: CreateProjectData, ownerId: string) {
     ...(data.description !== undefined && { description: data.description }),
     stage: data.stage,
     visibility: data.visibility,
-    ...(data.status !== undefined && { status: data.status }),
+    status: "ACTIVE" as const,
     ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
     ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
     ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
@@ -120,7 +122,6 @@ export async function updateProject(
     ...(data.description !== undefined && { description: data.description }),
     ...(data.stage !== undefined && { stage: data.stage }),
     ...(data.visibility !== undefined && { visibility: data.visibility }),
-    ...(data.status !== undefined && { status: data.status }),
     ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
     ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
     ...(data.logoLink !== undefined && { logoLink: data.logoLink }),

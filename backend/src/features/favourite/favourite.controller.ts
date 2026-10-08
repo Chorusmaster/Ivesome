@@ -1,6 +1,7 @@
 import { getFavourite, toggleFavourite } from "./favourite.service.js";
 import type { Request, Response } from "express";
 import { ApiError } from "../../types/error.types.js";
+import { assertCanViewProject } from "../project/project.authorization.js";
 
 export const getFavouriteHandler = async (
   req: Request,
@@ -16,6 +17,7 @@ export const getFavouriteHandler = async (
     res.status(401).json({ error: "Unauthorized" });
     return;
   }
+  await assertCanViewProject(req.params.projectId, userId);
 
   const favourite = await getFavourite(
     userId,
@@ -32,6 +34,7 @@ export const toggleFavouriteHandler = async (
   if (!req.params.projectId || typeof req.params.projectId !== "string") {
     throw new ApiError(422, "Invalid project id");
   }
+  await assertCanViewProject(req.params.projectId, req.user.id);
 
   const userId = req.user.id;
 
