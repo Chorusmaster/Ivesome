@@ -11,11 +11,13 @@ import workspaceRoutes from "../features/workspace/workspace.routes.js";
 import notificationRoutes from "../features/notification/notification.routes.js";
 import reportRoutes from "../features/report/report.routes.js";
 import settingsRoutes from "../features/settings/settings.routes.js";
+import taxonomyRoutes from "../features/taxonomy/taxonomy.routes.js";
 
 const router = Router();
 
 router.use("/auth", authRoutes);
 router.use("/projects", projectRoutes);
+router.use(taxonomyRoutes);
 router.use(userRoutes);
 router.use(favouriteRoutes);
 router.use(upvoteRoutes);

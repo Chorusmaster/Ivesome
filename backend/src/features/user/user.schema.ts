@@ -14,8 +14,7 @@ const jsonStringArray = z.string().superRefine((value, ctx) => {
   }
 
   if (
-    !Array.isArray(parsed) ||
-    !parsed.every((item) => typeof item === "string")
+    !z.array(z.string().trim().min(1)).safeParse(parsed).success
   ) {
     ctx.addIssue({
       code: "custom",

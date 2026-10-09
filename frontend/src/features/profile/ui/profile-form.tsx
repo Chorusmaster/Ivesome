@@ -10,6 +10,10 @@ import Input from "@/shared/ui/input";
 import Textarea from "@/shared/ui/textarea";
 import FileUpload from "@/shared/ui/file-upload";
 import ListField from "@/shared/ui/list-field";
+import {
+  getSkillSuggestions,
+  getTagSuggestions,
+} from "@/features/taxonomy/taxonomy.api";
 
 function ProfileForm() {
   const { t } = useTranslation();
@@ -178,6 +182,7 @@ function ProfileForm() {
             addLabel={t("profile.form.add")}
             removeLabel={t("profile.form.remove")}
             resetKey={user}
+            fetchSuggestions={getSkillSuggestions}
           />
 
           <ListField
@@ -189,6 +194,7 @@ function ProfileForm() {
             addLabel={t("profile.form.add")}
             removeLabel={t("profile.form.remove")}
             resetKey={user}
+            fetchSuggestions={getTagSuggestions}
           />
         </div>
 

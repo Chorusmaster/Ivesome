@@ -1,11 +1,22 @@
 import { prisma } from "../../config/database.js";
 import { Prisma } from "../../generated/prisma/client.js";
-import type { User } from "../../generated/prisma/client.js";
+import type { Skill, Tag, User } from "../../generated/prisma/client.js";
 import type { CreateUserData, UpdateUserData } from "./user.types.js";
 import type { UserStatus } from "../user/user.types.js";
 
-export async function getUserById(id: string): Promise<User | null> {
-  return prisma.user.findUnique({ where: { id } });
+export type UserWithPreferences = User & {
+  skills: Skill[];
+  interests: Tag[];
+};
+
+export async function getUserById(id: string) {
+  return prisma.user.findUnique({
+    where: { id },
+    include: {
+      skills: { select: { id: true, name: true } },
+      interests: { select: { id: true, name: true } },
+    },
+  });
 }
 
 export async function getUserByEmail(email: string): Promise<User | null> {
@@ -73,6 +84,34 @@ export async function updateUser(
   data: UpdateUserData,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
 ) {
+  const skills =
+    data.skills === undefined
+      ? undefined
+      : await Promise.all(
+          [...new Set(data.skills.map((name) => name.trim()))].map((name) =>
+            tx.skill.upsert({
+              where: { name },
+              update: {},
+              create: { name },
+              select: { id: true },
+            }),
+          ),
+        );
+
+  const interests =
+    data.interests === undefined
+      ? undefined
+      : await Promise.all(
+          [...new Set(data.interests.map((name) => name.trim()))].map((name) =>
+            tx.tag.upsert({
+              where: { name },
+              update: {},
+              create: { name },
+              select: { id: true },
+            }),
+          ),
+        );
+
   return tx.user.update({
     where: { id: userId },
     data: {
@@ -87,10 +126,19 @@ export async function updateUser(
       ...(data.location !== undefined && { location: data.location, }),
       ...(data.bio !== undefined && { bio: data.bio, }),
       ...(data.about !== undefined && { about: data.about, }),
-      ...(data.skills !== undefined && { skills: data.skills, }),
-      ...(data.interests !== undefined && { interests: data.interests, }),
+      ...(skills !== undefined && {
+        skills: { set: skills.map(({ id }) => ({ id })) },
+      }),
+      ...(interests !== undefined && {
+        interests: { set: interests.map(({ id }) => ({ id })) },
+      }),
       ...(data.links !== undefined && { 
           links: data.links as unknown as Prisma.InputJsonValue, 
         }),
-  }});
+    },
+    include: {
+      skills: { select: { id: true, name: true } },
+      interests: { select: { id: true, name: true } },
+    },
+  });
 }

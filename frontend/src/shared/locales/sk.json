@@ -35,6 +35,12 @@
     "dropMessage": "Presuňte sem svoje obrázky",
     "clickMessage": "alebo kliknutím vyberte viacero obrázkov"
   },
+  "listField": {
+    "loadingSuggestions": "Načítavanie návrhov...",
+    "suggestionsError": "Návrhy sa nepodarilo načítať. Skúste to znova.",
+    "noSuggestions": "Nenašli sa žiadne návrhy.",
+    "usageCount": "použití: {{count}}"
+  },
   "reportDialog": {
     "title": "Nahlásiť nevhodný obsah",
     "description": "Opíšte, prečo sa domnievate, že tento obsah porušuje pravidlá komunity.",

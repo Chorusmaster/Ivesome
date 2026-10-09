@@ -8,6 +8,10 @@ import MultipleFileUpload from "@/shared/ui/multiple-file-upload";
 import FileUpload from "@/shared/ui/file-upload";
 import type { MultipleFileUploadRef } from "@/shared/ui/multiple-file-upload";
 import ListField from "@/shared/ui/list-field";
+import {
+  getSkillSuggestions,
+  getTagSuggestions,
+} from "@/features/taxonomy/taxonomy.api";
 
 import type { CreateProjectPayload } from "../projects.types";
 import { useTranslation } from "react-i18next";
@@ -146,6 +150,7 @@ function ProjectEditorForm({
             resetKey={initialValues}
             values={tags}
             onChange={setTags}
+            fetchSuggestions={getTagSuggestions}
           />
           <ListField
             id="skills"
@@ -156,6 +161,7 @@ function ProjectEditorForm({
             resetKey={initialValues}
             values={skills}
             onChange={setSkills}
+            fetchSuggestions={getSkillSuggestions}
           />
         </div>
       </Card>

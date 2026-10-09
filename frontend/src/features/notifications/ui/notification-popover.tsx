@@ -14,6 +14,7 @@ import type {
 } from "@/features/notifications/notifications.types";
 import { useNavigate } from "react-router-dom";
 import { getComment } from "@/features/projects/comments.api";
+import { formatDate } from "@/shared/lib/utils";
 
 function NotificationPopover() {
   const { t } = useTranslation();
@@ -168,7 +169,7 @@ function NotificationPopover() {
 
                   <div className="min-w-0 flex-1">
                     <button
-                      className="text-small text-text-primary hover:text-primary-hover wrap-break-word"
+                      className="text-small text-text-primary hover:text-primary-hover wrap-break-word text-left"
                       onClick={async () => {
                         await handleNotificationReference(
                           notification.referenceType,
@@ -180,7 +181,7 @@ function NotificationPopover() {
                       {notification.message}
                     </button>
                     <p className="mt-1 text-[11px] text-muted">
-                      {new Date(notification.createdAt).toLocaleString()}
+                      {formatDate(new Date(notification.createdAt))}
                     </p>
                   </div>
 
