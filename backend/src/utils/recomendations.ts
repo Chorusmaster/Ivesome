@@ -1,10 +1,14 @@
-import type { Project, User } from "../generated/prisma/client.js";
+import type { ProjectWithTaxonomy } from "../features/project/project.repository.js";
+import type { UserWithPreferences } from "../features/user/user.repository.js";
 import {
   getFavouriteProjects,
   getUpvotedProjects,
 } from "../features/project/project.repository.js";
 
-export async function getRecommendations(user: User, projects: Project[]) {
+export async function getRecommendations(
+  user: UserWithPreferences,
+  projects: ProjectWithTaxonomy[],
+) {
   const upvotedProjects = await getUpvotedProjects({ userId: user.id });
   const favouriteProjects = await getFavouriteProjects({ userId: user.id });
 
@@ -19,14 +23,20 @@ export async function getRecommendations(user: User, projects: Project[]) {
 }
 
 function calculateScore(
-  user: User,
-  project: Project,
-  upvotedProjects: Project[],
-  favouriteProjects: Project[],
+  user: UserWithPreferences,
+  project: ProjectWithTaxonomy,
+  upvotedProjects: ProjectWithTaxonomy[],
+  favouriteProjects: ProjectWithTaxonomy[],
 ) {
-  const userSkillsMatch = calculateSimilarity(user.skills, project.skills);
+  const userSkillsMatch = calculateSimilarity(
+    user.skills.map(({ name }) => name),
+    project.skills.map(({ name }) => name),
+  );
 
-  const userInterestsMatch = calculateSimilarity(user.interests, project.tags);
+  const userInterestsMatch = calculateSimilarity(
+    user.interests.map(({ name }) => name),
+    project.tags.map(({ name }) => name),
+  );
 
   const isUpvoted = upvotedProjects.some((p) => p.id === project.id);
   const isFavourite = favouriteProjects.some((p) => p.id === project.id);
@@ -57,12 +67,18 @@ function normalizeString(str: string) {
   );
 }
 
-function calculateProjectsSimilarity(projects: Project[], target: Project) {
+function calculateProjectsSimilarity(
+  projects: ProjectWithTaxonomy[],
+  target: ProjectWithTaxonomy,
+) {
   if (projects.length === 0) return 0;
 
   return Math.max(
     ...projects.map((project) =>
-      calculateSimilarity(project.tags, target.tags),
+      calculateSimilarity(
+        project.tags.map(({ name }) => name),
+        target.tags.map(({ name }) => name),
+      ),
     ),
   );
 }

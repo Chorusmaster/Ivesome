@@ -64,6 +64,14 @@ export function formatMessageDate(date: Date | string | undefined) {
   return format(value, dateFormats[language].otherYear, { locale });
 }
 
+export function formatDate(date: Date | string | undefined) {
+  if (date === undefined) return "n/d";
+
+  return format(new Date(date), "PP", {
+    locale: getDateLocale(),
+  });
+}
+
 export function getDateLocale() {
   const language = localStorage.getItem("language");
 

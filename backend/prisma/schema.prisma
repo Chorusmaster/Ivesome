@@ -133,8 +133,6 @@ model User {
   location     String?
   bio          String?
   about        String?
-  skills       String[]   @default([])
-  interests    String[]   @default([])
   links        Json       @default("[]")
   createdAt    DateTime   @default(now())
 
@@ -150,6 +148,9 @@ model User {
   authTokens            AuthToken[]
   refreshSessions       RefreshSession[]
   settings              Settings?
+
+  skills                Skill[]
+  interests             Tag[]
 }
 
 model Project {
@@ -162,8 +163,6 @@ model Project {
   status           ProjectStatus     @default(ACTIVE)
   createdAt        DateTime          @default(now())
   updatedAt        DateTime          @updatedAt
-  tags             String[]          @default([])
-  skills           String[]          @default([])
   logoLink         String?
   mediaLinks       Json?
 
@@ -173,6 +172,9 @@ model Project {
   upvotes               Upvote[]
   favourites            Favourite[]
   workspace             Workspace?
+
+  skills                Skill[]
+  tags                  Tag[]
 }
 
 model Workspace {
@@ -334,4 +336,18 @@ model Settings {
   notifyOther                Boolean @default(true)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Skill {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  users    User[]
+  projects Project[]
+}
+
+model Tag {
+  id       String    @id @default(cuid())
+  name     String    @unique
+  users    User[]
+  projects Project[]
 }

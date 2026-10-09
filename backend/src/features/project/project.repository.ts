@@ -1,6 +1,6 @@
 import { prisma } from "../../config/database.js";
 import { Prisma } from "../../generated/prisma/client.js";
-import type { Project } from "../../generated/prisma/client.js";
+import type { Project, Skill, Tag } from "../../generated/prisma/client.js";
 import { getRecommendations } from "../../utils/recomendations.js";
 import { getUserById } from "../user/user.repository.js";
 import type {
@@ -10,6 +10,11 @@ import type {
   ProjectStage,
   UpdateProjectData,
 } from "./project.types.js";
+
+export type ProjectWithTaxonomy = Project & {
+  skills: Pick<Skill, "id" | "name">[];
+  tags: Pick<Tag, "id" | "name">[];
+};
 
 export async function getProjectById(id: string) {
   return prisma.project.findUnique({
@@ -39,7 +44,9 @@ export async function getProjectById(id: string) {
         select: {
           id: true
         }
-      }
+      },
+      skills: { select: { id: true, name: true } },
+      tags: { select: { id: true, name: true } },
     },
   });
 }
@@ -76,7 +83,7 @@ export async function getProjectByWorkspaceId(workspaceId: string) {
         select: {
           id: true
         }
-      }
+      },
     },
   });
 }
@@ -91,7 +98,7 @@ export async function getAllProjects({
   skip?: number;
   take?: number;
   orderBy?: Prisma.ProjectOrderByWithRelationInput;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   return prisma.project.findMany({
     ...(where && { where }),
     ...(skip !== undefined && { skip }),
@@ -119,6 +126,8 @@ export async function getAllProjects({
           },
         },
       },
+      skills: { select: { id: true, name: true } },
+      tags: { select: { id: true, name: true } },
     },
   });
 }
@@ -129,7 +138,7 @@ export async function listProjects({
 }: {
   skip?: number;
   take?: number;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   return getAllProjects({
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
@@ -146,7 +155,7 @@ export async function listUserProjects({
   skip?: number;
   take?: number;
   publicOnly?: boolean;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   return getAllProjects({
     where: {
       members: {
@@ -178,7 +187,7 @@ export async function listPublicProjects({
   stages?: ProjectStage[];
   tags?: string[];
   userId?: string;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   const orderBy: Prisma.ProjectOrderByWithRelationInput =
     sort === "popular"
       ? { upvotes: { _count: "desc" } }
@@ -205,7 +214,7 @@ export async function listPublicProjects({
       }),
 
       ...(tags.length > 0 && {
-        tags: { hasSome: tags },
+        tags: { some: { name: { in: tags } } },
       }),
     },
     ...(skip !== undefined && { skip }),
@@ -233,7 +242,7 @@ export async function getFavouriteProjects({
   userId: string;
   skip?: number;
   take?: number;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   return getAllProjects({
     where: {
       favourites: {
@@ -253,7 +262,7 @@ export async function getUpvotedProjects({
   userId: string;
   skip?: number;
   take?: number;
-}): Promise<Project[]> {
+}): Promise<ProjectWithTaxonomy[]> {
   return getAllProjects({
     where: {
       upvotes: {
@@ -269,11 +278,27 @@ export async function createProject(
   data: CreateProjectData,
   ownerId: string,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
-): Promise<Project> {
+): Promise<ProjectWithTaxonomy> {
+  const { skills, tags, ...projectData } = data;
+
   return tx.project.create({
     data: {
-      ...data,
+      ...projectData,
       stage: "IDEA",
+      ...(skills !== undefined && {
+        skills: {
+          connectOrCreate: [...new Set(skills.map((name) => name.trim()))].map(
+            (name) => ({ where: { name }, create: { name } }),
+          ),
+        },
+      }),
+      ...(tags !== undefined && {
+        tags: {
+          connectOrCreate: [...new Set(tags.map((name) => name.trim()))].map(
+            (name) => ({ where: { name }, create: { name } }),
+          ),
+        },
+      }),
       members: {
         create: {
           userId: ownerId,
@@ -302,6 +327,8 @@ export async function createProject(
           },
         },
       },
+      skills: { select: { id: true, name: true } },
+      tags: { select: { id: true, name: true } },
     },
   });
 }
@@ -310,7 +337,34 @@ export async function updateProject(
   projectId: string,
   data: UpdateProjectData,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
-): Promise<Project> {
+): Promise<ProjectWithTaxonomy> {
+  const skills =
+    data.skills === undefined
+      ? undefined
+      : await Promise.all(
+          [...new Set(data.skills.map((name) => name.trim()))].map((name) =>
+            tx.skill.upsert({
+              where: { name },
+              update: {},
+              create: { name },
+              select: { id: true },
+            }),
+          ),
+        );
+  const tags =
+    data.tags === undefined
+      ? undefined
+      : await Promise.all(
+          [...new Set(data.tags.map((name) => name.trim()))].map((name) =>
+            tx.tag.upsert({
+              where: { name },
+              update: {},
+              create: { name },
+              select: { id: true },
+            }),
+          ),
+        );
+
   return tx.project.update({
     where: { id: projectId },
     data: {
@@ -322,10 +376,12 @@ export async function updateProject(
       ...(data.stage !== undefined && { stage: data.stage }),
       ...(data.visibility !== undefined && { visibility: data.visibility }),
       ...(data.status !== undefined && { status: data.status }),
-      ...(data.tags !== undefined && { tags: data.tags }),
-      ...(data.skills !== undefined && { skills: data.skills }),
-      ...(data.tags !== undefined && { tags: data.tags }),
-      ...(data.skills !== undefined && { skills: data.skills }),
+      ...(tags !== undefined && {
+        tags: { set: tags.map(({ id }) => ({ id })) },
+      }),
+      ...(skills !== undefined && {
+        skills: { set: skills.map(({ id }) => ({ id })) },
+      }),
       ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
       ...(data.mediaLinks !== undefined && {
         mediaLinks: data.mediaLinks as Prisma.InputJsonValue,
@@ -352,13 +408,15 @@ export async function updateProject(
           },
         },
       },
+      skills: { select: { id: true, name: true } },
+      tags: { select: { id: true, name: true } },
     },
   });
 }
 
 export async function turnIdeaIntoProject(
   projectId: string,
-): Promise<Project> {
+): Promise<ProjectWithTaxonomy> {
   return prisma.project.update({
     where: { id: projectId },
     data: {
@@ -392,6 +450,8 @@ export async function turnIdeaIntoProject(
           },
         },
       },
+      skills: { select: { id: true, name: true } },
+      tags: { select: { id: true, name: true } },
     },
   });
 }

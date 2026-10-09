@@ -25,16 +25,28 @@ import {
 } from "./project.authorization.js";
 import { ApiError } from "../../types/error.types.js";
 
+function withTaxonomyNames<
+  T extends { skills: { name: string }[]; tags: { name: string }[] },
+>(project: T) {
+  return {
+    ...project,
+    skills: project.skills.map(({ name }) => name),
+    tags: project.tags.map(({ name }) => name),
+  };
+}
+
 export async function getProject(projectId: string, userId: string) {
   await assertCanViewProject(projectId, userId);
-  return await getProjectById(projectId);
+  const project = await getProjectById(projectId);
+  return project ? withTaxonomyNames(project) : null;
 }
 
 export async function listProjects(skip?: number, take?: number) {
-  return await listProjectsDb({
+  const projects = await listProjectsDb({
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
   });
+  return projects.map(withTaxonomyNames);
 }
 
 export async function listUserProjects(
@@ -43,12 +55,13 @@ export async function listUserProjects(
   take?: number,
   publicOnly?: boolean
 ) {
-  return await listUserProjectsDb({
+  const projects = await listUserProjectsDb({
     userId,
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
     ...(publicOnly !== undefined && { publicOnly }),
   });
+  return projects.map(withTaxonomyNames);
 }
 
 export async function listPublicProjects(
@@ -60,7 +73,7 @@ export async function listPublicProjects(
   tags?: string[],
   userId?: string,
 ) {
-  return await listPublicProjectsDb({
+  const projects = await listPublicProjectsDb({
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
     ...(query !== undefined && { query }),
@@ -69,6 +82,7 @@ export async function listPublicProjects(
     ...(tags !== undefined && { tags }),
     ...(userId !== undefined && { userId }),
   });
+  return projects.map(withTaxonomyNames);
 }
 
 export async function listFavouriteProjects(
@@ -76,11 +90,12 @@ export async function listFavouriteProjects(
   skip?: number,
   take?: number,
 ) {
-  return await listFavouriteProjectsDb({
+  const projects = await listFavouriteProjectsDb({
     userId,
     ...(skip !== undefined && { skip }),
     ...(take !== undefined && { take }),
   });
+  return projects.map(withTaxonomyNames);
 }
 
 export async function createProject(data: CreateProjectData, ownerId: string) {
@@ -97,7 +112,7 @@ export async function createProject(data: CreateProjectData, ownerId: string) {
     ...(data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks }),
   };
 
-  return await createProjectDb(processedData, ownerId);
+  return withTaxonomyNames(await createProjectDb(processedData, ownerId));
 }
 
 export async function updateProject(
@@ -128,7 +143,7 @@ export async function updateProject(
     ...(data.mediaLinks !== undefined && { mediaLinks: data.mediaLinks }),
   };
 
-  return await updateProjectDb(projectId, processedData);
+  return withTaxonomyNames(await updateProjectDb(projectId, processedData));
 }
 
 export async function turnIdeaIntoProject(projectId: string, userId: string) {
@@ -148,7 +163,7 @@ export async function turnIdeaIntoProject(projectId: string, userId: string) {
     throw new ApiError(409, "Project workspace already exists");
   }
 
-  return turnIdeaIntoProjectDb(projectId);
+  return withTaxonomyNames(await turnIdeaIntoProjectDb(projectId));
 }
 
 export async function deleteProject(projectId: string, userId: string) {
@@ -167,7 +182,7 @@ export async function updateProjectStatus(
     throw new ApiError(404, "Project not found");
   }
 
-  return await updateProjectDb(projectId, { status });
+  return withTaxonomyNames(await updateProjectDb(projectId, { status }));
 }
 
 export async function addMember(

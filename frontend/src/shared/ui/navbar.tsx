@@ -92,7 +92,7 @@ function Navbar() {
           </form>
 
           <Link
-            to="ideas/new"
+            to="/ideas/new"
             className="button text-white bg-primary hover:bg-primary-hover"
           >
             {t("shared.navbar.actions.newIdea")}

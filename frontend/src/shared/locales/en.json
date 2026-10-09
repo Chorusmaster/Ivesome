@@ -35,6 +35,12 @@
     "dropMessage": "Drag & Drop your images here",
     "clickMessage": "or click to select multiple images"
   },
+  "listField": {
+    "loadingSuggestions": "Loading suggestions...",
+    "suggestionsError": "Suggestions could not be loaded. Try again.",
+    "noSuggestions": "No suggestions found.",
+    "usageCount": "usages: {{count}}"
+  },
   "reportDialog": {
     "title": "Report inappropriate content",
     "description": "Please describe why you believe this content violates the community guidelines.",

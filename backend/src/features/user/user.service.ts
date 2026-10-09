@@ -1,5 +1,9 @@
 import type { RawUpdateUserData, UserStatus } from "./user.types.js";
-import { deleteUserById, getUserById, updateUser } from "./user.repository.js";
+import {
+  deleteUserById,
+  getUserById,
+  updateUser,
+} from "./user.repository.js";
 import { ApiError } from "../../types/error.types.js";
 import { getSettingsByUserId } from "../settings/settings.repository.js";
 
@@ -38,8 +42,8 @@ export async function getUser(userId: string) {
     role,
     status,
     about,
-    skills,
-    interests,
+    skills: skills.map(({ name }) => name),
+    interests: interests.map(({ name }) => name),
     links,
     createdAt,
   };
@@ -69,8 +73,6 @@ export async function getUserProfile(userId: string, requesterId?: string) {
     location,
     bio,
     about,
-    skills,
-    interests,
     links,
     createdAt,
   } = user;
@@ -85,8 +87,8 @@ export async function getUserProfile(userId: string, requesterId?: string) {
     location,
     bio,
     about,
-    skills,
-    interests,
+    skills: user.skills.map(({ name }) => name),
+    interests: user.interests.map(({ name }) => name),
     links,
     createdAt,
   };
@@ -102,14 +104,14 @@ export async function updateProfile(
   avatarLink?: string,
 ) {
   const skills = data.skills
-    ? ([...new Set(JSON.parse(data.skills))] as string[])
+    ? ([...new Set((JSON.parse(data.skills) as string[]).map((name) => name.trim()))] as string[])
     : undefined;
 
   const interests = data.interests
-    ? ([...new Set(JSON.parse(data.interests))] as string[])
+    ? ([...new Set((JSON.parse(data.interests) as string[]).map((name) => name.trim()))] as string[])
     : undefined;
 
-  return await updateUser(userId, {
+  const user = await updateUser(userId, {
     login: data.login,
     firstName: data.firstName,
     lastName: data.lastName,
@@ -121,6 +123,12 @@ export async function updateProfile(
     links: data.links ? JSON.parse(data.links) : undefined,
     avatarLink,
   });
+
+  return {
+    ...user,
+    skills: user.skills.map(({ name }) => name),
+    interests: user.interests.map(({ name }) => name),
+  };
 }
 
 export async function updateUserStatus(userId: string, status: UserStatus) {
@@ -130,5 +138,10 @@ export async function updateUserStatus(userId: string, status: UserStatus) {
     throw new ApiError(404, "User not found");
   }
 
-  return await updateUser(userId, { status });
+  const updatedUser = await updateUser(userId, { status });
+  return {
+    ...updatedUser,
+    skills: updatedUser.skills.map(({ name }) => name),
+    interests: updatedUser.interests.map(({ name }) => name),
+  };
 }
