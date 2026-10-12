@@ -92,7 +92,8 @@ function ListField({
       (suggestion) =>
         suggestion.name.toLowerCase().includes(value) &&
         !values.some(
-          (existing) => existing.toLowerCase() === suggestion.name.toLowerCase(),
+          (existing) =>
+            existing.toLowerCase() === suggestion.name.toLowerCase(),
         ),
     );
   }, [inputValue, suggestions, values]);
