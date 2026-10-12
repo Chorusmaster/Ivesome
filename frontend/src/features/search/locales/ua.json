@@ -23,6 +23,7 @@
       "stage": {
         "title": "Етап",
         "options": {
+          "idea": "Ідея",
           "teamBuilding": "Формування команди",
           "development": "У розробці",
           "launched": "Запущено"

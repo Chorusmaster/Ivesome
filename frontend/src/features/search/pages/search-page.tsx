@@ -16,6 +16,8 @@ function SearchPage() {
   const [searchParams] = useSearchParams();
   const query = searchParams.get("q") ?? undefined;
 
+  const [searchType, setSearchType] = useState<"PROJECTS" | "PEOPLE">("PROJECTS");
+
   useEffect(() => {
     const loadProjects = async () => {
       const projects = await getProjects(query, sort, filters);
@@ -36,16 +38,28 @@ function SearchPage() {
 
       <div className="flex justify-between items-end mt-4">
         <div className="flex gap-2">
-          <button className="bg-primary text-white px-4 py-1 rounded-full cursor-pointer select-none">
-            {t("search.categories.all")}
-          </button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
+          <button 
+            onClick={() => setSearchType("PROJECTS")}
+            className={
+              "px-4 py-1 rounded-full cursor-pointer select-none" +
+              (
+                searchType == "PROJECTS" ?
+                " bg-primary text-white" :
+                " text-text-primary bg-surface border border-border hover:border-primary transition"
+              )}
+          >
             {t("search.categories.projects")}
           </button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
-            {t("search.categories.ideas")}
-          </button>
-          <button className="bg-surface text-text-primary px-4 py-1 rounded-full cursor-pointer border border-border hover:border-primary transition select-none">
+          <button 
+            onClick={() => setSearchType("PEOPLE")}
+            className={
+              "px-4 py-1 rounded-full cursor-pointer select-none" +
+              (
+                searchType == "PEOPLE" ?
+                " bg-primary text-white" :
+                " text-text-primary bg-surface border border-border hover:border-primary transition"
+              )}
+          >
             {t("search.categories.people")}
           </button>
         </div>

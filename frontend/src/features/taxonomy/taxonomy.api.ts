@@ -21,3 +21,7 @@ export function getSkillSuggestions(search: string) {
 export function getTagSuggestions(search: string) {
   return searchTaxonomy("/tags", search);
 }
+
+export function getPopularTags() {
+  return searchTaxonomy("/tags", "");
+}

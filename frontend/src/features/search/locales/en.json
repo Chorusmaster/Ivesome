@@ -23,6 +23,7 @@
       "stage": {
         "title": "Stage",
         "options": {
+          "idea": "Idea",
           "teamBuilding": "Team building",
           "development": "In development",
           "launched": "Launched"

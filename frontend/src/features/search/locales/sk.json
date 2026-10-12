@@ -23,6 +23,7 @@
       "stage": {
         "title": "Etapa",
         "options": {
+          "idea": "Nápad",
           "teamBuilding": "Tvorba tímu",
           "development": "Vo vývoji",
           "launched": "Spustené"
