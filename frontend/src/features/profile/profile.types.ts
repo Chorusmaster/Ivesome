@@ -4,8 +4,16 @@ export type ProfileStats = {
   upvotes: number;
 };
 
+export type ProfileLocation = {
+  latitude: number;
+  longitude: number;
+  city?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
+};
+
 export type Profile = {
-  location?: string;
+  location?: ProfileLocation | null;
   bio?: string;
   about?: string;
   skills: string[];
@@ -18,7 +26,7 @@ export interface UpdateProfileData {
   firstName: string;
   lastName: string;
   login: string;
-  location?: string;
+  location?: ProfileLocation | null;
   bio?: string;
   about?: string;
   skills: string[];

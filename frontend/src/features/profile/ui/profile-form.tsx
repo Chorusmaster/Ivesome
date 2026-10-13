@@ -14,6 +14,7 @@ import {
   getSkillSuggestions,
   getTagSuggestions,
 } from "@/features/taxonomy/taxonomy.api";
+import MapPicker, { type Location } from "@/shared/ui/map-picker";
 
 function ProfileForm() {
   const { t } = useTranslation();
@@ -24,7 +25,7 @@ function ProfileForm() {
   const [lastName, setLastName] = useState("");
   const [avatar, setAvatar] = useState<File | undefined>(undefined);
   const [login, setLogin] = useState("");
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState<Location | null>(null);
   const [bio, setBio] = useState("");
   const [about, setAbout] = useState("");
   const [skills, setSkills] = useState<string[]>([]);
@@ -94,7 +95,7 @@ function ProfileForm() {
     setFirstName(user?.firstName ?? "");
     setLastName(user?.lastName ?? "");
     setLogin(user?.login ?? "");
-    setLocation(user?.location ?? "");
+    setLocation(user?.location ?? null);
     setBio(user?.bio ?? "");
     setAbout(user?.about ?? "");
     setSkills(user?.skills ?? []);
@@ -136,13 +137,15 @@ function ProfileForm() {
           placeholder={t("profile.form.loginPlaceholder")}
           className="mb-4"
         />
-        <Input
-          label={t("profile.form.location")}
-          id="location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          placeholder={t("profile.form.locationPlaceholder")}
-        />
+        <div className="heading mb-4 text-text-primary">
+          {t("profile.form.location")}
+        </div>
+        <p className="text-text-secondary text-small mb-4">
+          {t("profile.form.locationPlaceholder")}
+        </p>
+        <div className="w-100% overflow-hidden rounded-b-2xl">
+          <MapPicker location={location} setLocation={setLocation} />
+        </div>
       </Card>
 
       <Card>

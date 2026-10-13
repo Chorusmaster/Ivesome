@@ -1,4 +1,4 @@
-import type { ProfileLink } from "../profile/profile.types";
+import type { ProfileLink, ProfileLocation } from "../profile/profile.types";
 
 export type User = {
   id: string;
@@ -10,7 +10,7 @@ export type User = {
   lastName?: string,
   bio?: string,
   about?: string,
-  location?: string,
+  location?: ProfileLocation | null,
   skills?: string[],
   interests?: string[],
   links?: ProfileLink[],

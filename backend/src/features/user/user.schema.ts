@@ -53,6 +53,31 @@ const profileLinks = z.string().superRefine((value, ctx) => {
   }
 });
 
+const profileLocation = z
+  .string()
+  .transform((value, ctx) => {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      ctx.addIssue({
+        code: "custom",
+        message: "Location must be a JSON-encoded object with latitude and longitude",
+      });
+      return z.NEVER;
+    }
+  })
+  .pipe(
+    z.union([
+      z
+        .object({
+          latitude: z.number().min(-90).max(90),
+          longitude: z.number().min(-180).max(180),
+        })
+        .strict(),
+      z.null(),
+    ]),
+  );
+
 export const updateProfileSchema = z
   .object({
     login: z
@@ -67,7 +92,7 @@ export const updateProfileSchema = z
       .optional(),
     firstName: z.string().trim().max(100).optional(),
     lastName: z.string().trim().max(100).optional(),
-    location: z.string().trim().max(200).optional(),
+    location: profileLocation.optional(),
     bio: z.string().trim().max(500).optional(),
     about: z.string().trim().max(5000).optional(),
     skills: jsonStringArray.optional(),

@@ -60,4 +60,6 @@ export const env = {
   SMTPPassword: requiredEnv("SMTP_PASSWORD"),
   SMTPSenderName: requiredEnv("SMTP_SENDER_NAME"),
   SMTPSenderEmail: requiredEnv("SMTP_SENDER_EMAIL"),
+
+  nominatimReverseURL: requiredEnv("NOMINATIM_REVERSE_URL"),
 };
