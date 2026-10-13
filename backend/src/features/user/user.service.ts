@@ -6,6 +6,7 @@ import {
 } from "./user.repository.js";
 import { ApiError } from "../../types/error.types.js";
 import { getSettingsByUserId } from "../settings/settings.repository.js";
+import { enrichLocation } from "../nominatim/nominatim.service.js";
 
 export async function getUser(userId: string) {
   const user = await getUserById(userId);
@@ -84,7 +85,11 @@ export async function getUserProfile(userId: string, requesterId?: string) {
     firstName,
     lastName,
     avatarLink,
-    location,
+    ...(isOwner ? { location } : { location: {
+      country: location?.country,
+      countryCode: location?.countryCode,
+      city: location?.city,
+    }}),
     bio,
     about,
     skills: user.skills.map(({ name }) => name),
@@ -103,6 +108,8 @@ export async function updateProfile(
   data: RawUpdateUserData,
   avatarLink?: string,
 ) {
+  const location =
+    data.location == null ? data.location : await enrichLocation(data.location);
   const skills = data.skills
     ? ([...new Set((JSON.parse(data.skills) as string[]).map((name) => name.trim()))] as string[])
     : undefined;
@@ -115,7 +122,7 @@ export async function updateProfile(
     login: data.login,
     firstName: data.firstName,
     lastName: data.lastName,
-    location: data.location,
+    location,
     bio: data.bio,
     about: data.about,
     skills,

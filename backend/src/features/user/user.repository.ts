@@ -15,6 +15,15 @@ export async function getUserById(id: string) {
     include: {
       skills: { select: { id: true, name: true } },
       interests: { select: { id: true, name: true } },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          city: true,
+          country: true,
+          countryCode: true,
+        },
+      },
     },
   });
 }
@@ -123,7 +132,17 @@ export async function updateUser(
       ...(data.firstName !== undefined && { firstName: data.firstName }),
       ...(data.lastName !== undefined && { lastName: data.lastName }),
       ...(data.avatarLink !== undefined && { avatarLink: data.avatarLink, }),
-      ...(data.location !== undefined && { location: data.location, }),
+      ...(data.location !== undefined && {
+        location:
+          data.location === null
+            ? { disconnect: true }
+            : {
+                upsert: {
+                  create: data.location,
+                  update: data.location,
+                },
+              },
+      }),
       ...(data.bio !== undefined && { bio: data.bio, }),
       ...(data.about !== undefined && { about: data.about, }),
       ...(skills !== undefined && {
@@ -139,6 +158,15 @@ export async function updateUser(
     include: {
       skills: { select: { id: true, name: true } },
       interests: { select: { id: true, name: true } },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          city: true,
+          country: true,
+          countryCode: true,
+        },
+      },
     },
   });
 }

@@ -16,8 +16,8 @@ export const updateProfile = async (data: UpdateProfileData) => {
     formData.append("login", data.login);
   }
 
-  if (data.location) {
-    formData.append("location", data.location);
+  if (data.location !== undefined) {
+    formData.append("location", JSON.stringify(data.location));
   }
 
   if (data.bio) {

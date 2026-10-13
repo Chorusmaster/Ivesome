@@ -10,7 +10,7 @@ export interface RawUpdateUserData {
   login?: string | undefined;
   firstName?: string | undefined;
   lastName?: string | undefined;
-  location?: string | undefined;
+  location?: LocationCoordinates | null | undefined;
   bio?: string | undefined;
   about?: string | undefined;
   skills?: string | undefined;
@@ -26,7 +26,7 @@ export type UpdateUserData = {
   status?: UserStatus | undefined;
   firstName?: string | undefined;
   lastName?: string | undefined;
-  location?: string | undefined;
+  location?: LocationCoordinates | null | undefined;
   bio?: string | undefined;
   about?: string | undefined;
   skills?: string[] | undefined;
@@ -44,4 +44,12 @@ export type UserStatus = typeof USER_STATUS_VALUES[number];
 export interface ProfileLink {
   type: "GITHUB" | "LINKEDIN" | "UNKNOWN"
   link: string
+}
+
+export interface LocationCoordinates {
+  latitude: number;
+  longitude: number;
+  city?: string | null;
+  country?: string | null;
+  countryCode?: string | null;
 }

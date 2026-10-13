@@ -52,7 +52,6 @@ function ProfileHeader({
             user={user}
             size="lg"
             theme="primary"
-            imageUrl={filePathToUrl(user.avatarLink)}
           />
           <div className="min-w-0">
             <h1 className="text-display font-heading text-text-primary">
@@ -66,10 +65,10 @@ function ProfileHeader({
               {user.bio ?? t("profile.header.noBio")}
             </p>
             <div className="flex flex-wrap gap-4 text-muted text-small">
-              {user.location && (
+              {user.location?.country && (
                 <span className="flex items-center gap-1.5">
                   <MapPin size={16} />
-                  {user.location}
+                  {user.location.city ? `${user.location.city}, ${user.location.country}` : user.location.country}
                 </span>
               )}
               {user.createdAt && (
