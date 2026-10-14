@@ -14,7 +14,7 @@ export async function seedProjects() {
     throw new Error("No users found in the database. Please seed users first.");
   }
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 15; i++) {
     const user = users[Math.floor(Math.random() * users.length)];
 
     if (!user) {

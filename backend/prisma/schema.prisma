@@ -359,8 +359,6 @@ model Location {
   id          String  @id @default(cuid())
   latitude    Float
   longitude   Float
-  city        String?
-  country     String?
   countryCode String?
 
   users    User[]

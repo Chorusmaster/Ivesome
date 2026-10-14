@@ -31,6 +31,31 @@ const jsonStringArray = z.string().superRefine((value, ctx) => {
 
 const stringArrayInput = z.union([stringArray, jsonStringArray]);
 
+const projectLocation = z
+  .string()
+  .transform((value, ctx) => {
+    try {
+      return JSON.parse(value) as unknown;
+    } catch {
+      ctx.addIssue({
+        code: "custom",
+        message: "Location must be a JSON-encoded object with latitude and longitude",
+      });
+      return z.NEVER;
+    }
+  })
+  .pipe(
+    z.union([
+      z
+        .object({
+          latitude: z.number().min(-90).max(90),
+          longitude: z.number().min(-180).max(180),
+        })
+        .strict(),
+      z.null(),
+    ]),
+  );
+
 const projectFields = {
   title: z.string().trim().min(1).max(200),
   shortDescription: z.string().trim().min(1).max(500),
@@ -38,6 +63,7 @@ const projectFields = {
   visibility: z.enum(PROJECT_VISIBILITY_VALUES),
   tags: stringArrayInput.optional(),
   skills: stringArrayInput.optional(),
+  location: projectLocation.optional(),
   logoLink: z.string().trim().max(2048).optional(),
   mediaLinks: z.union([stringArray, jsonStringArray]).optional(),
 };

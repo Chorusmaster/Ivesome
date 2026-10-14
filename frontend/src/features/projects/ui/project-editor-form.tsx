@@ -15,6 +15,7 @@ import {
 
 import type { CreateProjectPayload } from "../projects.types";
 import { useTranslation } from "react-i18next";
+import MapPicker, { type Location } from "@/shared/ui/map-picker";
 
 interface ProjectEditorFormProps {
   onSubmit: (data: CreateProjectPayload) => Promise<void> | void;
@@ -26,6 +27,7 @@ interface ProjectEditorFormProps {
     tags?: string[];
     skills?: string[];
     visibility?: "PRIVATE" | "PUBLIC";
+    location?: Location | null;
   };
 }
 
@@ -49,6 +51,9 @@ function ProjectEditorForm({
   );
   const [logo, setLogo] = useState<File | undefined>(undefined);
   const [media, setMedia] = useState<File[]>([]);
+  const [location, setLocation] = useState<Location | null>(
+    initialValues?.location ?? null,
+  );
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,6 +66,14 @@ function ProjectEditorForm({
     setTags(initialValues?.tags ?? []);
     setSkills(initialValues?.skills ?? []);
     setVisibility(initialValues?.visibility ?? "PRIVATE");
+    setLocation(
+      initialValues?.location
+        ? {
+            latitude: initialValues.location.latitude,
+            longitude: initialValues.location.longitude,
+          }
+        : null,
+    );
   }, [initialValues]);
 
   const handleSubmit: React.SubmitEventHandler<HTMLFormElement> = async (e) => {
@@ -80,6 +93,7 @@ function ProjectEditorForm({
         logo,
         media,
         visibility,
+        location,
       });
       uploadRef.current?.reset();
     } finally {
@@ -163,6 +177,18 @@ function ProjectEditorForm({
             onChange={setSkills}
             fetchSuggestions={getSkillSuggestions}
           />
+        </div>
+      </Card>
+
+      <Card>
+        <div className="heading mb-4 text-text-primary">
+          {t("projects.projectEditor.locationTitle")}
+        </div>
+        <p className="text-text-secondary text-small mb-4">
+          {t("projects.projectEditor.locationPlaceholder")}
+        </p>
+        <div className="w-100% overflow-hidden rounded-b-2xl">
+          <MapPicker location={location} setLocation={setLocation} />
         </div>
       </Card>
 

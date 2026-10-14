@@ -74,6 +74,8 @@
       "private": "Súkromné",
       "public": "Verejné"
     },
+    "locationTitle": "Poloha",
+    "locationPlaceholder": "Kliknutím na mapu vyberte polohu projektu.",
     "tagsLabel": "Značky",
     "tagsPlaceholder": "Názov novej značky",
     "skillsLabel": "Zručnosti",

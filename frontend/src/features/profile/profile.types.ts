@@ -7,8 +7,6 @@ export type ProfileStats = {
 export type ProfileLocation = {
   latitude: number;
   longitude: number;
-  city?: string | null;
-  country?: string | null;
   countryCode?: string | null;
 };
 

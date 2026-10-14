@@ -74,6 +74,8 @@
       "private": "Private",
       "public": "Public"
     },
+    "locationTitle": "Location",
+    "locationPlaceholder": "Click the map to select the project location.",
     "tagsLabel": "Tags",
     "tagsPlaceholder": "New tag name",
     "skillsLabel": "Skills",

@@ -24,6 +24,7 @@ import {
   assertProjectPermission,
 } from "./project.authorization.js";
 import { ApiError } from "../../types/error.types.js";
+import { enrichLocation } from "../nominatim/nominatim.service.js";
 
 function withTaxonomyNames<
   T extends { skills: { name: string }[]; tags: { name: string }[] },
@@ -99,6 +100,8 @@ export async function listFavouriteProjects(
 }
 
 export async function createProject(data: CreateProjectData, ownerId: string) {
+  const location =
+    data.location == null ? undefined : await enrichLocation(data.location);
   const processedData = {
     title: data.title,
     shortDescription: data.shortDescription,
@@ -106,6 +109,7 @@ export async function createProject(data: CreateProjectData, ownerId: string) {
     stage: data.stage,
     visibility: data.visibility,
     status: "ACTIVE" as const,
+    ...(location !== undefined && { location }),
     ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
     ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
     ...(data.logoLink !== undefined && { logoLink: data.logoLink }),
@@ -121,6 +125,8 @@ export async function updateProject(
   data: UpdateProjectData,
 ) {
   await assertProjectPermission(projectId, userId, ["OWNER"]);
+  const location =
+    data.location == null ? data.location : await enrichLocation(data.location);
 
   if (data.stage) {
     const project = await getProjectById(projectId);
@@ -137,6 +143,7 @@ export async function updateProject(
     ...(data.description !== undefined && { description: data.description }),
     ...(data.stage !== undefined && { stage: data.stage }),
     ...(data.visibility !== undefined && { visibility: data.visibility }),
+    ...(data.location !== undefined && { location }),
     ...(data.tags !== undefined && { tags: [...new Set(data.tags)] }),
     ...(data.skills !== undefined && { skills: [...new Set(data.skills)] }),
     ...(data.logoLink !== undefined && { logoLink: data.logoLink }),

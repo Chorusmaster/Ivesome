@@ -76,6 +76,10 @@ export const createProject = async (payload: CreateProjectPayload) => {
     formData.append("status", payload.status);
   }
 
+  if (payload.location !== undefined) {
+    formData.append("location", JSON.stringify(payload.location));
+  }
+
   if (payload.description) {
     formData.append("description", payload.description);
   }
@@ -126,6 +130,10 @@ export const updateProject = async (
 
   if (payload.status !== undefined) {
     formData.append("status", payload.status);
+  }
+
+  if (payload.location !== undefined) {
+    formData.append("location", JSON.stringify(payload.location));
   }
 
   if (payload.tags !== undefined) {

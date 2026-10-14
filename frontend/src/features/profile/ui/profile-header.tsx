@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import Avatar from "@/shared/ui/avatar";
 import { filePathToUrl } from "@/shared/lib/utils";
+import { getLocalizedCountryName } from "@/shared/lib/country-name";
 import type { User } from "@/features/auth/auth.types";
 import { ReportDialog } from "@/shared/ui/report-dialog";
 import { getDateLocale } from "@/shared/lib/utils";
@@ -42,7 +43,7 @@ function ProfileHeader({
   onReportSubmit,
   onReportOpenChange,
 }: ProfileHeaderProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   return (
     <div className="px-16 py-12 bg-surface border-b border-border">
@@ -65,10 +66,13 @@ function ProfileHeader({
               {user.bio ?? t("profile.header.noBio")}
             </p>
             <div className="flex flex-wrap gap-4 text-muted text-small">
-              {user.location?.country && (
+              {user.location?.countryCode && (
                 <span className="flex items-center gap-1.5">
                   <MapPin size={16} />
-                  {user.location.city ? `${user.location.city}, ${user.location.country}` : user.location.country}
+                  {getLocalizedCountryName(
+                    user.location.countryCode,
+                    i18n.resolvedLanguage ?? i18n.language,
+                  )}
                 </span>
               )}
               {user.createdAt && (

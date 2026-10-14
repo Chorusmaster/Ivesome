@@ -1,4 +1,5 @@
 import type { User } from "../auth/auth.types";
+import type { Location } from "@/shared/ui/map-picker";
 
 export type ProjectStage = "IDEA" | "TEAM_BUILDING" | "DEVELOPMENT" | "LAUNCHED";
 export type ProjectVisibility = "PRIVATE" | "PUBLIC";
@@ -17,6 +18,7 @@ export interface Project {
   updatedAt: string;
   logoLink?: string | null;
   mediaLinks: string[];
+  location?: ProjectLocation | null;
   tags: string[];
   skills: string[];
   members: ProjectMember[];
@@ -44,6 +46,7 @@ export interface CreateProjectPayload {
   description?: string;
   visibility: ProjectVisibility;
   status?: ProjectStatus;
+  location?: Location | null;
   tags?: string[];
   skills?: string[];
   logo?: File;
@@ -56,6 +59,7 @@ export interface UpdateProjectPayload {
   description?: string;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
+  location?: Location | null;
   tags?: string[];
   skills?: string[];
   logo?: File;
@@ -65,6 +69,10 @@ export interface UpdateProjectPayload {
 export interface AddMemberPayload {
   role?: ProjectRole;
 }
+
+export type ProjectLocation = Location & {
+  countryCode?: string | null;
+};
 
 export const PROJECT_STAGES: ProjectStage[] = ["IDEA", "TEAM_BUILDING", "DEVELOPMENT", "LAUNCHED"];
 export const PROJECT_VISIBILITIES: ProjectVisibility[] = ["PRIVATE", "PUBLIC"];

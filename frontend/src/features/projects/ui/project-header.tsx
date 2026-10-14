@@ -6,13 +6,18 @@ import ItemLogo from "@/shared/ui/item-logo";
 import { filePathToUrl } from "@/shared/lib/utils";
 import type { Project } from "../projects.types";
 import { useTranslation } from "react-i18next";
+import { MapPin } from "lucide-react";
+import { getLocalizedCountryName } from "@/shared/lib/country-name";
 
 function ProjectHeader({ project }: { project: Project }) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
-  const formattedStage = t(`projects.projectStages.${project.stage.toLowerCase()}`, {
-    defaultValue: project.stage,
-  });
+  const formattedStage = t(
+    `projects.projectStages.${project.stage.toLowerCase()}`,
+    {
+      defaultValue: project.stage,
+    },
+  );
 
   const timeAgo = formatDistanceToNowStrict(new Date(project.createdAt), {
     locale: getDateLocale(),
@@ -39,6 +44,15 @@ function ProjectHeader({ project }: { project: Project }) {
             >
               {formattedStage}
             </div>
+            {project.location?.countryCode && (
+              <div className="flex items-center gap-1.5 text-muted text-small">
+                <MapPin size={16} />
+                {getLocalizedCountryName(
+                  project.location.countryCode,
+                  i18n.resolvedLanguage ?? i18n.language,
+                )}
+              </div>
+            )}
             <div className="text-muted text-small">
               {t("projects.projectHeader.published", { timeAgo })}
             </div>

@@ -81,16 +81,6 @@ export async function enrichLocation(
   const countryCode = firstString(address, ["country_code"]);
   return {
     ...location,
-    city: firstString(address, [
-      "city",
-      "town",
-      "village",
-      "municipality",
-      "borough",
-      "hamlet",
-      "suburb",
-    ]),
-    country: firstString(address, ["country"]),
     countryCode: countryCode?.toUpperCase() ?? null,
   };
 }

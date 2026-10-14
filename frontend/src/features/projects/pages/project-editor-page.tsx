@@ -91,6 +91,7 @@ function ProjectEditorPage() {
                 tags: project.tags,
                 skills: project.skills,
                 visibility: project.visibility,
+                location: project.location ?? null,
               }
             : undefined
         }
