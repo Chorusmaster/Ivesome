@@ -19,8 +19,6 @@ export async function getUserById(id: string) {
         select: {
           latitude: true,
           longitude: true,
-          city: true,
-          country: true,
           countryCode: true,
         },
       },
@@ -162,8 +160,6 @@ export async function updateUser(
         select: {
           latitude: true,
           longitude: true,
-          city: true,
-          country: true,
           countryCode: true,
         },
       },

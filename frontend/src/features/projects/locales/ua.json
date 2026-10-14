@@ -74,6 +74,8 @@
       "private": "Приватна",
       "public": "Публічна"
     },
+    "locationTitle": "Місцезнаходження",
+    "locationPlaceholder": "Натисніть на карту, щоб вибрати місцезнаходження проєкту.",
     "tagsLabel": "Теги",
     "tagsPlaceholder": "Назва нового тегу",
     "skillsLabel": "Навички",

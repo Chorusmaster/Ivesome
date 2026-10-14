@@ -86,9 +86,7 @@ export async function getUserProfile(userId: string, requesterId?: string) {
     lastName,
     avatarLink,
     ...(isOwner ? { location } : { location: {
-      country: location?.country,
       countryCode: location?.countryCode,
-      city: location?.city,
     }}),
     bio,
     about,

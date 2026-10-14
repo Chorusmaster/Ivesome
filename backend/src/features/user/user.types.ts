@@ -49,7 +49,5 @@ export interface ProfileLink {
 export interface LocationCoordinates {
   latitude: number;
   longitude: number;
-  city?: string | null;
-  country?: string | null;
   countryCode?: string | null;
 }

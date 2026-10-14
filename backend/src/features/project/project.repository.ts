@@ -1,6 +1,11 @@
 import { prisma } from "../../config/database.js";
 import { Prisma } from "../../generated/prisma/client.js";
-import type { Project, Skill, Tag } from "../../generated/prisma/client.js";
+import type {
+  Location,
+  Project,
+  Skill,
+  Tag,
+} from "../../generated/prisma/client.js";
 import { getRecommendations } from "../../utils/recomendations.js";
 import { getUserById } from "../user/user.repository.js";
 import type {
@@ -14,6 +19,7 @@ import type {
 export type ProjectWithTaxonomy = Project & {
   skills: Pick<Skill, "id" | "name">[];
   tags: Pick<Tag, "id" | "name">[];
+  location: Pick<Location, "latitude" | "longitude" | "countryCode"> | null;
 };
 
 export async function getProjectById(id: string) {
@@ -44,6 +50,13 @@ export async function getProjectById(id: string) {
         select: {
           id: true
         }
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
+        },
       },
       skills: { select: { id: true, name: true } },
       tags: { select: { id: true, name: true } },
@@ -83,6 +96,13 @@ export async function getProjectByWorkspaceId(workspaceId: string) {
         select: {
           id: true
         }
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
+        },
       },
     },
   });
@@ -124,6 +144,13 @@ export async function getAllProjects({
               avatarLink: true,
             },
           },
+        },
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
         },
       },
       skills: { select: { id: true, name: true } },
@@ -279,11 +306,12 @@ export async function createProject(
   ownerId: string,
   tx: Prisma.TransactionClient | typeof prisma = prisma,
 ): Promise<ProjectWithTaxonomy> {
-  const { skills, tags, ...projectData } = data;
+  const { skills, tags, location, ...projectData } = data;
 
   return tx.project.create({
     data: {
       ...projectData,
+      ...(location && { location: { create: location } }),
       stage: "IDEA",
       ...(skills !== undefined && {
         skills: {
@@ -325,6 +353,13 @@ export async function createProject(
               avatarLink: true,
             },
           },
+        },
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
         },
       },
       skills: { select: { id: true, name: true } },
@@ -376,6 +411,17 @@ export async function updateProject(
       ...(data.stage !== undefined && { stage: data.stage }),
       ...(data.visibility !== undefined && { visibility: data.visibility }),
       ...(data.status !== undefined && { status: data.status }),
+      ...(data.location !== undefined && {
+        location:
+          data.location === null
+            ? { disconnect: true }
+            : {
+                upsert: {
+                  create: data.location,
+                  update: data.location,
+                },
+              },
+      }),
       ...(tags !== undefined && {
         tags: { set: tags.map(({ id }) => ({ id })) },
       }),
@@ -406,6 +452,13 @@ export async function updateProject(
               avatarLink: true,
             },
           },
+        },
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
         },
       },
       skills: { select: { id: true, name: true } },
@@ -448,6 +501,13 @@ export async function turnIdeaIntoProject(
               avatarLink: true,
             },
           },
+        },
+      },
+      location: {
+        select: {
+          latitude: true,
+          longitude: true,
+          countryCode: true,
         },
       },
       skills: { select: { id: true, name: true } },

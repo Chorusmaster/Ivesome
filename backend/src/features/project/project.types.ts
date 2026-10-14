@@ -5,6 +5,7 @@ export interface CreateProjectData {
   stage: ProjectStage;
   visibility: ProjectVisibility;
   status?: ProjectStatus;
+  location?: ProjectLocation | null;
   tags?: string[];
   skills?: string[];
   logoLink?: string;
@@ -18,6 +19,7 @@ export interface UpdateProjectData {
   stage?: Exclude<ProjectStage, "IDEA">;
   visibility?: ProjectVisibility;
   status?: ProjectStatus;
+  location?: ProjectLocation | null;
   tags?: string[];
   skills?: string[];
   logoLink?: string;
@@ -42,3 +44,9 @@ export const PROJECT_ROLE_VALUES = ["OWNER", "MEMBER"] as const;
 export type ProjectRole = (typeof PROJECT_ROLE_VALUES)[number];
 
 export type ProjectSort = "newest" | "popular" | "relevant";
+
+export interface ProjectLocation {
+  latitude: number;
+  longitude: number;
+  countryCode?: string | null;
+}
