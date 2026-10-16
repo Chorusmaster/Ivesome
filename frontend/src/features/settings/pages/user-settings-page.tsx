@@ -212,6 +212,38 @@ export default function UserSettingsPage() {
               />
             }
           />
+
+          <hr className="border-border" />
+
+          <SettingsEntry
+            title={t("settings.privacy.showLocation")}
+            description={
+              (settings?.showLocation ?? true)
+                ? t("settings.privacy.locationVisible")
+                : t("settings.privacy.locationHidden")
+            }
+            action={
+              <Toggle
+                checked={settings?.showLocation ?? true}
+                disabled={
+                  isSettingsLoading ||
+                  !settings ||
+                  savingKeys.has("showLocation")
+                }
+                onChange={(value) =>
+                  void handleSettingsChange({ showLocation: value })
+                }
+              />
+            }
+          />
+
+          {settingsError && (
+            <p role="alert" className="text-danger text-small">
+              {settingsError === "load"
+                ? t("settings.errors.load")
+                : t("settings.errors.save")}
+            </p>
+          )}
         </Card>
 
         <Card>

@@ -1,6 +1,10 @@
 {
   "title": "Nastavenia používateľa",
   "description": "Spravujte svoj účet a osobné preferencie.",
+  "errors": {
+    "load": "Nepodarilo sa načítať vaše nastavenia. Skúste to znova.",
+    "save": "Nepodarilo sa uložiť vaše nastavenie. Skúste to znova."
+  },
 
   "preferences": {
     "title": "Preferencie",
@@ -17,7 +21,10 @@
     "publicProfileHidden": "Ostatní používatelia vidia iba vaše meno, používateľské meno a avatar",
     "showEmail": "Zobraziť e-mail",
     "emailVisible": "Váš e-mail je viditeľný pre všetkých návštevníkov platformy",
-    "emailHidden": "Váš e-mail je viditeľný iba pre vás"
+    "emailHidden": "Váš e-mail je viditeľný iba pre vás",
+    "showLocation": "Zobraziť polohu",
+    "locationVisible": "Vaša krajina je viditeľná pre všetkých návštevníkov platformy",
+    "locationHidden": "Vaša poloha je viditeľná iba pre vás"
   },
 
   "notifications": {

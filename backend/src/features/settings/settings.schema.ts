@@ -4,6 +4,7 @@ export const updateSettingsSchema = z
   .object({
     publicProfile: z.boolean().optional(),
     showEmail: z.boolean().optional(),
+    showLocation: z.boolean().optional(),
     notifyProject: z.boolean().optional(),
     notifyParticipationRequest: z.boolean().optional(),
     notifyComment: z.boolean().optional(),
