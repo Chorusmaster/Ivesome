@@ -1,6 +1,11 @@
 {
   "title": "User settings",
   "description": "Manage your account and personal preferences.",
+  "errors": {
+    "load": "Could not load your settings. Please try again.",
+    "save": "Could not save your setting. Please try again."
+  },
+
   "preferences": {
     "title": "Preferences",
     "theme": "Theme",
@@ -16,7 +21,10 @@
     "publicProfileHidden": "Only your name, username and avatar is visible to other users",
     "showEmail": "Show email",
     "emailVisible": "Your email is visible to all platform visitors",
-    "emailHidden": "Your email is visible only to you"
+    "emailHidden": "Your email is visible only to you",
+    "showLocation": "Show location",
+    "locationVisible": "Your country is visible to all platform visitors",
+    "locationHidden": "Your location is visible only to you"
   },
 
   "notifications": {

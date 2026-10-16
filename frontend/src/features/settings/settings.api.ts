@@ -5,6 +5,7 @@ export interface UserSettings {
   userId: string;
   publicProfile: boolean;
   showEmail: boolean;
+  showLocation: boolean;
   notifyProject: boolean;
   notifyParticipationRequest: boolean;
   notifyComment: boolean;

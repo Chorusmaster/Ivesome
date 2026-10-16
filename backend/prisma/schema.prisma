@@ -330,6 +330,7 @@ model Settings {
 
   publicProfile Boolean @default(true)
   showEmail     Boolean @default(true)
+  showLocation  Boolean @default(true)
 
   notifyProject              Boolean @default(true)
   notifyParticipationRequest Boolean @default(true)

@@ -20,6 +20,9 @@ export async function updateSettingsByUserId(
     ...(data.showEmail !== undefined && {
       showEmail: data.showEmail,
     }),
+    ...(data.showLocation !== undefined && {
+      showLocation: data.showLocation,
+    }),
     ...(data.notifyProject !== undefined && {
       notifyProject: data.notifyProject,
     }),
