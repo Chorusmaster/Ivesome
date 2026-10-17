@@ -12,7 +12,8 @@
     "options": {
       "relevant": "Najprv relevantné",
       "newest": "Najprv nové",
-      "popular": "Najprv populárne"
+      "popular": "Najprv populárne",
+      "nearest": "Najprv najbližšie"
     }
   },
   "emptyState": "Nič sa nenašlo :/",

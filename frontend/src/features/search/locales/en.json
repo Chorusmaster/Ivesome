@@ -12,7 +12,8 @@
     "options": {
       "relevant": "Relevant first",
       "newest": "Newest first",
-      "popular": "Popular first"
+      "popular": "Popular first",
+      "nearest": "Nearest first"
     }
   },
   "emptyState": "Nothing has been found :/",
