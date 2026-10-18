@@ -19,6 +19,7 @@ import ConversationsPage from "@/features/conversations/pages/conversations-page
 import WorkspacePage from "@/features/workspace/pages/workspace-page";
 import AdminDashboardPage from "@/features/admin/pages/admin-dashboard-page";
 import UserSettingsPage from "@/features/settings/pages/user-settings-page";
+import ParticipationRequestsPage from "@/features/participation-requests/pages/participation-requests-page";
 
 import ProjectEditorPage from "@/features/projects/pages/project-editor-page";
 import AdminLayout from "../layouts/admin-layout";
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
               {
                 path: "settings",
                 element: <UserSettingsPage />,
+              },
+              {
+                path: "participation-requests",
+                element: <ParticipationRequestsPage />,
               },
             ],
           },
