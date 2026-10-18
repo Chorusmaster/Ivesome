@@ -1,0 +1,17 @@
+{
+  "title": "Moje žiadosti o účasť",
+  "description": "Sledujte žiadosti o pripojenie k projektom, ktoré ste odoslali",
+  "loading": "Načítavanie žiadostí...",
+  "errorLoading": "Žiadosti o účasť sa nepodarilo načítať. Skúste to znova",
+  "empty": "Zatiaľ ste neposlali žiadne žiadosti o účasť",
+  "unknownProject": "Projekt nie je dostupný",
+  "types": {
+    "APPLICATION": "Žiadosť",
+    "INVITATION": "Pozvánka"
+  },
+  "statuses": {
+    "PENDING": "Čaká na vybavenie",
+    "ACCEPTED": "Prijatá",
+    "REJECTED": "Zamietnutá"
+  }
+}

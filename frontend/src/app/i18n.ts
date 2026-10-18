@@ -13,6 +13,7 @@ import notificationsEn from "@/features/notifications/locales/en.json";
 import profileEn from "@/features/profile/locales/en.json";
 import projectsEn from "@/features/projects/locales/en.json";
 import workspaceEn from "@/features/workspace/locales/en.json";
+import participationRequestsEn from "@/features/participation-requests/locales/en.json";
 
 import appSk from "@/app/locales/sk.json";
 import sharedSk from "@/shared/locales/sk.json";
@@ -25,6 +26,7 @@ import notificationsSk from "@/features/notifications/locales/sk.json";
 import profileSk from "@/features/profile/locales/sk.json";
 import projectsSk from "@/features/projects/locales/sk.json";
 import workspaceSk from "@/features/workspace/locales/sk.json";
+import participationRequestsSk from "@/features/participation-requests/locales/sk.json";
 import adminSk from "@/features/admin/locales/sk.json";
 
 import appUa from "@/app/locales/ua.json";
@@ -38,6 +40,7 @@ import notificationsUa from "@/features/notifications/locales/ua.json";
 import profileUa from "@/features/profile/locales/ua.json";
 import projectsUa from "@/features/projects/locales/ua.json";
 import workspaceUa from "@/features/workspace/locales/ua.json";
+import participationRequestsUa from "@/features/participation-requests/locales/ua.json";
 import adminUa from "@/features/admin/locales/ua.json";
 
 const resources = {
@@ -54,6 +57,7 @@ const resources = {
       profile: profileEn,
       projects: projectsEn,
       workspace: workspaceEn,
+      participationRequests: participationRequestsEn,
       settings: settingsEn
     },
   },
@@ -70,6 +74,7 @@ const resources = {
       profile: profileSk,
       projects: projectsSk,
       workspace: workspaceSk,
+      participationRequests: participationRequestsSk,
       settings: settingsSk
     },
   },
@@ -86,6 +91,7 @@ const resources = {
       profile: profileUa,
       projects: projectsUa,
       workspace: workspaceUa,
+      participationRequests: participationRequestsUa,
       settings: settingsUa
     },
   }

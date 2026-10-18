@@ -1,0 +1,17 @@
+{
+  "title": "My participation requests",
+  "description": "Track the requests you have sent to join projects",
+  "loading": "Loading requests...",
+  "errorLoading": "Unable to load participation requests. Please try again",
+  "empty": "You have not sent any participation requests yet",
+  "unknownProject": "Project unavailable",
+  "types": {
+    "APPLICATION": "Application",
+    "INVITATION": "Invitation"
+  },
+  "statuses": {
+    "PENDING": "Pending",
+    "ACCEPTED": "Accepted",
+    "REJECTED": "Rejected"
+  }
+}

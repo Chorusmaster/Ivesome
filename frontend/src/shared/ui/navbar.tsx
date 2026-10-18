@@ -1,12 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth/auth.context";
-import { filePathToUrl } from "../lib/utils.ts";
 import { useTranslation } from "react-i18next";
 
 import Logo from "@/assets/logo.svg?react";
-import { Search, LogOut } from "lucide-react";
+import { Search, LogOut, MessageSquare } from "lucide-react";
 import Avatar from "@/shared/ui/avatar";
-import { useState } from "react";
+import { useState, type SubmitEventHandler } from "react";
 import { Popover } from "./popover.tsx";
 import NotificationPopover from "../../features/notifications/ui/notification-popover.tsx";
 
@@ -17,7 +16,7 @@ function Navbar() {
   const { user, logout } = useAuth();
   const [query, setQuery] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit: SubmitEventHandler = (e) => {
     e.preventDefault();
 
     if (!query.trim()) {
@@ -41,9 +40,7 @@ function Navbar() {
         <div className="flex gap-2 py-2 items-center">
           <Link className="flex items-center gap-2" to="/">
             <Logo className="size-8"></Logo>
-            <div className="text-2xl font-bold text-text-primary">
-              Ivesome
-            </div>
+            <div className="text-2xl font-bold text-text-primary">Ivesome</div>
           </Link>
           <div className="flex px-8 gap-8 items-center">
             <Link
@@ -60,8 +57,11 @@ function Navbar() {
                 >
                   {t("shared.navbar.nav.favourites")}
                 </Link>
-                <Link to="/conversations" className="text-muted font-button">
-                  {t("shared.navbar.nav.conversations")}
+                <Link
+                  to="/participation-requests"
+                  className={`${location.pathname === "/participation-requests" ? "text-primary" : "text-muted"} font-button`}
+                >
+                  {t("shared.navbar.nav.participationRequests")}
                 </Link>
               </>
             )}
@@ -93,12 +93,21 @@ function Navbar() {
 
           <Link
             to="/ideas/new"
-            className="button text-white bg-primary hover:bg-primary-hover"
+            className="button text-white bg-primary hover:bg-primary-hover p-2"
           >
             {t("shared.navbar.actions.newIdea")}
           </Link>
 
-          <NotificationPopover />
+          <div className="flex gap-2">
+            <Link
+              to="/conversations"
+              className={`${location.pathname === "/conversations" ? "text-primary" : "text-muted"} font-button flex justify-center items-center p-2 rounded-button transition-colors hover:bg-background`}
+            >
+              <MessageSquare />
+            </Link>
+
+            <NotificationPopover />
+          </div>
 
           <Popover>
             <Popover.Trigger
@@ -106,10 +115,7 @@ function Navbar() {
               aria-label={t("shared.navbar.userMenu.ariaLabel")}
               className="rounded-full focus:outline-none focus:ring-2 focus:ring-primary/30 h-full flex items-end"
             >
-              <Avatar
-                user={user ?? undefined}
-                theme="accent"
-              />
+              <Avatar user={user ?? undefined} theme="accent" />
             </Popover.Trigger>
             <Popover.Content className="flex flex-col gap-1">
               <Link
